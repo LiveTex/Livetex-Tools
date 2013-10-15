@@ -12,7 +12,8 @@ JS_COMPILER ?= java -jar $(TOOLS_HOME)/tools/compiler.jar \
                 --compilation_level ADVANCED_OPTIMIZATIONS \
                 --debug --formatting=PRETTY_PRINT
 
-JS_LINTER ?= gjslint --strict --custom_jsdoc_tags="namespace,event"
+JS_LINTER ?= $(TOOLS_HOME)/tools/gjslint/closure_linter/gjslint.py \
+              --strict --custom_jsdoc_tags="namespace, event"
 
 JS_HEADERS_EXTRACTOR ?= $(TOOLS_HOME)/tools/externs-extractor
 
