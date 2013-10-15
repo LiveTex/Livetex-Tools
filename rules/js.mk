@@ -1,9 +1,10 @@
 
 SOURCE_PATH ?= ./lib
 BUILD_PATH ?= ./bin
-HEADERS_PATH ?= ./externs
+HEADERS_BUILD_PATH ?= ./externs
 DEPS_PATH ?= ./node_modules
 CONFIG_PATH ?= ./etc
+INCLUDE_PATH ?= ./include
 
 TOOLS_HOME ?= $(shell pwd)/$(DEPS_PATH)/livetex-tools
 
@@ -25,7 +26,7 @@ vpath %.jst $(CONFIG_PATH)
 
 
 %.js-run: %.js
-	node $<
+	node $(BUILD_PATH)/$<
 
 
 %.js-compile: %.jso %.jsh
@@ -37,8 +38,8 @@ vpath %.jst $(CONFIG_PATH)
 	 $(JS_LINTER) $^
 
 
-%.js-headers: %.jso
-	$(JS_HEADERS_EXTRACTOR) $< > $(HEADERS_PATH)/$(@F); \
+%-externs.js: %.jso
+	$(JS_HEADERS_EXTRACTOR) $< > $(HEADERS_BUILD_PATH)/$(@F); \
 
 
 %.js: %.jso %.jst
@@ -47,13 +48,14 @@ vpath %.jst $(CONFIG_PATH)
 
 
 %.jso : %.d
-	cat $(foreach FILE, $(shell cat $^), $(SOURCE_PATH)/$(FILE)) < /dev/null > $@
+	cat $(foreach FILE, $(shell cat $^ < /dev/null), \
+	    $(SOURCE_PATH)/$(FILE)) < /dev/null > $@
 
 
-%.jsh : %.hd
-	cat `cat $^ < /dev/null` > $@
+%.jsh : %-headers.d
+	cat `cat $^ < /dev/null` $(wildcard $(INCLUDE_PATH)/*.js) < /dev/null > $@
 
 
-%.hd :
-	echo $(foreach DIR, $(DEPS_PATH)/*, $(wildcard $(DIR)/$(HEADERS_PATH)/*.js) \
-	  $(wildcard $(DIR)/$(HEADERS_PATH)/$(JS_ENVIRONMENT)/*.js)) > $@;
+%-headers.d :
+	echo $(foreach DIR, $(DEPS_PATH)/*, $(wildcard $(DIR)/$(HEADERS_BUILD_PATH)/*.js) \
+	  $(wildcard $(DIR)/$(HEADERS_BUILD_PATH)/$(JS_ENVIRONMENT)/*.js)) > $@;
