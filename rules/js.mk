@@ -1,7 +1,9 @@
 
+SOURCE_PATH ?= ./lib
 BUILD_PATH ?= ./bin
 HEADERS_PATH ?= ./externs
 DEPS_PATH ?= ./node_modules
+CONFIG_PATH ?= ./etc
 
 TOOLS_HOME ?= $(shell pwd)/$(DEPS_PATH)/livetex-tools
 
@@ -16,6 +18,14 @@ JS_LINTER ?= $(TOOLS_HOME)/tools/gjslint/closure_linter/gjslint.py \
               --strict --custom_jsdoc_tags="namespace, event"
 
 JS_HEADERS_EXTRACTOR ?= $(TOOLS_HOME)/tools/externs-extractor
+
+
+vpath %.d $(CONFIG_PATH)
+vpath %.jst $(CONFIG_PATH)
+
+
+%.js-run: %.js
+	node $<
 
 
 %.js-compile: %.jso %.jsh
@@ -34,7 +44,7 @@ JS_HEADERS_EXTRACTOR ?= $(TOOLS_HOME)/tools/externs-extractor
 
 
 %.jso : %.d
-	cat $(foreach FILE, $(shell cat $^), $(<D)/$(FILE)) > $@
+	cat $(foreach FILE, $(shell cat $^), $(SOURCE_PATH)/$(FILE)) > $@
 
 
 %.jsh : %.hd
