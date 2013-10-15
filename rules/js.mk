@@ -37,18 +37,21 @@ vpath %.jst $(CONFIG_PATH)
 	 $(JS_LINTER) $^
 
 
-%.js: %.jso %.jst
+%.js-headers: %.jso
 	$(JS_HEADERS_EXTRACTOR) $< > $(HEADERS_PATH)/$(@F); \
-  sed -e "/%%CONTENT%%/r $<" \
+
+
+%.js: %.jso %.jst
+	sed -e "/%%CONTENT%%/r $<" \
       -e "//d" `echo "$^" | cut -d " " -f2-` > $(BUILD_PATH)/$(@F)
 
 
 %.jso : %.d
-	cat $(foreach FILE, $(shell cat $^), $(SOURCE_PATH)/$(FILE)) > $@
+	cat $(foreach FILE, $(shell cat $^), $(SOURCE_PATH)/$(FILE)) < /dev/null > $@
 
 
 %.jsh : %.hd
-	cat `cat $^ || echo "/dev/null"` > $@
+	cat `cat $^ < /dev/null` > $@
 
 
 %.hd :
