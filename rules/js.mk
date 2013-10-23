@@ -41,8 +41,11 @@ all: index.js
 	 $(JS_LINTER) $^
 
 
+%.js-check: %.js-compile %.js-lint
+	
+
 %.js-clean:
-  rm -rf $(BUILD_PATH)/*
+	rm -rf $(BUILD_PATH)/*
 
 
 %-externs.js: %.jso
