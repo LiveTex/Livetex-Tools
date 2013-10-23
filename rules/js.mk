@@ -25,6 +25,9 @@ vpath %.d $(CONFIG_PATH)
 vpath %.jst $(CONFIG_PATH)
 
 
+all: index.js
+
+
 %.js-run: %.js
 	node $(BUILD_PATH)/$<
 
@@ -36,6 +39,10 @@ vpath %.jst $(CONFIG_PATH)
 
 %.js-lint: %.jso
 	 $(JS_LINTER) $^
+
+
+%.js-clean:
+  rm -rf $(BUILD_PATH)/*
 
 
 %-externs.js: %.jso
