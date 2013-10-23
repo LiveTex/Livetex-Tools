@@ -49,7 +49,7 @@ all: index.js
 
 
 %-externs.js: %.jso
-	$(JS_HEADERS_EXTRACTOR) $< > $(HEADERS_BUILD_PATH)/$(@F); \
+	$(JS_HEADERS_EXTRACTOR) $< > $(HEADERS_BUILD_PATH)/$*.js; \
 
 
 %.js: %.jso %.jst
