@@ -10,8 +10,10 @@ CSS_MOBILE_SOURCES = $(addprefix ./, $(shell cat ./css-mobile-src.d))
 
 
 %.css-compile :
-  $(CSS_COMPILER) $(CSS_SOURCES) > $(BUILD_PATH)/main.css;
+	mkdir -p $(BUILD_PATH)
+	$(CSS_COMPILER) $(CSS_SOURCES) > $(BUILD_PATH)/main.css;
 
 %.css-mobile-compile :
-  $(CSS_COMPILER) $(CSS_MOBILE_SOURCES) > $(BUILD_PATH)/mobile.css;
+	mkdir -p $(BUILD_PATH)
+	$(CSS_COMPILER) $(CSS_MOBILE_SOURCES) > $(BUILD_PATH)/mobile.css;
 
