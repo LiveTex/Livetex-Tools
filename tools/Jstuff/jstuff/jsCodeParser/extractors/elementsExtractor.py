@@ -1,0 +1,259 @@
+import re
+from jsCodeParser.elements import *
+from jsCodeParser.jsDoc import JsDoc
+
+
+def __getElements(text, path):
+    """
+        Finds JsDocs and code of elements
+
+        @param {string} text.
+
+        @return {Set.<jsCodeParser.elements.Element>} Elements, which were
+                found in code.
+    """
+    elements = list()
+    position = 0
+    jsDoc = __extractJsDoc(text)
+    while jsDoc:
+        jsDocText = jsDoc.getOriginal()
+        position = text.find(jsDocText, position) + len(jsDocText)
+        element = __extractElement(text[position:], jsDoc, path)
+        elements.append(element)
+        position = text.find(element.getCode(), position) + \
+            len(element.getCode())
+        jsDoc = __extractJsDoc(text[position:])
+    return elements
+
+
+def __extractJsDoc(text):
+    """
+        Extracts the first occurrence of JsDoc.
+
+        @param {string} text.
+
+        @return {(jsCodeParser.jsDoc.JsDoc|None)} JsDoc.
+    """
+    text = text.strip()
+    jsDocPattern = '((\s*\/\*\*\n){1}( \s*\*.*\n)+( \s*\*\/))'
+    match = re.search(jsDocPattern, text)
+    if match:
+        jsDocText = match.group(0).strip()
+        return JsDoc(jsDocText)
+    return None
+
+
+def __extractElement(text, jsDoc, path):
+    """
+        Extracts an element, which has a certain JsDoc.
+
+        @param {string} text.
+        @param {jsCodeParser.jsDoc.JsDoc} jsDoc.
+
+        @return {jsCodeParser.elements.Element} Element.
+    """
+    text = text.strip()
+
+    extractor = None
+
+    tags = ['@constructor', '@interface', '@namespace',
+            '@typedef', '@type', '@enum']
+
+    tagMap = {
+        '@constructor': __extractClass,
+        '@interface': __extractInterface,
+        '@namespace': __extractNamespace,
+        '@typedef': __extractTypedef,
+        '@type': __extractProperty,
+        '@enum': __extractEnum
+    }
+
+    for tag in tags:
+        if tag in jsDoc.getText():
+            extractor = tagMap[tag]
+            break
+
+    if not extractor:
+        extractor = __extractMethod
+
+    element = extractor(text, jsDoc, path)
+
+    return element
+
+
+def __extractNamespace(text, jsDoc, path):
+    """
+        Extracts namespace, which has JsDoc with '@namespace' tag.
+
+        @param {string} text.
+        @param {jsCodeParser.jsDoc.JsDoc} jsDoc.
+
+        @return {jsCodeParser.elements.Namespace} Namespace.
+    """
+    end = text.find('}') + 1
+    if text[end] == ';':
+        end += 1
+    code = text[:end].strip()
+    return Namespace(code, jsDoc, path)
+
+
+def __extractTypedef(text, jsDoc, path):
+    """
+        Extracts typedef, which has JsDoc with '@typedef' tag.
+
+        @param {string} text.
+        @param {jsCodeParser.jsDoc.JsDoc} jsDoc.
+
+        @return {jsCodeParser.elements.Typedef} Typedef.
+    """
+    end = findEnd(text)
+    code = text[:end].strip()
+    return Typedef(code, jsDoc, path)
+
+
+def __extractProperty(text, jsDoc, path):
+    """
+        Extracts property, which has JsDoc with '@type' tag.
+
+        @param {string} text.
+        @param {jsCodeParser.jsDoc.JsDoc} jsDoc.
+
+        @return {jsCodeParser.elements.Property} Property.
+    """
+    eqPos = text.find('=')
+    value = text[eqPos + 1:].strip()
+    if value[0] in ['[', '{']:
+        value = extractTextBetweenTokens(value, value[0])
+        end = text.find(value) + len(value)
+    elif value[0] in ['"', "'"]:
+        value = extractString(value, value[0])
+        end = text.find(value) + len(value)
+    else:
+        end = text.find(value) + findEnd(value)
+    if text[end] == ';':
+        end += 1
+    code = text[:end].strip()
+    element = Property(code, jsDoc, path)
+    return element
+
+
+def __extractEnum(text, jsDoc, path):
+    """
+        Extracts enumeration, which has JsDoc with '@enum' tag.
+
+        @param {string} text.
+        @param {jsCodeParser.jsDoc.JsDoc} jsDoc.
+
+        @return {jsCodeParser.elements.Enumeration} Enumeration.
+    """
+    obj = extractTextBetweenTokens(text, '{')
+    end = text.find(obj) + len(obj)
+    if text[end] == ';':
+        end += 1
+    code = text[:end].strip()
+    return Enumeration(code, jsDoc, path)
+
+
+def __extractFunction(text, jsDoc, classConstructor, path):
+    """
+        Extracts a function depending of its pattern:
+
+        'function declaration':
+            function <name>(<parameters>) {
+                <realization>
+            }[;]
+
+        'named function expression':
+            <variable> = function <name>(<parameters>) {
+                <realization>
+            }[;]
+
+        'unnamed function expression'.
+            <variable> = function(<parameters>) {
+                <realization>
+            }[;]
+
+        'alias function':
+            <variable> = <name>(<parameters>)[;]
+
+        @param {string} text.
+        @param {jsCodeParser.jsDoc.JsDoc} jsDoc.
+        @param {(jsCodeParser.elements.Class|jsCodeParser.elements.Method)}
+                classConstructor.
+
+        @return {(jsCodeParser.elements.Class|jsCodeParser.elements.Method)}
+                Element.
+    """
+    parameters = extractTextBetweenTokens(text, '(')
+    end = text.find(parameters) + len(parameters)
+    realization = text[end:].strip()
+    if realization[0] == '{':
+        realization = extractTextBetweenTokens(realization, '{')
+        end = text.find(realization) + len(realization)
+    if text[end] == ';':
+        end += 1
+    code = text[:end].strip()
+    return classConstructor(code, jsDoc, path)
+
+
+def __extractClass(text, jsDoc, path):
+    """
+        Extracts class, which has JsDoc with '@constructor' tag.
+        Extracts its attributes and sets to class's structure.
+
+        @param {string} text.
+        @param {jsCodeParser.jsDoc.JsDoc} jsDoc.
+
+        @return {jsCodeParser.elements.Class} Class.
+    """
+    element = __extractFunction(text, jsDoc, Class, path)
+    attributes = __getElements(element.getRealization(), path)
+    element.setAttributes(attributes)
+    return element
+
+
+def __extractMethod(text, jsDoc, path):
+    """
+        Extracts method and its attributes.
+
+        @param {string} text.
+        @param {jsCodeParser.jsDoc.JsDoc} jsDoc.
+
+        @return {jsCodeParser.elements.Method} Method.
+    """
+    element = __extractFunction(text, jsDoc, Method, path)
+    realization = element.getRealization()
+    if realization:
+        attributes = __getElements(realization, path)
+        element.setAttributes(attributes)
+    return element
+
+
+def __extractInterface(text, jsDoc, path):
+    """
+        Delegates extraction of interface to __extractFunction method.
+
+        @param {string} text.
+        @param {jsCodeParser.jsDoc.JsDoc} jsDoc.
+
+        @return {jsCodeParser.elements.Interface} Interface.
+    """
+    return __extractFunction(text, jsDoc, Interface, path)
+
+
+def extractElements(project):
+    """
+        Gets elements from project files' code and adds it to project structure.
+
+        @param {project.Project} project.
+    """
+    for path in project.getPaths():
+        file = open(path, 'r')
+        code = file.read()
+        elements = __getElements(code, path)
+        for element in elements:
+            project.addElement(element)
+
+
+
+

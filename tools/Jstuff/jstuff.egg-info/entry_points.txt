@@ -1,0 +1,3 @@
+[console_scripts]
+jstuff = jstuff.jstuff:main
+
