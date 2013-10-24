@@ -49,10 +49,12 @@ all: index.js
 
 
 %-externs.js: %.jso
+	mkdir -p $(HEADERS_BUILD_PATH)
 	$(JS_HEADERS_EXTRACTOR) $< > $(HEADERS_BUILD_PATH)/$*.js; \
 
 
 %.js: %.jso %.jst
+	mkdir -p $(BUILD_PATH)
 	sed -e "/%%CONTENT%%/r $<" \
       -e "//d" `echo "$^" | cut -d " " -f2-` > $(BUILD_PATH)/$(@F)
 
