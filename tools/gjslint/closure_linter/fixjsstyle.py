@@ -22,9 +22,9 @@ import sys
 
 import gflags as flags
 
-from closure_linter import error_fixer
-from closure_linter import runner
-from closure_linter.common import simplefileflags as fileflags
+import error_fixer
+import runner
+from common import simplefileflags as fileflags
 
 FLAGS = flags.FLAGS
 flags.DEFINE_list('additional_extensions', None, 'List of additional file '

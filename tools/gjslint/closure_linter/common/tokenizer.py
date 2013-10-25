@@ -19,7 +19,7 @@
 __author__ = ('robbyw@google.com (Robert Walker)',
               'ajp@google.com (Andy Perelson)')
 
-from closure_linter.common import tokens
+from common import tokens
 
 # Shorthand
 Type = tokens.TokenType

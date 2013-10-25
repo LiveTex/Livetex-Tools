@@ -23,9 +23,9 @@ __author__ = ('nnaze@google.com (Nathan Naze)')
 
 import StringIO
 
-from closure_linter import ecmametadatapass
-from closure_linter import javascriptstatetracker
-from closure_linter import javascripttokenizer
+import ecmametadatapass
+import javascriptstatetracker
+import javascripttokenizer
 
 
 def TokenizeSource(source):

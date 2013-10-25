@@ -28,8 +28,8 @@ and comments/annotations must be maintained while sorting.
 
 
 
-from closure_linter import javascripttokens
-from closure_linter import tokenutil
+import javascripttokens
+import tokenutil
 
 # Shorthand
 Type = javascripttokens.JavaScriptTokenType

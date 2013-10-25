@@ -23,21 +23,21 @@ __author__ = ('robbyw@google.com (Robert Walker)',
 
 import re
 
-from closure_linter import checkerbase
-from closure_linter import ecmametadatapass
-from closure_linter import error_check
-from closure_linter import errorrules
-from closure_linter import errors
-from closure_linter import indentation
-from closure_linter import javascripttokens
-from closure_linter import javascripttokenizer
-from closure_linter import statetracker
-from closure_linter import tokenutil
-from closure_linter.common import error
-from closure_linter.common import htmlutil
-from closure_linter.common import lintrunner
-from closure_linter.common import position
-from closure_linter.common import tokens
+import checkerbase
+import ecmametadatapass
+import error_check
+import errorrules
+import errors
+import indentation
+import javascripttokens
+import javascripttokenizer
+import statetracker
+import tokenutil
+from common import error
+from common import htmlutil
+from common import lintrunner
+from common import position
+from common import tokens
 import gflags as flags
 
 FLAGS = flags.FLAGS

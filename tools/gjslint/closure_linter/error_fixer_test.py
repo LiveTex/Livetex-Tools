@@ -21,8 +21,8 @@
 
 
 import unittest as googletest
-from closure_linter import error_fixer
-from closure_linter import testutil
+import error_fixer
+import testutil
 
 
 class ErrorFixerTest(googletest.TestCase):

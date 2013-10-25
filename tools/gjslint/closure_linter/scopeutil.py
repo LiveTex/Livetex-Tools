@@ -22,9 +22,9 @@ __author__ = ('nnaze@google.com (Nathan Naze)')
 
 import itertools
 
-from closure_linter import ecmametadatapass
-from closure_linter import tokenutil
-from closure_linter.javascripttokens import JavaScriptTokenType
+import ecmametadatapass
+import tokenutil
+from javascripttokens import JavaScriptTokenType
 
 
 

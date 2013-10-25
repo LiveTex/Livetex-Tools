@@ -31,10 +31,10 @@ import unittest
 import gflags as flags
 import unittest as googletest
 
-from closure_linter import errors
-from closure_linter import error_check
-from closure_linter import runner
-from closure_linter.common import filetestcase
+import errors
+import error_check
+import runner
+from common import filetestcase
 
 _RESOURCE_PREFIX = 'closure_linter/testdata'
 

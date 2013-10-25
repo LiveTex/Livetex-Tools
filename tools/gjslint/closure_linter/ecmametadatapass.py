@@ -18,8 +18,8 @@
 
 __author__ = ('robbyw@google.com (Robert Walker)')
 
-from closure_linter import javascripttokens
-from closure_linter import tokenutil
+import javascripttokens
+import tokenutil
 
 
 TokenType = javascripttokens.JavaScriptTokenType

@@ -22,10 +22,10 @@ __author__ = ('nnaze@google.com (Nathan Naze)')
 
 import unittest as googletest
 
-from closure_linter import aliaspass
-from closure_linter import errors
-from closure_linter import testutil
-from closure_linter.common import erroraccumulator
+import aliaspass
+import errors
+import testutil
+from common import erroraccumulator
 
 
 def _GetTokenByLineAndString(start_token, string, line_number):

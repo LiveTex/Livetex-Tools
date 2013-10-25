@@ -18,9 +18,9 @@
 
 
 
-from closure_linter import javascripttokens
-from closure_linter import statetracker
-from closure_linter import tokenutil
+import javascripttokens
+import statetracker
+import tokenutil
 
 # Shorthand
 Type = javascripttokens.JavaScriptTokenType

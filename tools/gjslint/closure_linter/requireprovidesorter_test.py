@@ -19,9 +19,9 @@
 
 
 import unittest as googletest
-from closure_linter import javascripttokens
-from closure_linter import requireprovidesorter
-from closure_linter import testutil
+import javascripttokens
+import requireprovidesorter
+import testutil
 
 # pylint: disable=g-bad-name
 TokenType = javascripttokens.JavaScriptTokenType

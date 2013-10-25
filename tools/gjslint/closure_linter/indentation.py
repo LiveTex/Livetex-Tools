@@ -18,12 +18,12 @@
 
 __author__ = ('robbyw@google.com (Robert Walker)')
 
-from closure_linter import ecmametadatapass
-from closure_linter import errors
-from closure_linter import javascripttokens
-from closure_linter import tokenutil
-from closure_linter.common import error
-from closure_linter.common import position
+import ecmametadatapass
+import errors
+import javascripttokens
+import tokenutil
+from common import error
+from common import position
 
 import gflags as flags
 

@@ -1,42 +1,23 @@
 {
   "default": {
     "parser": {
-      "path": "/home/lera/Develop/livetex",
-      "description": "Livetex project",
+      "path": "PATH/TO/PROJECT",
+      "description": "DESCRIPTION",
       "files": ""
     },
     "docs": {
-      "out": "/home/lera/Develop/livetex/Livetex-Model/docs",
+      "out": "OUTPUT/PATH/FOR/DOCS",
       "hold_extension": true,
       "templates": {
-        "globalnamespace": "/etc/jstuff/templates/project.md",
-        "class": "/etc/jstuff/templates/class.md",
-        "namespace": "/etc/jstuff/templates/namespace.md",
-        "interface": "/etc/jstuff/templates/interface.md"
+        "globalnamespace": "PATH/TO/project.md",
+        "class": "PATH/TO/class.md",
+        "namespace": "PATH/TO/namespace.md",
+        "interface": "PATH/TO/interface.md"
       },
-      "root": "https://github.com/LiveTex/Livetex-Model/tree/master/docs"
+      "root": "PATH/OR/URL/TO/DOCS/ROOT"
     },
     "externs": {
-      "out": "/home/lera/Develop/livetex/externs"
-    }
-  },
-  "Node-Task-Router": {
-    "parser": {
-      "path": "/home/lera/Develop/livetex/Node-Task-Router",
-      "files": "/home/lera/Develop/livetex/Node-Task-Router/etc/index.d"
-    },
-    "externs": {
-      "out": "/home/lera/Develop/livetex/Node-Task-Router/externs.js"
-    }
-  },
-  "Node-Polina": {
-    "parser": {
-      "path": "/home/lera/Develop/livetex/Node-Polina",
-      "description": "Pure JS driver for Redis server and Beanstalk queue daemon.",
-      "files": "/home/lera/Develop/livetex/Node-Polina/src.d"
-    },
-    "externs": {
-      "out": "/home/lera/Develop/livetex/Node-Polina/externs.js"
+      "out": "OUTPUT/FOR/EXTERNS"
     }
   }
 }

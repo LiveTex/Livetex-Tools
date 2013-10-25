@@ -20,7 +20,7 @@ __author__ = ('robbyw@google.com (Robert Walker)',
               'ajp@google.com (Andy Perelson)')
 
 
-from closure_linter.common import errorhandler
+from common import errorhandler
 
 
 class ErrorAccumulator(errorhandler.ErrorHandler):

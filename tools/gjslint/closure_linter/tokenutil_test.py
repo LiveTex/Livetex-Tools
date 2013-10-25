@@ -22,10 +22,10 @@ __author__ = ('nnaze@google.com (Nathan Naze)')
 
 import unittest as googletest
 
-from closure_linter import ecmametadatapass
-from closure_linter import javascripttokens
-from closure_linter import testutil
-from closure_linter import tokenutil
+import ecmametadatapass
+import javascripttokens
+import testutil
+import tokenutil
 
 
 class FakeToken(object):

@@ -22,9 +22,9 @@ __author__ = ('robbyw@google.com (Robert Walker)',
 import copy
 import re
 
-from closure_linter import javascripttokens
-from closure_linter.common import matcher
-from closure_linter.common import tokenizer
+import javascripttokens
+from common import matcher
+from common import tokenizer
 
 # Shorthand
 Type = javascripttokens.JavaScriptTokenType

@@ -22,12 +22,12 @@ __author__ = ('nnaze@google.com (Nathan Naze)')
 
 import itertools
 
-from closure_linter import ecmametadatapass
-from closure_linter import errors
-from closure_linter import javascripttokens
-from closure_linter import scopeutil
-from closure_linter import tokenutil
-from closure_linter.common import error
+import ecmametadatapass
+import errors
+import javascripttokens
+import scopeutil
+import tokenutil
+from common import error
 
 
 # TODO(nnaze): Create a Pass interface and move this class, EcmaMetaDataPass,

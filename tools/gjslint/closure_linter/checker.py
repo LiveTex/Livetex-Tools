@@ -21,10 +21,10 @@ __author__ = ('robbyw@google.com (Robert Walker)',
 
 import gflags as flags
 
-from closure_linter import aliaspass
-from closure_linter import checkerbase
-from closure_linter import closurizednamespacesinfo
-from closure_linter import javascriptlintrules
+import aliaspass
+import checkerbase
+import closurizednamespacesinfo
+import javascriptlintrules
 
 
 flags.DEFINE_list('closurized_namespaces', '',

@@ -21,8 +21,8 @@ import StringIO
 
 import gflags as flags
 import unittest as googletest
-from closure_linter import error_fixer
-from closure_linter import runner
+import error_fixer
+import runner
 
 
 _RESOURCE_PREFIX = 'closure_linter/testdata'

@@ -19,8 +19,8 @@
 __author__ = ('robbyw@google.com (Robert Walker)',
               'ajp@google.com (Andy Perelson)')
 
-from closure_linter.common import position
-from closure_linter.common import tokens
+from common import position
+from common import tokens
 
 # Shorthand
 Token = tokens.Token

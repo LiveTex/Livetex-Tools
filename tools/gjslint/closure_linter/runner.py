@@ -24,15 +24,15 @@ import traceback
 
 import gflags as flags
 
-from closure_linter import checker
-from closure_linter import ecmametadatapass
-from closure_linter import errors
-from closure_linter import javascriptstatetracker
-from closure_linter import javascripttokenizer
+import checker
+import ecmametadatapass
+import errors
+import javascriptstatetracker
+import javascripttokenizer
 
-from closure_linter.common import error
-from closure_linter.common import htmlutil
-from closure_linter.common import tokens
+from common import error
+from common import htmlutil
+from common import tokens
 
 flags.DEFINE_list('limited_doc_files', ['dummy.js', 'externs.js'],
                   'List of files with relaxed documentation checks. Will not '

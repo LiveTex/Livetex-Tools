@@ -26,7 +26,7 @@ __author__ = ('robbyw@google.com (Robert Walker)',
 import re
 
 import unittest as googletest
-from closure_linter.common import erroraccumulator
+from common import erroraccumulator
 
 
 class AnnotatedFileTestCase(googletest.TestCase):

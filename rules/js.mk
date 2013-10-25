@@ -6,7 +6,9 @@ DEPS_PATH ?= ./node_modules
 CONFIG_PATH ?= ./etc
 INCLUDE_PATH ?= ./include
 
+
 TOOLS_HOME ?= $(shell pwd)/$(DEPS_PATH)/livetex-tools
+
 
 JS_ENVIRONMENT ?= node
 
@@ -18,7 +20,11 @@ JS_COMPILER ?= java -jar $(TOOLS_HOME)/tools/compiler.jar \
 JS_LINTER ?= $(TOOLS_HOME)/tools/gjslint/closure_linter/gjslint.py \
               --strict --custom_jsdoc_tags="namespace, event"
 
-JS_HEADERS_EXTRACTOR ?= $(TOOLS_HOME)/tools/externs-extractor
+JS_HEADERS_EXTRACTOR ?= $(TOOLS_HOME)/tools/Jstuff/jstuff/jstuff.py \
+              --config $(CONFIG_PATH)/config.json
+              --result externs
+
+
 
 
 vpath %.d $(CONFIG_PATH)
@@ -50,7 +56,7 @@ all: index.js
 
 %-externs.js: %.jso
 	mkdir -p $(HEADERS_BUILD_PATH)
-	$(JS_HEADERS_EXTRACTOR) $< > $(HEADERS_BUILD_PATH)/$*.js; \
+	$(JS_HEADERS_EXTRACTOR)
 
 
 %.js: %.jso %.jst

@@ -26,15 +26,15 @@ __author__ = ('robbyw@google.com (Robert Walker)',
 
 import re
 
-from closure_linter import ecmalintrules
-from closure_linter import error_check
-from closure_linter import errors
-from closure_linter import javascripttokenizer
-from closure_linter import javascripttokens
-from closure_linter import requireprovidesorter
-from closure_linter import tokenutil
-from closure_linter.common import error
-from closure_linter.common import position
+import ecmalintrules
+import error_check
+import errors
+import javascripttokenizer
+import javascripttokens
+import requireprovidesorter
+import tokenutil
+from common import error
+from common import position
 
 # Shorthand
 Error = error.Error
