@@ -61,6 +61,7 @@ all: index.js
 	mkdir -p $(BUILD_PATH)
 	sed -e "/%%CONTENT%%/r $<" \
       -e "//d" `echo "$^" | cut -d " " -f2-` > $(BUILD_PATH)/$(@F)
+	npm version build
 
 
 %.jso : %.d
