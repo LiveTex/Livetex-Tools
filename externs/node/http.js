@@ -24,7 +24,7 @@ http.Server = function() {};
 
 
 /**
- * @param {number} port
+ * @param {number|string} port
  * @param {string=} opt_host
  */
 http.Server.prototype.listen = function(port, opt_host) {};
