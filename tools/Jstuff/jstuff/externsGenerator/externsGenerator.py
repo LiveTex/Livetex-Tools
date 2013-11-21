@@ -105,8 +105,7 @@ def generateExterns():
         Generates externs.
     """
     for project in collector.getProjects():
-        config = project.getConfig()
-        out = config.getValueByPath('externs.out')
+        out = './externs/index.js'
         if os.path.exists(out):
             os.remove(out)
         file = open(out, 'w')

@@ -14,9 +14,9 @@ class Project:
         @attribute {{group: Array.<jsCodeParser.elements.Element>}} elements
                     Elements of project.
     """
-    def __init__(self, config):
-        self.config = config
-        self.globalNamespace = self.__defineGlobal(config)
+    def __init__(self, pathsFile):
+        self.pathsFile = pathsFile
+        self.globalNamespace = GlobalNamespace('', JsDoc(''), '', '')
         self.elements = {
             'all': [],
             'Namespace': [],
@@ -27,32 +27,17 @@ class Project:
             'Typedef': [],
             'Enumeration': [],
         }
-        self.paths = self.__definePaths()
 
-    def __defineGlobal(self, config):
-        jsDoc = JsDoc('')
-        name = config.getName()
-        description = config.getValueByPath('parser.description')
-        return GlobalNamespace('', jsDoc, name, description)
+    def getName(self):
+        return ''
 
-    def __definePaths(self):
-        config = self.config
-        projectPath = config.getValueByPath('parser.path')
-        file = open(config.getValueByPath('parser.files'), 'r')
+    def getPaths(self):
+        file = open(self.pathsFile, 'r')
         pathsList = file.read().splitlines()
-        paths = [projectPath + os.sep + 'lib' + os.sep + path
+        paths = ['lib' + os.sep + path
                  for path in pathsList if path]
         paths = getFiles(paths)
         return paths
-
-    def getName(self):
-        return self.config.getName()
-
-    def getConfig(self):
-        return self.config
-
-    def getPaths(self):
-        return self.paths
 
     def getGlobal(self):
         return self.globalNamespace
