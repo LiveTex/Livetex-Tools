@@ -29,11 +29,9 @@ vpath %.jst $(CONFIG_PATH)
 
 all: index-externs.js index.js
 
-publish:
-  index-externs.js
-  index.js
-  npm version patch
-  npm publish
+publish: index-externs.js index.js
+	npm version patch
+	npm publish
 
 %.js-run: %.js
 	node $(BUILD_PATH)/$<
@@ -63,7 +61,7 @@ publish:
 %.js: %.jso %.jst
 	mkdir -p $(BUILD_PATH)
 	sed -e "/%%CONTENT%%/r $<" \
-      -e "//d" `echo "$^" | cut -d " " -f2-` > $(BUILD_PATH)/$(@F)
+		-e "//d" `echo "$^" | cut -d " " -f2-` > $(BUILD_PATH)/$(@F)
 
 
 %.jso : %.d
