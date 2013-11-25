@@ -217,7 +217,7 @@ def __extractClass(text, jsDoc):
     realization = element.getRealization()
     if realization:
         attributes = [attribute for attribute in __getElements(realization)
-                      if not attribute.isPrivate()]
+                      if attribute.isPublic()]
         element.setAttributes(attributes)
     return element
 
@@ -235,7 +235,7 @@ def __extractMethod(text, jsDoc):
     realization = element.getRealization()
     if realization:
         attributes = [attribute for attribute in __getElements(realization)
-                      if not attribute.isPrivate()]
+                      if not attribute.isPublic()]
         element.setAttributes(attributes)
     return element
 

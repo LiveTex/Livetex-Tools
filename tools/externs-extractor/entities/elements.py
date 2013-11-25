@@ -250,6 +250,23 @@ class Property(Element):
     def __init__(self, code, jsDoc):
         Element.__init__(self, code, jsDoc)
 
+    def __getValue(self):
+        record = self.jsDoc.getRecordsByTag('@type')[0]
+        recordType = record.getType()
+        if 'Array' in recordType:
+            return '[]'
+        elif 'string' in recordType:
+            return "''"
+        else:
+            start = self.code.find('=') + 1
+            return self.code[start:].strip(' ;')
+
+    def getExterns(self):
+        end = self.code.find('=')
+        definition = self.code[:end]
+        value = self.__getValue()
+        return self.jsDoc.getText() + '\n' + definition + ' = ' + value + ';'
+
 
 class Typedef(Element):
     """

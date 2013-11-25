@@ -27,7 +27,7 @@ vpath %.d $(CONFIG_PATH)
 vpath %.jst $(CONFIG_PATH)
 
 
-all: index-externs.js index.js
+all: index.js index-externs.js
 
 publish: index-externs.js index.js
 	npm version patch
