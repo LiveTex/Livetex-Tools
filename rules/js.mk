@@ -20,15 +20,20 @@ JS_COMPILER ?= java -jar $(TOOLS_HOME)/tools/compiler.jar \
 JS_LINTER ?= $(TOOLS_HOME)/tools/gjslint/closure_linter/gjslint.py \
 		--strict --custom_jsdoc_tags="namespace, event"
 
-JS_HEADERS_EXTRACTOR ?= $(TOOLS_HOME)/tools/Jstuff/jstuff/jstuff.py
+JS_HEADERS_EXTRACTOR ?= $(TOOLS_HOME)/tools/externs-extractor/externsExtractor.py
 
 
 vpath %.d $(CONFIG_PATH)
 vpath %.jst $(CONFIG_PATH)
 
 
-all: index.js
+all: index-externs.js index.js
 
+publish:
+  index-externs.js
+  index.js
+  npm version patch
+  npm publish
 
 %.js-run: %.js
 	node $(BUILD_PATH)/$<
@@ -59,7 +64,6 @@ all: index.js
 	mkdir -p $(BUILD_PATH)
 	sed -e "/%%CONTENT%%/r $<" \
       -e "//d" `echo "$^" | cut -d " " -f2-` > $(BUILD_PATH)/$(@F)
-	npm version build
 
 
 %.jso : %.d

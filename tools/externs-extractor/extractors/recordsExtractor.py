@@ -1,7 +1,6 @@
 import re
 from utils import *
-from jsCodeParser.extractors.typesExtractor import extractType
-from jsCodeParser.record import Record
+from entities.record import Record
 
 
 def __extractTag(text):
@@ -73,15 +72,15 @@ def extractRecord(text):
     recordMap = {
         'type': {
             'extractor': __extractType,
-            'value': None
+            'value': ''
         },
         'name': {
             'extractor': __extractName,
-            'value': None
+            'value': ''
         },
         'description': {
             'extractor': __extractDescription,
-            'value': None
+            'value': ''
         }
     }
 
@@ -98,10 +97,6 @@ def extractRecord(text):
     typeExpression = recordMap['type']['value']
     name = recordMap['name']['value']
     description = recordMap['description']['value']
-
-    if typeExpression:
-        typeExpression = typeExpression[1:-1]
-        typeExpression = extractType(typeExpression)
 
     return Record(tag, typeExpression, name, description)
 

@@ -1,4 +1,4 @@
-from jsCodeParser.extractors.recordsExtractor import extractRecord
+from extractors.recordsExtractor import extractRecord
 from utils import *
 
 
@@ -14,9 +14,8 @@ class JsDoc:
     def __init__(self, text):
         self.original = text
         self.text = indentJsDoc(text)
-        self.records = self.__defineRecords()
 
-    def __defineRecords(self):
+    def getRecords(self):
         records = []
         jsDoc = self.text.strip('/* ').replace('\n', '')
         while '@' in jsDoc:
@@ -36,8 +35,8 @@ class JsDoc:
     def getOriginal(self):
         return self.original
 
-    def getRecords(self, tag=None):
-        records = self.records
+    def getRecordsByTag(self, tag=None):
+        records = self.getRecords()
         if tag:
             records = [record for record in records if record.getTag() == tag]
         return records
@@ -47,6 +46,12 @@ class JsDoc:
                  if '@' not in line]
         description = ' '.join(lines)
         return description
+
+    def getIndent(self):
+        text = self.original.strip(' \n')
+        end = text.find('*/')
+        start = text.rfind('\n')
+        return end - start - 2
 
     def isInheritDoc(self):
         if '@inheritDoc' in self.text:

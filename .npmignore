@@ -1,4 +1,4 @@
-.idea/
+.gitignore
 *.iml
-node_modules*
-bin
+.idea/
+

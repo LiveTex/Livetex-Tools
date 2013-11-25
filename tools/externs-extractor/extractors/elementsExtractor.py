@@ -1,9 +1,9 @@
 import re
-from jsCodeParser.elements import *
-from jsCodeParser.jsDoc import JsDoc
+from entities.elements import *
+from entities.jsDoc import JsDoc
 
 
-def __getElements(text, path):
+def __getElements(text):
     """
         Finds JsDocs and code of elements
 
@@ -18,7 +18,7 @@ def __getElements(text, path):
     while jsDoc:
         jsDocText = jsDoc.getOriginal()
         position = text.find(jsDocText, position) + len(jsDocText)
-        element = __extractElement(text[position:], jsDoc, path)
+        element = __extractElement(text[position:], jsDoc)
         elements.append(element)
         position = text.find(element.getCode(), position) + \
             len(element.getCode())
@@ -43,7 +43,7 @@ def __extractJsDoc(text):
     return None
 
 
-def __extractElement(text, jsDoc, path):
+def __extractElement(text, jsDoc):
     """
         Extracts an element, which has a certain JsDoc.
 
@@ -76,12 +76,12 @@ def __extractElement(text, jsDoc, path):
     if not extractor:
         extractor = __extractMethod
 
-    element = extractor(text, jsDoc, path)
+    element = extractor(text, jsDoc)
 
     return element
 
 
-def __extractNamespace(text, jsDoc, path):
+def __extractNamespace(text, jsDoc):
     """
         Extracts namespace, which has JsDoc with '@namespace' tag.
 
@@ -94,10 +94,10 @@ def __extractNamespace(text, jsDoc, path):
     if text[end] == ';':
         end += 1
     code = text[:end].strip()
-    return Namespace(code, jsDoc, path)
+    return Namespace(code, jsDoc)
 
 
-def __extractTypedef(text, jsDoc, path):
+def __extractTypedef(text, jsDoc):
     """
         Extracts typedef, which has JsDoc with '@typedef' tag.
 
@@ -108,10 +108,10 @@ def __extractTypedef(text, jsDoc, path):
     """
     end = findEnd(text)
     code = text[:end].strip()
-    return Typedef(code, jsDoc, path)
+    return Typedef(code, jsDoc)
 
 
-def __extractProperty(text, jsDoc, path):
+def __extractProperty(text, jsDoc):
     """
         Extracts property, which has JsDoc with '@type' tag.
 
@@ -120,6 +120,11 @@ def __extractProperty(text, jsDoc, path):
 
         @return {jsCodeParser.elements.Property} Property.
     """
+    recordType = jsDoc.getRecordsByTag('@type')[0].getType()
+    if recordType.find('function') + 1:
+        function = __extractFunction(text, jsDoc, Method)
+        if function:
+            return function
     eqPos = text.find('=')
     value = text[eqPos + 1:].strip()
     if value[0] in ['[', '{']:
@@ -133,11 +138,11 @@ def __extractProperty(text, jsDoc, path):
     if text[end] == ';':
         end += 1
     code = text[:end].strip()
-    element = Property(code, jsDoc, path)
+    element = Property(code, jsDoc)
     return element
 
 
-def __extractEnum(text, jsDoc, path):
+def __extractEnum(text, jsDoc):
     """
         Extracts enumeration, which has JsDoc with '@enum' tag.
 
@@ -151,10 +156,10 @@ def __extractEnum(text, jsDoc, path):
     if text[end] == ';':
         end += 1
     code = text[:end].strip()
-    return Enumeration(code, jsDoc, path)
+    return Enumeration(code, jsDoc)
 
 
-def __extractFunction(text, jsDoc, classConstructor, path):
+def __extractFunction(text, jsDoc, classConstructor):
     """
         Extracts a function depending of its pattern:
 
@@ -185,6 +190,8 @@ def __extractFunction(text, jsDoc, classConstructor, path):
                 Element.
     """
     parameters = extractTextBetweenTokens(text, '(')
+    if not parameters:
+        return None
     end = text.find(parameters) + len(parameters)
     realization = text[end:].strip()
     if realization[0] == '{':
@@ -193,10 +200,10 @@ def __extractFunction(text, jsDoc, classConstructor, path):
     if text[end] == ';':
         end += 1
     code = text[:end].strip()
-    return classConstructor(code, jsDoc, path)
+    return classConstructor(code, jsDoc)
 
 
-def __extractClass(text, jsDoc, path):
+def __extractClass(text, jsDoc):
     """
         Extracts class, which has JsDoc with '@constructor' tag.
         Extracts its attributes and sets to class's structure.
@@ -206,13 +213,16 @@ def __extractClass(text, jsDoc, path):
 
         @return {jsCodeParser.elements.Class} Class.
     """
-    element = __extractFunction(text, jsDoc, Class, path)
-    attributes = __getElements(element.getRealization(), path)
-    element.setAttributes(attributes)
+    element = __extractFunction(text, jsDoc, Class)
+    realization = element.getRealization()
+    if realization:
+        attributes = [attribute for attribute in __getElements(realization)
+                      if not attribute.isPrivate()]
+        element.setAttributes(attributes)
     return element
 
 
-def __extractMethod(text, jsDoc, path):
+def __extractMethod(text, jsDoc):
     """
         Extracts method and its attributes.
 
@@ -221,15 +231,16 @@ def __extractMethod(text, jsDoc, path):
 
         @return {jsCodeParser.elements.Method} Method.
     """
-    element = __extractFunction(text, jsDoc, Method, path)
+    element = __extractFunction(text, jsDoc, Method)
     realization = element.getRealization()
     if realization:
-        attributes = __getElements(realization, path)
+        attributes = [attribute for attribute in __getElements(realization)
+                      if not attribute.isPrivate()]
         element.setAttributes(attributes)
     return element
 
 
-def __extractInterface(text, jsDoc, path):
+def __extractInterface(text, jsDoc):
     """
         Delegates extraction of interface to __extractFunction method.
 
@@ -238,21 +249,18 @@ def __extractInterface(text, jsDoc, path):
 
         @return {jsCodeParser.elements.Interface} Interface.
     """
-    return __extractFunction(text, jsDoc, Interface, path)
+    return __extractFunction(text, jsDoc, Interface)
 
 
-def extractElements(project):
+def extractElements(path):
     """
         Gets elements from project files' code and adds it to project structure.
 
         @param {project.Project} project.
     """
-    for path in project.getPaths():
-        file = open(path, 'r')
-        code = file.read()
-        elements = __getElements(code, path)
-        for element in elements:
-            project.addElement(element)
+    file = open(path, 'r')
+    code = file.read()
+    return __getElements(code)
 
 
 
