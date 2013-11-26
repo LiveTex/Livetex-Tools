@@ -31,6 +31,7 @@ all: index.js index-externs.js
 
 publish: index-externs.js index.js
 	npm version patch
+	git push --tags
 	npm publish
 
 %.js-run: %.js
