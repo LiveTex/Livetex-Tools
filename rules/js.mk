@@ -34,7 +34,6 @@ install: index.js-clean index.js index-externs.js
 
 
 publish: install
-	git push origin $(npm version patch)
 	npm publish
 
 
