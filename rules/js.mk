@@ -30,12 +30,11 @@ vpath %.jst $(CONFIG_PATH)
 all: install
 
 
-install: index.js-clean index.js-check index.js index-externs.js
+install: index.js-clean index.js index-externs.js
 
 
 publish: install
-	npm version patch
-	git push origin $(shell git describe --tags)
+	git push origin $(npm version patch)
 	npm publish
 
 
