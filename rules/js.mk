@@ -30,12 +30,12 @@ vpath %.jst $(CONFIG_PATH)
 all: install
 
 
-install: index.js-clear index.js-check index.js index-externs.js
+install: index.js-clean index.js-check index.js index-externs.js
 
 
 publish: install
 	npm version patch
-	git push --tags
+	git tag -a < git describe --tags
 	npm publish
 
 
@@ -55,7 +55,7 @@ publish: install
 %.js-check: %.js-compile %.js-lint
 	
 
-%.js-clear:
+%.js-clean:
 	rm -rf $(BUILD_PATH)/*
 
 
