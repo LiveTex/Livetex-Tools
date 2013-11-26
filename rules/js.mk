@@ -35,7 +35,7 @@ install: index.js-clean index.js-check index.js index-externs.js
 
 publish: install
 	npm version patch
-	git tag -a < git describe --tags
+	git push origin $(shell git describe --tags)
 	npm publish
 
 
