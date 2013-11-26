@@ -29,13 +29,16 @@ vpath %.jst $(CONFIG_PATH)
 
 all: install
 
+
 install: index.js-check index.js index-externs.js
+
 
 publish:
   install
 	npm version patch
 	git push --tags
 	npm publish
+
 
 %.js-run: %.js
 	node $(BUILD_PATH)/$<
