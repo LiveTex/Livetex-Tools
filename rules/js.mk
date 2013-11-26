@@ -27,9 +27,12 @@ vpath %.d $(CONFIG_PATH)
 vpath %.jst $(CONFIG_PATH)
 
 
-all: index.js index-externs.js
+all: install
 
-publish: index-externs.js index.js
+install: index.js-check index.js index-externs.js
+
+publish:
+  install
 	npm version patch
 	git push --tags
 	npm publish
