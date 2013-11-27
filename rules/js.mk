@@ -20,7 +20,7 @@ JS_COMPILER ?= java -jar $(TOOLS_HOME)/tools/compiler.jar \
 JS_LINTER ?= $(TOOLS_HOME)/tools/gjslint/closure_linter/gjslint.py \
 		--strict --custom_jsdoc_tags="namespace, event"
 
-JS_HEADERS_EXTRACTOR ?= $(TOOLS_HOME)/tools/externs-extractor/externsExtractor.py
+JS_HEADERS_EXTRACTOR ?= python3 $(TOOLS_HOME)/tools/externs-extractor/externsExtractor.py
 
 
 vpath %.d $(CONFIG_PATH)
