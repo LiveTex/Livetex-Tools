@@ -47,15 +47,16 @@ publish: install
 
 
 %.js-lint: %.jso
-	 $(JS_LINTER) $^
+	$(JS_LINTER) $^
 
 
 %.js-check: %.js-compile %.js-lint
 	
 
 %.js-clean:
-	rm -rf $(BUILD_PATH)/*
-
+	if [ -e $(BUILD_PATH)/% ]; then \
+	rm -rf $(BUILD_PATH)/*; \
+	fi;
 
 %-externs.js: %.jso
 	mkdir -p $(HEADERS_BUILD_PATH)
@@ -65,12 +66,12 @@ publish: install
 %.js: %.jso %.jst
 	mkdir -p $(BUILD_PATH)
 	sed -e "/%%CONTENT%%/r $<" \
-		-e "//d" `echo "$^" | cut -d " " -f2-` > $(BUILD_PATH)/$(@F)
+	-e "//d" `echo "$^" | cut -d " " -f2-` > $(BUILD_PATH)/$(@F)
 
 
 %.jso : %.d
 	cat $(foreach FILE, $(shell cat $^ < /dev/null), \
-	    $(SOURCE_PATH)/$(FILE)) < /dev/null > $@
+	$(SOURCE_PATH)/$(FILE)) < /dev/null > $@
 
 
 %.jsh : %-headers.d
@@ -79,4 +80,4 @@ publish: install
 
 %-headers.d :
 	echo $(foreach DIR, $(DEPS_PATH)/*, $(wildcard $(DIR)/$(HEADERS_BUILD_PATH)/*.js) \
-	  $(wildcard $(DIR)/$(HEADERS_BUILD_PATH)/$(JS_ENVIRONMENT)/*.js)) > $@;
+	$(wildcard $(DIR)/$(HEADERS_BUILD_PATH)/$(JS_ENVIRONMENT)/*.js)) > $@;
