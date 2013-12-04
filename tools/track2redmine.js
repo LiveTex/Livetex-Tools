@@ -3,7 +3,25 @@
 var https = require('https');
 var http = require('http');
 var xml2js = require('../node_modules/xml2js');
-var util = require('../node_modules/node-util');
+
+
+// Util ------------------------------------------------------------------------
+
+/**
+ * Decodes special characters in url.
+ *
+ * @param {string} url URL-string.
+ * @return {string} Decoded string.
+ */
+unescape = function(url) {
+  try {
+    return decodeURIComponent(url);
+  } catch (error) {
+    console.error('Malformed url: "' + url + '". [unescape]');
+  }
+
+  return '';
+};
 
 
 // Async -----------------------------------------------------------------------
@@ -317,7 +335,7 @@ function getYouTrackIssues(project, complete, cancel) {
         });
 
         res.on('end', function() {
-          xml2js.parseString(util.unescape(issues), function (err, result) {
+          xml2js.parseString(unescape(issues), function (err, result) {
             if (err) {
               cancel(err);
             } else {
