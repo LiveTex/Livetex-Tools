@@ -28,14 +28,10 @@ unescape = function(url) {
 
 
 /**
- * @typedef {function(*, !Function, function(string, number=))}
- */
-TaskFunction;
-
-
-/**
- * @param {!TaskFunction} handler Задача обработки данных.
- * @return {!TaskFunction} Задача генерации и обработки.
+ * @param {!function(*, !Function, function(string, number=))} handler
+ * Задача обработки данных.
+ * @return {!function(*, !Function, function(string, number=))}
+ * Задача генерации и обработки.
  */
 each = function (handler) {
   return function(array, complete, cancel) {
@@ -64,8 +60,10 @@ each = function (handler) {
 
 
 /**
- * @param {!Array.<!TaskFunction>} tasks Набор задач.
- * @return {!TaskFunction} Задача парралельного исполнения.
+ * @param {!Array.<!function(*, !Function, function(string, number=))>} tasks
+ * Набор задач.
+ * @return {!function(*, !Function, function(string, number=))}
+ * Задача парралельного исполнения.
  */
 collect = function(tasks) {
   return function(data, complete, cancel) {
