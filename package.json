@@ -3,6 +3,7 @@
   "version": "0.1.8",
 
   "dependencies": {
+    "node-util": "*",
     "xml2js": "0.4.0"
   }
 }
