@@ -10,8 +10,14 @@ var util = require('../node_modules/node-util');
 
 
 /**
- * @param {!async.TaskFunction} handler Задача обработки данных.
- * @return {!async.TaskFunction} Задача генерации и обработки.
+ * @typedef {function(*, !Function, function(string, number=))}
+ */
+TaskFunction;
+
+
+/**
+ * @param {!TaskFunction} handler Задача обработки данных.
+ * @return {!TaskFunction} Задача генерации и обработки.
  */
 each = function (handler) {
   return function(array, complete, cancel) {
@@ -40,8 +46,8 @@ each = function (handler) {
 
 
 /**
- * @param {!Array.<!async.TaskFunction>} tasks Набор задач.
- * @return {!async.TaskFunction} Задача парралельного исполнения.
+ * @param {!Array.<!TaskFunction>} tasks Набор задач.
+ * @return {!TaskFunction} Задача парралельного исполнения.
  */
 collect = function(tasks) {
   return function(data, complete, cancel) {
