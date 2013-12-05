@@ -1,4 +1,5 @@
 
+
 SOURCE_PATH ?= ./lib
 BUILD_PATH ?= ./bin
 HEADERS_BUILD_PATH ?= ./externs
@@ -54,8 +55,8 @@ publish: install
 	
 
 %.js-clean:
-	if [ -e $(BUILD_PATH)/% ]; then \
-	rm -rf $(BUILD_PATH)/*; \
+	if [ -e $(BUILD_PATH)/$*.js ]; then \
+	rm -rf $(BUILD_PATH)/$*.js; \
 	fi;
 
 %-externs.js: %.jso
