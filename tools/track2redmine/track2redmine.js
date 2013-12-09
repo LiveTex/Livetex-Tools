@@ -338,7 +338,9 @@ function getYouTrackIssues(project, complete, cancel) {
               cancel(err);
             } else {
               var issues = result['issueCompacts']['issue'];
-              complete(serializeYouTrackIssuesData(issues));
+              if (issues !== undefined) {
+                complete(serializeYouTrackIssuesData(issues));
+              }
             }
           });
         });
