@@ -2,7 +2,7 @@
 (function() {
   var xml2js;
 
-  xml2js = require('xml2js');
+  xml2js = require('./xml2js.js');
 
   exports.stripBOM = function(str) {
     if (str[0] === '\uFEFF') {
