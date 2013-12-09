@@ -248,11 +248,11 @@ def findEnd(text):
     minimum = min(semicolonPos, newlinePos)
     maximum = max(semicolonPos, newlinePos)
     if minimum != -1:
-        end = minimum
+        end = minimum + 1
     elif maximum != -1:
-        end = maximum
+        end = maximum + 1
     else:
-        end = textEnd
+        end = textEnd + 1
     return end
 
 
@@ -369,16 +369,16 @@ def cutExtension(path):
     return path[:position]
 
 
-def addIntend(text, intend):
+def addIndent(text, indent):
     """
         @param {string} text
-        @param {number} intend
+        @param {number} indent
         @return {string}
     """
     result = ''
     lines = text.splitlines()
     for line in lines:
-        result += ' ' * intend
+        result += ' ' * indent
         result += line
         result += '\n'
     return result
@@ -408,6 +408,6 @@ def indentJsDoc(text):
         lines = text.splitlines()
         result = lines[0] + '\n'
         for line in lines[1:]:
-            result += addIntend(line, 1)
+            result += addIndent(line, 1)
     result = result.strip('\n ')
     return result
