@@ -248,11 +248,13 @@ def findEnd(text):
     minimum = min(semicolonPos, newlinePos)
     maximum = max(semicolonPos, newlinePos)
     if minimum != -1:
-        end = minimum + 1
+        end = minimum
     elif maximum != -1:
-        end = maximum + 1
+        end = maximum
     else:
-        end = textEnd + 1
+        end = textEnd
+    if end != textEnd:
+        end += 1
     return end
 
 
