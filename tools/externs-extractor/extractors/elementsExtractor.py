@@ -21,7 +21,7 @@ def __getElements(text):
         element = __extractElement(text[position:], jsDoc)
         elements.append(element)
         position = text.find(element.getCode(), position) + \
-            len(element.getCode())
+                   len(element.getCode())
         jsDoc = __extractJsDoc(text[position:])
     return elements
 
@@ -135,7 +135,7 @@ def __extractProperty(text, jsDoc):
         end = text.find(value) + len(value)
     else:
         end = text.find(value) + findEnd(value)
-    if text[end] == ';':
+    if end != len(text) and text[end] == ';':
         end += 1
     code = text[:end].strip()
     element = Property(code, jsDoc)

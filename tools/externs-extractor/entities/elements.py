@@ -47,7 +47,7 @@ class Element:
         jsDoc = self.jsDoc.getText()
         externs = jsDoc + '\n' + self.code + '\n'
         indent = self.jsDoc.getIndent()
-        externs = addIntend(externs, indent)
+        externs = addIndent(externs, indent)
         return externs
 
     def isPublic(self):
@@ -125,14 +125,16 @@ class Constructor(Element):
         realization = '{'
         attributes = self.attributes
         if attributes:
+            realization += '\n'
             for attribute in attributes:
-                realization += '\n'
-                attributeExterns = attribute.getExterns()
+                attributeExterns = '\n'
+                attributeExterns += attribute.getExterns()
+                attributeExterns += '\n'
                 realization += attributeExterns
         realization += '};\n'
         externs = self.jsDoc.getText() + '\n' + definition + realization
         indent = self.jsDoc.getIndent()
-        externs = addIntend(externs, indent)
+        externs = addIndent(externs, indent)
         return externs
 
     def getParameters(self):
@@ -251,21 +253,15 @@ class Property(Element):
         Element.__init__(self, code, jsDoc)
 
     def __getValue(self):
-        record = self.jsDoc.getRecordsByTag('@type')[0]
-        recordType = record.getType()
-        if 'Array' in recordType:
-            return '[]'
-        elif 'string' in recordType:
-            return "''"
-        else:
-            start = self.code.find('=') + 1
-            return self.code[start:].strip(' ;')
+        start = self.code.find('=') + 1
+        return self.code[start:].strip(' ;')
 
     def getExterns(self):
         end = self.code.find('=')
-        definition = self.code[:end]
-        value = self.__getValue()
-        return self.jsDoc.getText() + '\n' + definition + ' = ' + value + ';'
+        definition = self.code[:end].strip(' \n')
+        externs = self.jsDoc.getText() + '\n' + definition + ';'
+        indent = self.jsDoc.getIndent()
+        return addIndent(externs, indent)
 
 
 class Typedef(Element):

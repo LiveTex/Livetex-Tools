@@ -2,7 +2,7 @@
 
 var https = require('https');
 var http = require('http');
-var xml2js = require('../node_modules/xml2js');
+var xml2js = require('./xml2js/lib/xml2js.js');
 
 
 // Util ------------------------------------------------------------------------
@@ -338,7 +338,9 @@ function getYouTrackIssues(project, complete, cancel) {
               cancel(err);
             } else {
               var issues = result['issueCompacts']['issue'];
-              complete(serializeYouTrackIssuesData(issues));
+              if (issues !== undefined) {
+                complete(serializeYouTrackIssuesData(issues));
+              }
             }
           });
         });
