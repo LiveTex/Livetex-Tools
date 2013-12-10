@@ -23,6 +23,8 @@ JS_LINTER ?= $(TOOLS_HOME)/tools/gjslint/closure_linter/gjslint.py \
 JS_HEADERS_EXTRACTOR ?= python3 $(TOOLS_HOME)/tools/externs-extractor/externsExtractor.py
 
 
+
+
 vpath %.d $(CONFIG_PATH)
 vpath %.jst $(CONFIG_PATH)
 
@@ -37,8 +39,8 @@ publish: install
 	npm version patch && npm publish && git push
 
 
-%.js-run: %.js
-	node $(BUILD_PATH)/$<
+test-%: %.js
+	node --eval "require('$(BUILD_PATH)/$^').test.run('$(prefix)', '$(names)'.split(/\s*,\s*/))"
 
 
 %.js-compile: %.jso %.jsh
@@ -46,8 +48,8 @@ publish: install
 	               --externs `echo "$^" | cut -d " " -f2-`
 
 
-%.js-lint: %.jso
-	$(JS_LINTER) $^
+%.js-lint: %.js
+	 $(JS_LINTER) $^
 
 
 %.js-check: %.js-compile %.js-lint
