@@ -41,7 +41,7 @@ publish: install
 
 
 test-%: %.js
-	node --eval "require('$(BUILD_PATH)/$^').test.run('$(prefix)', '$(names)'.split(/\s*,\s*/))"
+	node --eval "require('$(BUILD_PATH)/$^').test.run('$(names)')"
 
 
 %.js-compile: %.jso %.jsh
