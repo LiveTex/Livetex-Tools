@@ -10,7 +10,7 @@
     "bindings",
     "gyp"
   ],
-  "version": "0.12.1",
+  "version": "0.11.0",
   "installVersion": 9,
   "author": {
     "name": "Nathan Rajlich",
@@ -49,6 +49,6 @@
   "bugs": {
     "url": "https://github.com/TooTallNate/node-gyp/issues"
   },
-  "_id": "node-gyp@0.12.1",
-  "_from": "node-gyp"
+  "_id": "node-gyp@0.11.0",
+  "_from": "node-gyp@0.11.0"
 }
