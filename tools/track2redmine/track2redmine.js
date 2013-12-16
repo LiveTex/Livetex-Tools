@@ -257,7 +257,7 @@ function checkDoubledIssues(issues) {
     for (var k = 0; k < doubledIssues.length; k++) {
       console.log(doubledIssues[k]['id'], ':', doubledIssues[k]['ticket']);
     }
-    process.exit()
+    process.exit();
   }
 }
 
@@ -394,7 +394,12 @@ function getRedmineIssue(ticket, complete, cancel) {
     });
 
     res.on('end', function() {
-      complete(serializeRedmineIssueData(JSON.parse(issue)));
+      try {
+        complete(serializeRedmineIssueData(JSON.parse(issue)));
+      } catch (error) {
+        cancel('Hey! Here is some shit!:', error,
+            'it seems your ticket', ticket, 'doesn\'t exists!');
+      }
     })
 
   });
