@@ -4,8 +4,8 @@ SOURCE_PATH ?= ./lib
 BUILD_PATH ?= ./bin
 HEADERS_BUILD_PATH ?= ./externs
 DEPS_PATH ?= ./node_modules
-CONFIG_PATH ?= ./etc/build
 INCLUDE_PATH ?= ./include
+CONFIG_PATH = $(shell test -d etc/build && echo etc/build || echo ./etc)
 
 
 TOOLS_HOME ?= $(shell pwd)/$(DEPS_PATH)/livetex-tools

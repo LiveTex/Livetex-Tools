@@ -29,7 +29,10 @@ def main():
                       dest="output",
                       help="Input path to externs file.")
     (options, args) = parser.parse_args()
-    paths = getPaths(options.input)
+    indexdpaths = options.input
+    if not os.path.exists(indexdpaths):
+        indexdpaths = './etc/index.d'
+    paths = getPaths(indexdpaths)
     out = options.output
     externs = ''
     if os.path.exists(out):
