@@ -20,7 +20,7 @@ def main():
     parser = OptionParser(usage)
     parser.add_option("-i", "--input",
                       action="store",
-                      default='./etc/index.d',
+                      default='./etc/bin/index.d',
                       dest="input",
                       help="Input path to file with project files.")
     parser.add_option("-o", "--out",
