@@ -1,4 +1,8 @@
 {
   "name": "livetex-tools",
-  "version": "0.1.13"
+  "version": "0.1.13",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LiveTex/Livetex-Tools"
+  }
 }
