@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 
 import os
 from optparse import OptionParser
@@ -20,7 +20,7 @@ def main():
     parser = OptionParser(usage)
     parser.add_option("-i", "--input",
                       action="store",
-                      default='./etc/index.d',
+                      default='./etc/build/index.d',
                       dest="input",
                       help="Input path to file with project files.")
     parser.add_option("-o", "--out",
@@ -29,7 +29,10 @@ def main():
                       dest="output",
                       help="Input path to externs file.")
     (options, args) = parser.parse_args()
-    paths = getPaths(options.input)
+    indexdpaths = options.input
+    if not os.path.exists(indexdpaths):
+        indexdpaths = './etc/index.d'
+    paths = getPaths(indexdpaths)
     out = options.output
     externs = ''
     if os.path.exists(out):
