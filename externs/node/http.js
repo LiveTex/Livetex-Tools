@@ -109,3 +109,11 @@ http.ServerResponse.prototype.write = function(chunk, opt_encode) {};
  * @type {number}
  */
 http.ServerResponse.prototype.statusCode = 200;
+
+
+/**
+ * @type {!Object}
+ */
+http.ServerResponse.prototype.headers;
+
+
