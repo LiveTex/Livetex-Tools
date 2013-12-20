@@ -39,7 +39,7 @@ publish: install
 
 
 test-%: %.js
-	node --eval "require('$(BUILD_PATH)/$^').test.run('$(names)', '$(ns)' || 'test')"
+	node --eval "require('$(BUILD_PATH)/$^').test.run('$(names)')"
 
 
 %.js-compile: %.jso %.jsh
