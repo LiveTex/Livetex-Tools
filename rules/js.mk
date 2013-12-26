@@ -47,8 +47,9 @@ test-%: %.js
 	               --externs `echo "$^" | cut -d " " -f2-`
 
 
-%.js-lint: %.js
-	 $(JS_LINTER) $^
+%.js-lint: %.d
+	$(JS_LINTER) $(foreach FILE, \
+	$(shell cat $^ < /dev/null), $(SOURCE_PATH)/$(FILE))
 
 
 %.js-check: %.js-compile %.js-lint
