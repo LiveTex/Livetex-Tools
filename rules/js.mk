@@ -42,12 +42,10 @@ test-%: %.js
 	node --eval "require('$(BUILD_PATH)/$^').test.run('$(names)')"
 
 
-check-%: %.js-compile %.js-lint
 
-
-%.js-compile: %.jso %.jsh
+%.js-compile: %.jso %.jsh %.js-lint
 	$(JS_COMPILER) --js $< \
-	               --externs `echo "$^" | cut -d " " -f2-`
+	               --externs `echo "$^" | cut -d " " -f2`
 
 
 %.js-lint: %.d
