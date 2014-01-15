@@ -41,7 +41,7 @@ def main():
     for path in paths:
         elements = extractElements(path)
         for element in elements:
-            if not element.isPrivate():
+            if not element.isPrivate() and not element.isTest():
                 externs += element.getExterns()
                 externs += '\n\n'
         externs += '\n'

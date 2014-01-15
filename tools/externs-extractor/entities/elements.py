@@ -70,6 +70,11 @@ class Element:
         else:
             return False
 
+    def isTest(self):
+        words = self.getName().split('.')
+        if len(words) > 1 and words[1][:4] == 'test':
+            return True
+        return False
 
 class Namespace(Element):
     """
