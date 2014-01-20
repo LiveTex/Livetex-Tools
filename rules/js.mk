@@ -35,7 +35,7 @@ install: index.js-clean index.js index-externs.js
 
 
 publish: install
-	npm version patch && npm publish && git push
+	npm version patch && npm login && npm publish && git push
 
 
 test-%: %.js
