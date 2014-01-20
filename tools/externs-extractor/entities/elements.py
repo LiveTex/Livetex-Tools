@@ -34,6 +34,15 @@ class Element:
         name = name.strip('.')
         return name
 
+    def getParentNane(self):
+        name = self.getName()
+        if 'prototype' in name:
+            name = name.split('prototype')[0]
+        elif '.' in name:
+            name = name[:name.rfind('.')]
+        name = name.strip('.')
+        return name
+
     def getDescription(self):
         return self.description
 
@@ -73,6 +82,18 @@ class Element:
     def isTest(self):
         words = self.getName().split('.')
         return len(words) > 1 and words[1][:4] == 'test'
+
+    def isExcluded(self, alreadyExcluded):
+        records = self.jsDoc.getRecordsByTag(tag='@excluded')
+        if len(records) > 0:
+            return True
+        else:
+            parentName = self.getParentNane()
+            for excludedElement in alreadyExcluded:
+                if excludedElement.getName() == parentName:
+                    return True
+        return False
+
 
 class Namespace(Element):
     """
