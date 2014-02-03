@@ -1,6 +1,8 @@
 
 
 
+
+
 /**
  * @param {string} namespace
  * @return {!Object}
@@ -24,3 +26,8 @@ var module = {};
  * @namespace
  */
 module.exports = {};
+
+/**
+ * @type {string}
+ */
+__dirname;
