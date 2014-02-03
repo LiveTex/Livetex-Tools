@@ -30,4 +30,4 @@ module.exports = {};
 /**
  * @type {string}
  */
-__dirname;
+__dirname = '';
