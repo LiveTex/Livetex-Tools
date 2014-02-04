@@ -1,8 +1,31 @@
 {
   "name": "livetex-tools",
-  "version": "0.1.23",
+
+  "version": "1.0.0",
+
   "repository": {
     "type": "git",
     "url": "https://github.com/LiveTex/Livetex-Tools"
-  }
+  },
+
+  "license": "Modified BSD License",
+
+  "contributors": [
+    {
+      "name": "Sergey Kononenko",
+      "email": "kononencheg@gmail.com"
+    },
+    {
+      "name": "Evgeny Mikheev",
+      "email": "eudgee@gmail.com"
+    },
+    {
+      "name": "Maxim Kalachev",
+      "email": "kalachevmax@gmail.com"
+    },
+    {
+      "name": "Valeria Lepina",
+      "email": "divergence082@gmail.com"
+    }
+  ]
 }
