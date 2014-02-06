@@ -38,15 +38,9 @@ def main():
     if os.path.exists(out):
         os.remove(out)
     file = open(out, 'w')
-    excluded = []
     for path in paths:
-        elements = extractElements(path)
-        for element in elements:
-            if element.isExcluded(excluded):
-                excluded.append(element)
-            elif not element.isPrivate() and \
-                    not element.isTest() and \
-                    not element.isExcluded(excluded):
+        for element in extractElements(path):
+            if not (element.isPrivate() or element.isTest()):
                 externs += element.getExterns()
                 externs += '\n\n'
         externs += '\n'

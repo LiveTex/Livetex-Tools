@@ -34,7 +34,7 @@ class Element:
         name = name.strip('.')
         return name
 
-    def getParentNane(self):
+    def getParentName(self):
         name = self.getName()
         if 'prototype' in name:
             name = name.split('prototype')[0]
@@ -73,26 +73,15 @@ class Element:
             return False
 
     def isPrivate(self):
-        name = self.getShortName()
-        if name[:2] == '__':
-            return True
-        else:
-            return False
+        nameParts = self.getName().split('.')
+        for part in nameParts:
+            if part[:2] == '__':
+                return True
+        return False
 
     def isTest(self):
         words = self.getName().split('.')
         return len(words) > 1 and words[1][:4] == 'test'
-
-    def isExcluded(self, alreadyExcluded):
-        records = self.jsDoc.getRecordsByTag(tag='@excluded')
-        if len(records) > 0:
-            return True
-        else:
-            parentName = self.getParentNane()
-            for excludedElement in alreadyExcluded:
-                if excludedElement.getName() == parentName:
-                    return True
-        return False
 
 
 class Namespace(Element):
