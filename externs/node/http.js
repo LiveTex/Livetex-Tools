@@ -72,6 +72,13 @@ http.ServerRequest.prototype.pause = function() {};
 
 
 /**
+ * @param {string} event Событие.
+ * @param {function(!Object)} callback Обработчик результата.
+ */
+http.ServerRequest.prototype.on = function(event, callback) {};
+
+
+/**
  * @constructor
  * @extends {events.EventEmitter}
  */
