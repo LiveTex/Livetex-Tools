@@ -3,6 +3,14 @@ from entities.elements import *
 from entities.jsDoc import JsDoc
 
 
+class externsError(Exception):
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return repr(self.value)
+
+
 def __getElements(text):
     """
         Finds JsDocs and code of elements
@@ -19,9 +27,16 @@ def __getElements(text):
         jsDocText = jsDoc.getOriginal()
         position = text.find(jsDocText, position) + len(jsDocText)
         element = __extractElement(text[position:], jsDoc)
+        # print '>>', position, text[position]
+        # try:
+        #     element.getExterns()
+        # except PositionError:
+        #     position += 1
+        # else:
         elements.append(element)
         position = text.find(element.getCode(), position) + \
                    len(element.getCode())
+        # print '>>>', position, text[position]
         jsDoc = __extractJsDoc(text[position:])
     return elements
 

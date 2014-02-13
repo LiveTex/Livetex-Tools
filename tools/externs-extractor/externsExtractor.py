@@ -42,12 +42,12 @@ def main():
                       help="Input path to file to get externs.")
     parser.add_option("-o", "--output",
                       action="store",
-                      default='./externs/index.js',
+                      default=os.getcwd() + os.sep + 'externs/index.js',
                       dest="output",
                       help="Input path to externs file.")
     parser.add_option("-s", "--settings",
                       action="store",
-                      default='./etc/build/content.d',
+                      default=os.getcwd() + os.sep + 'etc/build/content.d',
                       dest="settings",
                       help="Input path to file with project files.")
     (options, args) = parser.parse_args()
