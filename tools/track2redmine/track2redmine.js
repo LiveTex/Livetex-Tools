@@ -109,7 +109,7 @@ collect = function(tasks) {
  */
 function youTrackLogin(complete, cancel) {
 
-  var data = 'login=root&password=123123';
+  var data = 'login=root&password=SmetubViaraivHeolCerAmBijnenOgfivBaikyaryonweitjusimkaceujviddUj';
 
   var options = {
     hostname: 'youtrack.livetex.ru',
