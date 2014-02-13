@@ -65,7 +65,7 @@ test-%: %.js
 
 %-externs.js: %.js
 	mkdir -p $(HEADERS_BUILD_PATH)
-	$(JS_HEADERS_EXTRACTOR)
+	$(JS_HEADERS_EXTRACTOR) -i $^
 
 
 %.js: %.jst
