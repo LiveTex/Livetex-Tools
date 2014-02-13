@@ -277,7 +277,7 @@ function filterYouTrackIssues(issues) {
     if ((issue['sprint'] == sprintNumber) &&
         (issue['ticket'] !== undefined) &&
         ((issue['status'] === 'In Progress') ||
-            (issue['status'] === 'In Testing') ||
+            (issue['status'] === 'Ready') ||
             (issue['status'] === 'Done'))) {
       filteredIssues.push(issue);
     }
@@ -495,7 +495,7 @@ function getRedmineStatusObject(status, complete, cancel) {
 function mapStatus(status) {
   var map = {
     'In Progress': 'В работе',
-    'In Testing': 'Решена',
+    'Ready': 'Решена',
     'Done': 'Проверено'
   };
   return map[status];
