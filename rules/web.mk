@@ -23,12 +23,13 @@ vpath %.d $(CONFIG_PATH)
 vpath %.jst $(CONFIG_PATH)
 
 
-%.js-compile: %.js-lint %.jso
-	$(JS_COMPILER) --js $(BUILD_PATH)/$^
+%.js-compile: %.jso %.jst
+	$(foreach FILE, $(shell cat $(CONFIG_PATH)/*.jso < /dev/null), $(JS_COMPILER) --js $(CONFIG_PATH)/$(FILE))
+	$(TEMPLATER) %.jst
 
 
 %.js-lint: %.jso
-	$(JS_LINTER) $(foreach FILE, $(shell cat $(CONFIG_PATH)/$^ < /dev/null), $(FILE))
+	$(JS_LINTER) $(foreach FILE, $(shell cat $(CONFIG_PATH)/$< < /dev/null), $(FILE))
 	rm $(CONFIG_PATH)/*.jso
 
 
