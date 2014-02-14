@@ -27,16 +27,9 @@ def __getElements(text):
         jsDocText = jsDoc.getOriginal()
         position = text.find(jsDocText, position) + len(jsDocText)
         element = __extractElement(text[position:], jsDoc)
-        # print '>>', position, text[position]
-        # try:
-        #     element.getExterns()
-        # except PositionError:
-        #     position += 1
-        # else:
         elements.append(element)
         position = text.find(element.getCode(), position) + \
                    len(element.getCode())
-        # print '>>>', position, text[position]
         jsDoc = __extractJsDoc(text[position:])
     return elements
 
