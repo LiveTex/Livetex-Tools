@@ -21,15 +21,17 @@ ENV_EXTERNS_PATH  ?= $(TOOLS_PATH)/externs
 # TOOLS ########################################################################
 
 
-JS_COMPILER ?= java -jar $(TOOLS_HOME)/tools/compiler.jar \
+JS_COMPILER ?= java -jar $(TOOLS_PATH)/tools/compiler.jar \
                 --warning_level     VERBOSE \
                 --language_in       ECMASCRIPT5_STRICT \
 
-JS_LINTER ?= $(TOOLS_HOME)/tools/gjslint/closure_linter/gjslint.py \
+JS_LINTER ?= $(TOOLS_PATH)/tools/gjslint/closure_linter/gjslint.py \
 		            --strict \
 		            --custom_jsdoc_tags "namespace, event"
 
-JS_EXTERNS_EXTRACTOR ?= $(TOOLS_HOME)/tools/externs-extractor/externsExtractor.py
+JS_EXTERNS_EXTRACTOR ?= $(TOOLS_PATH)/tools/externs-extractor/externsExtractor.py
+
+JS_TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
 
 
 # ENVIRONMENT ##################################################################
@@ -101,7 +103,7 @@ vpath %.jst $(CONFIG_PATH)
 
 
 %.js-assemble: %.jst
-	sed -e 's/%%\(.*\)%%/$(shell $(shell cat $^ < /dev/null | grep -m 1 -o '%%\(.*\)%%' | grep -o '[^%]*' ))/' $^
+	@$(JS_TEMPLATER) $< > $(SOURCES_PATH)/$(shell basename $< | cut -d "." -f 1).js
 
 
 ################################################################################
