@@ -101,8 +101,7 @@ vpath %.jst $(CONFIG_PATH)
 
 
 %.js-assemble: %.jst
-	@$(foreach LINE, $(shell cat $^ | grep -o '%%\(.*\)%%' | grep -o '[^%]*'), $(LINE))
-
+	sed -e 's/%%\(.*\)%%/$(shell $(shell cat $^ < /dev/null | grep -m 1 -o '%%\(.*\)%%' | grep -o '[^%]*' ))/' $^
 
 
 ################################################################################
