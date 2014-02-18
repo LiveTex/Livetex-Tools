@@ -77,9 +77,9 @@ vpath %.jst $(CONFIG_PATH)/templates
 
 %.js-extract-externs: %.d
 	@mkdir -p $(EXTERNS_PATH)
-	$(JS_EXTERNS_EXTRACTOR) \
+	@$(JS_EXTERNS_EXTRACTOR) \
 	$(foreach FILE, $(shell cat $^), \
-	$(SOURCES_PATH)/$(FILE)) > $(EXTERNS_PATH)/$%.js
+	$(SOURCES_PATH)/$(FILE)) > $(EXTERNS_PATH)/$(shell echo $@ | cut -d '-' -f 1)
 
 
 %.js-assemble: %.jst

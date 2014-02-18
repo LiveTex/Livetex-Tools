@@ -137,12 +137,13 @@ def __extractProperty(text, jsDoc):
         @return {jsCodeParser.elements.Property} Property.
     """
     recordType = jsDoc.getRecordsByTag('@type')[0].getType()
-    if recordType.find('function') + 1:
+    if recordType.strip('?!.').find('function') == 0:
         function = __extractFunction(text, jsDoc, Method)
         if function:
             return function
     eqPos = text.find('=')
     value = text[eqPos + 1:].strip()
+
     if value[0] in ['[', '{']:
         value = extractTextBetweenTokens(value, value[0])
         end = text.find(value) + len(value)
@@ -153,6 +154,7 @@ def __extractProperty(text, jsDoc):
         end = text.find(value) + findEnd(value)
     if end != len(text) and text[end] == ';':
         end += 1
+
     code = text[:end].strip()
     element = Property(code, jsDoc)
     return element
