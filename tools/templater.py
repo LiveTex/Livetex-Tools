@@ -18,18 +18,23 @@ def addIndent(text, indent):
     return indentedText
 
 
-file = open(sys.argv[1], 'r')
-text = file.read()
-file.close()
+def main():
+    file = open(sys.argv[1], 'r')
+    text = file.read()
+    file.close()
 
-match = re.search('(\%\%.+\%\%)', text)
-
-while match:
-    tag = match.group(0)
-    cmd = tag.strip('%')
-    insertion = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-    insertion = addIndent(insertion, getIndent(text, match.start()))
-    text = text.replace(tag, insertion)
     match = re.search('(\%\%.+\%\%)', text)
 
-print text
+    while match:
+        tag = match.group(0)
+        cmd = tag.strip('%')
+        insertion = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+        insertion = addIndent(insertion, getIndent(text, match.start()))
+        text = text.replace(tag, insertion)
+        match = re.search('(\%\%.+\%\%)', text)
+
+    print text
+
+
+if __name__ == "__main__":
+    main()

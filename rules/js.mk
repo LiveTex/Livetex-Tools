@@ -23,7 +23,7 @@ ENV_EXTERNS_PATH  ?= $(TOOLS_PATH)/externs
 
 JS_COMPILER ?= java -jar $(TOOLS_PATH)/tools/compiler.jar \
                 --warning_level     VERBOSE \
-                --language_in       ECMASCRIPT5_STRICT \
+                --language_in       ECMASCRIPT5_STRICT
 
 JS_LINTER ?= $(TOOLS_PATH)/tools/gjslint/closure_linter/gjslint.py \
 		            --strict \
@@ -52,8 +52,12 @@ vpath %.jst $(CONFIG_PATH)/templates
 ################################################################################
 
 
-%.js-headers: %.js-env-headers %.js-custom-headers
+%.jsh: %.js-env-headers %.js-custom-headers %.js-headers
 	@cat `cat $^ < /dev/null` > $@
+
+
+%.js-headers:
+	@echo $(foreach DIR, $(MODULES_PATH)/*, $(wildcard $(DIR)/externs/*.js)) > $@
 
 
 %.js-custom-headers:
@@ -79,7 +83,7 @@ vpath %.jst $(CONFIG_PATH)/templates
 	@mkdir -p $(EXTERNS_PATH)
 	@$(JS_EXTERNS_EXTRACTOR) \
 	$(foreach FILE, $(shell cat $^), \
-	$(SOURCES_PATH)/$(FILE)) > $(EXTERNS_PATH)/$(shell echo $@ | cut -d '-' -f 1)
+	$(SOURCES_PATH)/$(FILE)) > $(EXTERNS_PATH)/$(shell echo $@ | cut -d '.' -f 1).js
 
 
 %.js-assemble: %.jst
@@ -89,63 +93,20 @@ vpath %.jst $(CONFIG_PATH)/templates
 # COMPILATIONS #################################################################
 
 
+%.js-advanced-compile: %.d %.jsh
+	$(JS_COMPILER) \
+	--formatting PRETTY_PRINT \
+	--compilation_level ADVANCED_OPTIMIZATIONS \
+	--js $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE)) \
+	--externs $(shell echo "$^" | cut -d " " -f 2)
+
+
+%.js-compress-compile: %.d %.jsh
+	@$(JS_COMPILER) \
+	--js $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE)) \
+	--externs $(shell echo "$^" | cut -d " " -f 2)
+
+
 %.js-raw-compile: %.d
-	@cat $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
-
-
-%.js-compile: %.d
-	$(JS_COMPILER) --formatting PRETTY_PRINT \
-	--js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
-
-
-%.js-compress-compile: %.d
-	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
-
-
-# COMPILATIONS WITH EXTERNS ####################################################
-
-
-%.js-externs-compile: %.js-extract-externs %.d
-	$(JS_COMPILER) --formatting PRETTY_PRINT \
-	--js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE)) \
-	--externs $(EXTERNS_PATH)/$%.js
-
-
-%.js-externs-compress-compile: %.js-extract-externs %.d
-	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $^), \
-	$(SOURCES_PATH)/$(FILE)) --externs $(EXTERNS_PATH)/$%.js
-
-
-# COMPILATIONS WITH HEADERS ####################################################
-
-
-%.js-headers-compile: %.js-headers %.d
-	$(JS_COMPILER) --formatting PRETTY_PRINT \
-	--js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
-
-
-%.js-headers-compress-compile: %.js-headers %.d
-	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
-
-
-%.js-headers-externs-compile: %.d
-	$(JS_COMPILER) --formatting PRETTY_PRINT \
-	--js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE)) \
-	--externs $(EXTERNS_PATH)/$%.js
-
-
-%.js-headers-externs-compress-compile: %.js-headers %.d
-	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $^), \
-	$(SOURCES_PATH)/$(FILE)) --externs $(EXTERNS_PATH)/$%.js
-
-
-################################################################################
-# GENERAL RULES
-################################################################################
-
-
-#make
-#make check
-#make build
-#make clean
+	@cat $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE))
 

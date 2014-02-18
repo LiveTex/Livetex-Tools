@@ -1,0 +1,49 @@
+# COMPILATIONS WITH EXTERNS ####################################################
+
+
+%.js-externs-compile: %.d %.js-extract-externs %.js-raw-compile
+	$(JS_COMPILER) --formatting PRETTY_PRINT \
+	--js $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE)) \
+	--externs $(EXTERNS_PATH)/$(shell echo $@ | cut -d '-' -f 1)
+
+
+%.js-externs-compress-compile: %.d %.js-extract-externs
+	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $<), \
+	$(SOURCES_PATH)/$(FILE)) \
+	--externs $(EXTERNS_PATH)/$(shell echo $@ | cut -d '-' -f 1)
+
+
+# COMPILATIONS WITH HEADERS ####################################################
+
+
+%.js-headers-compile: %.d %.js-headers
+	$(JS_COMPILER) --formatting PRETTY_PRINT \
+	--js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
+
+
+%.js-headers-compress-compile: %.d %.js-headers
+	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
+
+
+#%.js-headers-externs-compile: %.js-headers %.js-extract-externs
+#  $(JS_COMPILER) --formatting PRETTY_PRINT \
+#	--js $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE)) \
+#	--externs $< \
+#	--externs $(EXTERNS_PATH)/$(shell echo $@ | cut -d '-' -f 1)
+
+
+%.js-headers-externs-compress-compile: %.d %.js-headersb
+	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $^), \
+	$(SOURCES_PATH)/$(FILE)) --externs $(EXTERNS_PATH)/$(shell echo $@ | cut -d '-' -f 1)
+
+
+################################################################################
+# GENERAL RULES
+################################################################################
+
+
+#make
+#make check
+#make build
+#make clean
+

@@ -215,7 +215,7 @@ def __extractFunction(text, jsDoc, classConstructor):
     if realization[0] == '{':
         realization = extractTextBetweenTokens(realization, '{')
         end = text.find(realization) + len(realization)
-    if text[end] == ';':
+    if end < len(text) and text[end] == ';':
         end += 1
     code = text[:end].strip()
     return classConstructor(code, jsDoc)
