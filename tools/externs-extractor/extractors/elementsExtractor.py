@@ -26,12 +26,20 @@ def __getElements(text):
     while jsDoc:
         jsDocText = jsDoc.getOriginal()
         position = text.find(jsDocText, position) + len(jsDocText)
-        element = __extractElement(text[position:], jsDoc)
-        elements.append(element)
-        position = text.find(element.getCode(), position) + \
-                   len(element.getCode())
+        if __checkJsDoc(text, jsDocText):
+            element = __extractElement(text[position:], jsDoc)
+            elements.append(element)
+            position = text.find(element.getCode(), position) + \
+                       len(element.getCode())
         jsDoc = __extractJsDoc(text[position:])
     return elements
+
+
+def __checkJsDoc(text, jsDoc):
+    index = text.find(jsDoc) + len(jsDoc)
+    if ord(text[index]) == ord(text[index + 1]) == 10:
+        return False
+    return True
 
 
 def __extractJsDoc(text):

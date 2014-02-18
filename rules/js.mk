@@ -43,28 +43,30 @@ JS_ENVIRONMENT ?= node
 # PREREQUISITES PATHS ##########################################################
 
 
-vpath %.d $(CONFIG_PATH)
-vpath %.jst $(CONFIG_PATH)
-
-
-################################################################################
-# RULES FOR FILES
-################################################################################
-
-## ПОДУМАТЬ!!!!!!!!!!!!!!!
-
-
-%.js-headers: %.js-env
-	cat `cat $^ < /dev/null` $(wildcard $(INCLUDE_PATH)/*.js) < /dev/null > $@
-
-
-%.js-env:
-	echo $(foreach DIR, $(DEPS_PATH)/*, $(wildcard $(DIR)/$(EXTERNS_PATH)/*.js) \
-	$(wildcard $(DIR)/$(EXTERNS_PATH)/$(JS_ENVIRONMENT)/*.js)) > $@;
+vpath %.d $(CONFIG_PATH)/sources-lists
+vpath %.jst $(CONFIG_PATH)/templates
 
 
 ################################################################################
 # AUX RULES
+################################################################################
+
+
+%.js-headers: %.js-env-headers %.js-custom-headers
+	@cat `cat $^ < /dev/null` > $@
+
+
+%.js-custom-headers:
+	@echo $(foreach DIR, $(INCLUDES_PATH), $(wildcard $(DIR)/*.js)) > $@
+
+
+%.js-env-headers:
+	@echo $(foreach DIR, $(ENV_EXTERNS_PATH)/$(JS_ENVIRONMENT), \
+	$(wildcard $(DIR)/*.js)) > $@
+
+
+################################################################################
+# MAIN RULES
 ################################################################################
 
 
@@ -74,8 +76,17 @@ vpath %.jst $(CONFIG_PATH)
 
 
 %.js-extract-externs: %.d
+	@mkdir -p $(EXTERNS_PATH)
 	$(JS_EXTERNS_EXTRACTOR) \
-	$(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE)) > $(EXTERNS_PATH)/$%.js
+	$(foreach FILE, $(shell cat $^), \
+	$(SOURCES_PATH)/$(FILE)) > $(EXTERNS_PATH)/$%.js
+
+
+%.js-assemble: %.jst
+	@$(JS_TEMPLATER) $< > $(SOURCES_PATH)/$(shell basename $< | cut -d "." -f 1).js
+
+
+# COMPILATIONS #################################################################
 
 
 %.js-raw-compile: %.d
@@ -91,19 +102,41 @@ vpath %.jst $(CONFIG_PATH)
 	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
 
 
-%.js-externs-compile: %.d
+# COMPILATIONS WITH EXTERNS ####################################################
+
+
+%.js-externs-compile: %.js-extract-externs %.d
 	$(JS_COMPILER) --formatting PRETTY_PRINT \
 	--js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE)) \
 	--externs $(EXTERNS_PATH)/$%.js
 
 
-%.js-externs-compress-compile: %.d
-	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE)) \
+%.js-externs-compress-compile: %.js-extract-externs %.d
+	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $^), \
+	$(SOURCES_PATH)/$(FILE)) --externs $(EXTERNS_PATH)/$%.js
+
+
+# COMPILATIONS WITH HEADERS ####################################################
+
+
+%.js-headers-compile: %.js-headers %.d
+	$(JS_COMPILER) --formatting PRETTY_PRINT \
+	--js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
+
+
+%.js-headers-compress-compile: %.js-headers %.d
+	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
+
+
+%.js-headers-externs-compile: %.d
+	$(JS_COMPILER) --formatting PRETTY_PRINT \
+	--js $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE)) \
 	--externs $(EXTERNS_PATH)/$%.js
 
 
-%.js-assemble: %.jst
-	@$(JS_TEMPLATER) $< > $(SOURCES_PATH)/$(shell basename $< | cut -d "." -f 1).js
+%.js-headers-externs-compress-compile: %.js-headers %.d
+	$(JS_COMPILER) --js $(foreach FILE, $(shell cat $^), \
+	$(SOURCES_PATH)/$(FILE)) --externs $(EXTERNS_PATH)/$%.js
 
 
 ################################################################################
