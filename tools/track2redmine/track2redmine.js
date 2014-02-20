@@ -398,7 +398,7 @@ function getRedmineIssue(ticket, complete, cancel) {
         complete(serializeRedmineIssueData(JSON.parse(issue)));
       } catch (error) {
         cancel('Hey! Here is some shit!:', error,
-            'it seems your ticket', ticket, 'doesn\'t exist!');
+            'it seems your ticket', ticket, 'doesn\'t exist! Check up issue');
       }
     })
 
@@ -523,7 +523,11 @@ function update(youTrackIssue, complete, cancel) {
         }, cancel);
       }
     }
-  }, cancel)
+  }, function(error) {
+    var issueError = 'Houston! We have problems with issue ' +
+        youTrackIssue['id'] + ' ERROR: ' + error;
+    cancel(issueError);
+  })
 }
 
 // General ---------------------------------------------------------------------
