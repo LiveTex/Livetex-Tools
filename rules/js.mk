@@ -45,11 +45,15 @@ JS_ENVIRONMENT ?= node
 
 vpath %.d $(CONFIG_PATH)/sources-lists
 vpath %.jst $(CONFIG_PATH)/templates
+vpath %.js $(BUILD_PATH)
 
 
 ################################################################################
 # AUX RULES
 ################################################################################
+
+
+# HEADERS ######################################################################
 
 
 %.jsh: %.js-env-headers %.js-custom-headers %.js-headers
@@ -69,44 +73,89 @@ vpath %.jst $(CONFIG_PATH)/templates
 	$(wildcard $(DIR)/*.js)) > $@
 
 
+# COMPILATIONS #################################################################
+
+
+%.js-compile: %.d
+	@cat $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE))
+
+
+%.js-compile-compressed: %.d
+	@$(JS_COMPILER) \
+	--js        $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE)) \
+
+
+# COMPILATIONS WITH EXTERNS ####################################################
+
+
+%.js-externs-compile: %.d %.jsh
+	$(JS_COMPILER) \
+	--formating PRETTY_PRINT \
+	--js        $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE)) \
+	--externs   $(shell echo "$^" | cut -d " " -f 2)
+
+
+%.js-externs-compile-compressed: %.d %.jsh
+	@$(JS_COMPILER) \
+	--js        $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE)) \
+	--externs   $(shell echo "$^" | cut -d " " -f 2)
+
+
+# ADVANCED COMPILATION #########################################################
+
+
+%.js-externs-compile-advanced: %.d %.jsh
+	$(JS_COMPILER) \
+	--compilation_level ADVANCED_OPTIMIZATIONS \
+	--js        $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE)) \
+	--externs   $(shell echo "$^" | cut -d " " -f 2)
+
+
 ################################################################################
 # MAIN RULES
 ################################################################################
 
 
 %.js-lint: %.d
-	$(JS_LINTER) \
-	$(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
+	$(JS_LINTER) $(foreach FILE, $(shell cat $^), $(SOURCES_PATH)/$(FILE))
 
 
-%.js-extract-externs: %.d
-	@mkdir -p $(EXTERNS_PATH)
-	@$(JS_EXTERNS_EXTRACTOR) \
-	$(foreach FILE, $(shell cat $^), \
-	$(SOURCES_PATH)/$(FILE)) > $(EXTERNS_PATH)/$(shell echo $@ | cut -d '.' -f 1).js
+%.js-check: %.jst
+	@$(JS_TEMPLATER) -a True $< > /dev/null
 
 
 %.js-assemble: %.jst
-	@$(JS_TEMPLATER) $< > $(SOURCES_PATH)/$(shell basename $< | cut -d "." -f 1).js
+	@$(JS_TEMPLATER) $< > \
+	$(SOURCES_PATH)/$(shell basename $< | cut -d "." -f 1).js
 
 
-# COMPILATIONS #################################################################
+%.js-extract-externs: %.js
+	@mkdir -p $(EXTERNS_PATH)
+	@$(JS_EXTERNS_EXTRACTOR) $^ > \
+	$(EXTERNS_PATH)/$(shell echo $@ | cut -d '.' -f 1).js
 
 
-%.js-advanced-compile: %.d %.jsh
-	$(JS_COMPILER) \
-	--formatting PRETTY_PRINT \
-	--compilation_level ADVANCED_OPTIMIZATIONS \
-	--js $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE)) \
-	--externs $(shell echo "$^" | cut -d " " -f 2)
+################################################################################
+# GENERAL RULES
+################################################################################
 
 
-%.js-compress-compile: %.d %.jsh
-	@$(JS_COMPILER) \
-	--js $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE)) \
-	--externs $(shell echo "$^" | cut -d " " -f 2)
+lint:
+	@$(foreach DFILE, $(shell cat $(CONFIG_PATH)/content.lint), \
+	make -s $(shell echo $(DFILE) | cut -d '.' -f 1).js-lint)
 
 
-%.js-raw-compile: %.d
-	@cat $(foreach FILE, $(shell cat $<), $(SOURCES_PATH)/$(FILE))
+check: lint
+	@$(foreach TEMPLATE, $(CONFIG_PATH)/templates/*, make -s $(shell echo \
+	$(TEMPLATE) | rev | cut -d '/' -f 1 | rev | cut -d '.' -f 1).js-check)
 
+
+build: check
+	@mkdir -p $(BUILD_PATH)
+	@$(foreach TEMPLATE, $(CONFIG_PATH)/templates/*, make -s $(shell echo \
+	$(TEMPLATE) | rev | cut -d '/' -f 1 | rev | cut -d '.' -f 1).js-assemble > \
+	$(BUILD_PATH)/$(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
+	cut -d '.' -f 1).js)
+	@$(foreach TEMPLATE, $(CONFIG_PATH)/templates/*, make -s $(shell echo \
+	$(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
+	cut -d '.' -f 1).js-extract-externs)
