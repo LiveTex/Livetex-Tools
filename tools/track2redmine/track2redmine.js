@@ -397,8 +397,8 @@ function getRedmineIssue(ticket, complete, cancel) {
       try {
         complete(serializeRedmineIssueData(JSON.parse(issue)));
       } catch (error) {
-        cancel('Hey! Here is some shit!:', error,
-            'it seems your ticket', ticket, 'doesn\'t exist! Check up issue');
+        cancel('Hey! Here is some shit!: ' + error + ' it seems your ticket ' +
+            ticket + ' doesn\'t exist! Check up issue');
       }
     })
 
