@@ -1,4 +1,4 @@
 *.iml
-__*
+__pycache__
 *.pyc
 .idea/
