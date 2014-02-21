@@ -1,18 +1,36 @@
 
 
 /**
- * @enum {string}
+ * @type {string}
  */
-var LivetexSettings = {};
+var LTX_URL;
+
+
+/**
+ * @type {boolean}
+ */
+var LTX_IS_API;
+
+
+/**
+ * @type {{HTTP_BALANCER: string}}
+ */
+var LivetexSettings;
 
 
 /**
  * @type {!Object}
  */
-var LiveTex = {};
+var LiveTex;
 
 
 /**
- * @type {!boolean}
+ * @type {{buttons: Array}}
  */
-var LTX_IS_API;
+window.liveSettings = {'buttons': []};
+
+
+/**
+ * @type {!Function}
+ **/
+LiveTex.on;

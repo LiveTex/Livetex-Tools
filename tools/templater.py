@@ -58,7 +58,7 @@ def assemble(templateText):
 
 
 def main():
-    usage = "usage: templater [--a advanced]"
+    usage = "usage: templater [--a advanced -d dfiles] template"
     parser = OptionParser(usage)
     parser.add_option("-a", "--advanced",
                       action="store",
@@ -73,9 +73,6 @@ def main():
                       help="Whether to get only names of required for template "
                            "d-filed or not")
     (options, args) = parser.parse_args()
-    file = open('args.txt', 'w')
-    file.write('ARGS: ' + str(args))
-    file.close()
 
     templatePath = args[0]
     templateText = getTemplateText(templatePath)
