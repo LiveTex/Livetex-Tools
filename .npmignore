@@ -1,5 +1,5 @@
 *.iml
-__*
 *.pyc
 .gitignore
 .idea/
+__pycache__/
