@@ -17,7 +17,7 @@ JS_BUILD_PATH       ?= $(PROJECT_PATH)/public/js
 JS_EXTERNS_PATH     ?= $(PROJECT_PATH)/externs
 JS_SOURCES_PATH     ?= $(PROJECT_PATH)/lib
 CSS_BUILD_PATH      ?= $(PROJECT_PATH)/public/css
-CSS_SOURCES_PATH    ?= $(CSS_BUILD_PATH)
+CSS_SOURCES_PATH    ?= $(PROJECT_PATH)/styles
 MODULES_PATH        ?= $(PROJECT_PATH)/node_modules
 TOOLS_PATH          ?= $(MODULES_PATH)/livetex-tools
 ENV_EXTERNS_PATH    ?= $(TOOLS_PATH)/externs
@@ -26,7 +26,7 @@ ENV_EXTERNS_PATH    ?= $(TOOLS_PATH)/externs
 # TOOLS ########################################################################
 
 
-CSS_COMPILER ?= java -jar $(TOOLS_HOME)/tools/closure-stylesheets.jar
+CSS_COMPILER ?= java -jar $(TOOLS_PATH)/tools/closure-stylesheets.jar
 
 
 TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
@@ -41,8 +41,8 @@ JS_ENVIRONMENT ?= browser
 # PREREQUISITES PATHS ##########################################################
 
 
-vpath %.cssd  $(SOURCES_LISTS_PATH)/css
 vpath %.csst  $(TEMPLATES_PATH)/css
+vpath %.cssd  $(SOURCES_LISTS_PATH)/css
 vpath %.css   $(CSS_BUILD_PATH)
 
 
@@ -55,7 +55,7 @@ vpath %.css   $(CSS_BUILD_PATH)
 
 
 %.css-compile: %.cssd
-  $(CSS_COMPILER) $(shell cat $<)
+	$(CSS_COMPILER) $(foreach FILE, $(shell cat $<), $(CSS_SOURCES_PATH)/$(FILE))
 
 
 ################################################################################
@@ -89,7 +89,7 @@ css-build: css-clean
 
 
 css-clean:
-  @#rm -rf $(CSS_BUILD_PATH)
-  @rm $(shell find $(CSS_BUILD_PATH) -maxdepth 1 \
-  -not -name mobile-invite.css -not -name css)
-  @echo $@: DONE
+	@#rm -rf $(CSS_BUILD_PATH)
+	@rm -rf $(shell find $(CSS_BUILD_PATH) -maxdepth 1 \
+	-not -name mobile-invite.css -not -name css)
+	@echo $@: DONE

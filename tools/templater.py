@@ -37,6 +37,16 @@ def addIndent(text, indent):
     return indentedText
 
 
+def interpretSimple(templateText):
+    templateText = templateText.replace('.js-compile-compressed ',
+                                        '.js-compile ')
+    templateText = templateText.replace('.js-externs-compile-compressed ',
+                                        '.js-compile ')
+    templateText = templateText.replace('.js-externs-compile-advanced ',
+                                        '.js-compile ')
+    return templateText
+
+
 def interpretAdvanced(templateText):
     templateText = templateText.replace('.js-externs-compile ',
                                         '.js-externs-compile-advanced ')
@@ -66,6 +76,12 @@ def main():
                       dest="advanced",
                       help="Whether to interpret commands for advanced "
                            "compilation mode or not")
+    parser.add_option("-s", "--simple",
+                      action="store",
+                      default=False,
+                      dest="simple",
+                      help="Whether to interpret commands for simple "
+                           "compilation mode or not")
     parser.add_option("-d", "--dFiles",
                       action="store",
                       default=False,
@@ -77,12 +93,15 @@ def main():
     templatePath = args[0]
     templateText = getTemplateText(templatePath)
 
-    if options.advanced:
-        templateText = interpretAdvanced(templateText)
-
     if options.dFiles:
         print getDFilesList(templateText)
     else:
+        if options.advanced:
+            templateText = interpretAdvanced(templateText)
+
+        if options.simple:
+            templateText = interpretSimple(templateText)
+
         print assemble(templateText)
 
 

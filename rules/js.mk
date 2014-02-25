@@ -50,9 +50,9 @@ JS_ENVIRONMENT ?= node
 # PREREQUISITES PATHS ##########################################################
 
 
-vpath %.jst $(TEMPLATES_PATH)/js
-vpath %.jsd $(SOURCES_LISTS_PATH)/js
-vpath %.js  $(JS_BUILD_PATH)
+vpath %.jst   $(TEMPLATES_PATH)/js
+vpath %.jsd   $(SOURCES_LISTS_PATH)/js
+vpath %.js    $(JS_BUILD_PATH)
 
 
 ################################################################################
@@ -63,12 +63,19 @@ vpath %.js  $(JS_BUILD_PATH)
 # HEADERS ######################################################################
 
 
+%.jso: %.jst
+	@mkdir -p $(JS_EXTERNS_PATH)
+	@$(TEMPLATER) -s True $< > \
+	$(shell echo $(JS_EXTERNS_PATH)/$(shell basename $<) | cut -d '.' -f 1).jso
+
+
 %.jsh: %.js-env-headers %.js-custom-headers %.js-headers
 	@cat `cat $^ < /dev/null` > $@
 
 
 %.js-headers:
-	@echo $(foreach DIR, $(MODULES_PATH)/*, $(wildcard $(DIR)/externs/*.js)) > $@
+	@echo $(foreach DIR, $(wildcard $(MODULES_PATH)/*), \
+	$(wildcard $(DIR)/externs/*.js)) > $@
 
 
 %.js-custom-headers:
@@ -89,23 +96,16 @@ vpath %.js  $(JS_BUILD_PATH)
 
 %.js-compile-compressed: %.jsd
 	@$(JS_COMPILER) \
-	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
+	--js          $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
 
 
-# COMPILATIONS WITH EXTERNS ####################################################
+# COMPRESSED COMPILATIONS ######################################################
 
 
-%.js-externs-compile: %.jsd %.jsh
-	$(JS_COMPILER) \
-	--formating PRETTY_PRINT \
-	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs   $(shell echo "$^" | cut -d " " -f 2)
-
-
-%.js-externs-compile-compressed: %.jsd%.jsh
+%.js-externs-compile-compressed: %.jsd %.jsh
 	@$(JS_COMPILER) \
-	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs   $(shell echo "$^" | cut -d " " -f 2)
+	--js          $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
+	--externs     $(shell echo "$^" | cut -d " " -f 2)
 
 
 # ADVANCED COMPILATION #########################################################
@@ -114,8 +114,8 @@ vpath %.js  $(JS_BUILD_PATH)
 %.js-externs-compile-advanced: %.jsd %.jsh
 	$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
-	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs   $(shell echo "$^" | cut -d " " -f 2)
+	--js          $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
+	--externs     $(shell echo "$^" | cut -d " " -f 2)
 
 
 ################################################################################
@@ -133,14 +133,15 @@ vpath %.js  $(JS_BUILD_PATH)
 
 %.js-assemble: %.jst
 	@mkdir -p $(JS_BUILD_PATH)
-	$(TEMPLATER) $< > \
+	@$(TEMPLATER) $< > \
 	$(shell echo $(JS_BUILD_PATH)/$(shell basename $<) | cut -d '.' -f 1).js
 
 
-%.js-extract-externs: %.js
+%.js-extract-externs: %.jso
 	@mkdir -p $(JS_EXTERNS_PATH)
-	@$(JS_EXTERNS_EXTRACTOR) $^ > \
+	@$(JS_EXTERNS_EXTRACTOR) $(JS_EXTERNS_PATH)/$^ > \
 	$(JS_EXTERNS_PATH)/$(shell echo $@ | cut -d '.' -f 1).js
+	@rm $(JS_EXTERNS_PATH)/$^
 
 
 ################################################################################
@@ -159,24 +160,25 @@ js-lint:
 
 
 js-check: js-lint
-	@$(foreach TEMPLATE, $(TEMPLATES_PATH)/js/*, make -s $(shell echo \
-	$(TEMPLATE) | rev | cut -d '/' -f 1 | rev | cut -d '.' -f 1).js-check)
+	@$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
+	$(call $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
+	cut -d '.' -f 1).js-check))
 	@echo $@: DONE
 
 
 js-clean:
 	@rm -rf $(JS_BUILD_PATH) $(JS_EXTERNS_PATH)
-	@rm -rf $(shell find $(MODULES_PATH) -maxdepth 1 \
-	-not -name livetex-tools -not -name node_modules)
 	@echo $@: DONE
 
 
 js-build: js-clean js-check
 	@mkdir -p $(JS_BUILD_PATH)
-	@$(foreach TEMPLATE, $(TEMPLATES_PATH)/js/*, make -s $(shell echo \
-	$(TEMPLATE) | rev | cut -d '/' -f 1 | rev | cut -d '.' -f 1).js-assemble)
-	@$(foreach TEMPLATE, $(TEMPLATES_PATH)/js/*, make -s $(shell echo \
-	$(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
+	@$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
+	$(shell make -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
+	cut -d '.' -f 1).js-assemble))
+
+	@#$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
+	make -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
 	cut -d '.' -f 1).js-extract-externs)
 	@echo $@: DONE
 
