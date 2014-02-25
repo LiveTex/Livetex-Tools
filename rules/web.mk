@@ -89,7 +89,7 @@ css-build: css-clean
 
 
 css-clean:
-	@#rm -rf $(CSS_BUILD_PATH)
+	@#rm -rf $(wildcard $(CSS_BUILD_PATH)/*.css)
 	@rm -rf $(shell find $(CSS_BUILD_PATH) -maxdepth 1 \
 	-not -name mobile-invite.css -not -name css)
 	@echo $@: DONE

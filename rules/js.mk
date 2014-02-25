@@ -149,37 +149,49 @@ vpath %.js    $(JS_BUILD_PATH)
 ################################################################################
 
 
-js: js-clean js-check js-build
+js: js-build js-externs
 	@echo $@: DONE
 
 
 js-lint:
 	@$(foreach DFILE, $(shell cat $(CONFIG_PATH)/js.lint), \
 	make -s $(shell echo $(DFILE) | cut -d '.' -f 1).js-lint > /dev/null)
+	@if [ ! -f $(CONFIG_PATH)/js.lint ] ; then \
+	$(foreach DFILE, $(wildcard $(SOURCES_LISTS_PATH)/js/*), \
+	make -s $(shell echo $(DFILE) | rev | cut -d '/' -f 1 | rev | \
+	cut -d '.' -f 1).js-lint > /dev/null) ; \
+	fi;
 	@echo $@: DONE
 
 
 js-check: js-lint
 	@$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
-	$(call $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
+	$(shell make -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
 	cut -d '.' -f 1).js-check))
 	@echo $@: DONE
 
 
+js-externs:
+	@mkdir -p $(JS_EXTERNS_PATH)
+	@$(foreach FILE, $(shell cat $(CONFIG_PATH)/js.externs), \
+	make -s $(FILE)-extract-externs)
+	@if [ ! -f $(CONFIG_PATH)/js.externs ] ; then \
+	$(foreach FILE, $(shell ls $(JS_BUILD_PATH)), \
+	make -s $(FILE)-extract-externs) ; \
+	fi;
+	@echo $@: DONE
+
+
 js-clean:
-	@rm -rf $(JS_BUILD_PATH) $(JS_EXTERNS_PATH)
+	@rm -rf $(wildcard $(JS_BUILD_PATH)/*.js) $(JS_EXTERNS_PATH)
 	@echo $@: DONE
 
 
 js-build: js-clean js-check
 	@mkdir -p $(JS_BUILD_PATH)
-	@$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
+	$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
 	$(shell make -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
 	cut -d '.' -f 1).js-assemble))
-
-	@#$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
-	make -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
-	cut -d '.' -f 1).js-extract-externs)
 	@echo $@: DONE
 
 

@@ -57,5 +57,5 @@ cpp-build:
 
 
 cpp-clean:
-	@rm -f $(shell echo $(CPP_BUILD_PATH)/*.node)
+	@rm -f $(wildcard $(CPP_BUILD_PATH)/*.node)
 	@echo $@: DONE

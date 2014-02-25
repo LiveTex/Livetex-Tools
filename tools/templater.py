@@ -62,7 +62,7 @@ def assemble(templateText):
         cmd = tag.strip('%')
         insertion = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
         insertion = addIndent(insertion, getIndent(templateText, match.start()))
-        templateText = templateText.replace(tag, insertion)
+        templateText = templateText.replace(tag, insertion.strip())
         match = re.search('(\%\%.+\%\%)', templateText)
     return templateText
 
