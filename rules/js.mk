@@ -34,7 +34,7 @@ JS_EXTERNS          ?= $(shell ls $(wildcard $(JS_BUILD_PATH)/*.js) | \
 # TOOLS ########################################################################
 
 
-JS_COMPILER ?= java -jar $(TOOLS_PATH)/tools/compiler.jar \
+JS_COMPILER ?= java -jar $(TOOLS_PATH)/tools/closure-compiler.jar \
                 --warning_level     VERBOSE \
                 --language_in       ECMASCRIPT5_STRICT
 

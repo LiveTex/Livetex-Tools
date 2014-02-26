@@ -13,7 +13,7 @@ TOOLS_HOME ?= $(shell pwd)/$(DEPS_PATH)/livetex-tools
 
 JS_ENVIRONMENT ?= node
 
-JS_COMPILER ?= java -jar $(TOOLS_HOME)/tools/compiler.jar \
+JS_COMPILER ?= java -jar $(TOOLS_HOME)/tools/closure-compiler.jar \
 		--warning_level VERBOSE --language_in=ECMASCRIPT5_STRICT \
 		--compilation_level ADVANCED_OPTIMIZATIONS \
 		--debug --formatting=PRETTY_PRINT
