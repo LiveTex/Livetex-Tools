@@ -197,10 +197,10 @@ js-build: js-clean js-check
 
 
 publish: js-build
-  @npm version patch
-  @npm login
-  @npm publish
-  @git push
+	@npm version patch
+	@npm login
+	@npm publish
+	@git push
 	@echo $@: DONE
 
 
