@@ -30,7 +30,8 @@ ENV_EXTERNS_PATH  ?= $(TOOLS_PATH)/externs
 
 
 %.node:
-	cp $(GIP_BUILD_PATH)/Release/$@ $(CPP_BUILD_PATH)
+	@mkdir -p $(CPP_BUILD_PATH)
+	@cp $(GIP_BUILD_PATH)/Release/$@ $(CPP_BUILD_PATH)/$@
 
 
 ################################################################################

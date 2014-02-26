@@ -61,9 +61,12 @@ test-%: %.js
 	rm -rf $(BUILD_PATH)/$*.js; \
 	fi;
 
-%-externs.js: %.jso
+%-externs.js: %.d
 	mkdir -p $(HEADERS_BUILD_PATH)
-	$(JS_HEADERS_EXTRACTOR)
+	$(JS_HEADERS_EXTRACTOR) \
+	$(foreach FILE, $(shell cat $<), $(SOURCE_PATH)/$(FILE)) > \
+	$(HEADERS_BUILD_PATH)/$(shell echo $< | rev | cut -d '/' -f 1 | rev | \
+	cut -d '.' -f 1).js
 
 
 %.js: %.jso %.jst
