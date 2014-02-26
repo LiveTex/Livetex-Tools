@@ -23,6 +23,14 @@ ENV_EXTERNS_PATH    ?= $(TOOLS_PATH)/externs
 BACKPORTS_PATH      ?= $(TOOLS_PATH)/rules/backports
 
 
+# VARS #########################################################################
+
+
+JS_LINT             ?= $(shell ls $(SOURCES_LISTS_PATH)/js)
+JS_EXTERNS          ?= $(shell ls $(wildcard $(JS_BUILD_PATH)/*.js) | \
+                                  rev | cut -d '/' -f 1 | rev )
+
+
 # TOOLS ########################################################################
 
 
@@ -160,13 +168,8 @@ js: js-build js-externs
 
 
 js-lint:
-	@$(foreach DFILE, $(shell cat $(CONFIG_PATH)/js.lint), \
+	@$(foreach DFILE, $(JS_LINT), \
 	$(MAKE) -s $(shell echo $(DFILE) | cut -d '.' -f 1).js-lint > /dev/null)
-	@if [ ! -f $(CONFIG_PATH)/js.lint ] ; then \
-	$(foreach DFILE, $(wildcard $(SOURCES_LISTS_PATH)/js/*), \
-	$(MAKE) -s $(shell echo $(DFILE) | rev | cut -d '/' -f 1 | rev | \
-	cut -d '.' -f 1).js-lint > /dev/null) ; \
-	fi;
 	@echo $@: DONE
 
 
@@ -179,12 +182,8 @@ js-check: js-lint
 
 js-externs:
 	@mkdir -p $(JS_EXTERNS_PATH)
-	@$(foreach FILE, $(shell cat $(CONFIG_PATH)/js.externs), \
+	@$(foreach FILE, $(JS_EXTERNS), \
 	$(MAKE) -s $(FILE)-extract-externs)
-	@if [ ! -f $(CONFIG_PATH)/js.externs ] ; then \
-	$(foreach FILE, $(shell ls $(JS_BUILD_PATH)), \
-	$(MAKE) -s $(FILE)-extract-externs) ; \
-	fi;
 	@echo $@: DONE
 
 
