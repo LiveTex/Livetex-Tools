@@ -20,6 +20,7 @@ JS_SOURCES_PATH     ?= $(PROJECT_PATH)/lib
 MODULES_PATH        ?= $(PROJECT_PATH)/node_modules
 TOOLS_PATH          ?= $(MODULES_PATH)/livetex-tools
 ENV_EXTERNS_PATH    ?= $(TOOLS_PATH)/externs
+BACKPORTS_PATH      ?= $(TOOLS_PATH)/rules/backports
 
 
 # TOOLS ########################################################################
@@ -196,5 +197,16 @@ js-build: js-clean js-check
 
 
 publish: js-build
-	@npm publish
+  @npm version patch
+  @npm login
+  @npm publish
+  @git push
 	@echo $@: DONE
+
+
+%: force
+	@$(MAKE) -f $(BACKPORTS_PATH)/Makefile
+	@echo $@: DONE
+
+
+force: ;

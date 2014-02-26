@@ -82,9 +82,6 @@ css-build: css-clean
 	@mkdir -p $(CSS_BUILD_PATH)
 	@$(foreach TEMPLATE, $(TEMPLATES_PATH)/css/*, make -s $(shell echo \
 	$(TEMPLATE) | rev | cut -d '/' -f 1 | rev | cut -d '.' -f 1).css-assemble)
-	@$(foreach TEMPLATE, $(TEMPLATES_PATH)/css/*, make -s $(shell echo \
-	$(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
-	cut -d '.' -f 1).js-extract-externs)
 	@echo $@: DONE
 
 
