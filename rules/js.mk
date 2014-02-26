@@ -150,16 +150,21 @@ vpath %.js    $(JS_BUILD_PATH)
 ################################################################################
 
 
+all:
+	test -d $(TEMPLATES_PATH) || $(MAKE) -f $(BACKPORTS_PATH)/Makefile $@ && \
+	exit 0
+
+
 js: js-build js-externs
 	@echo $@: DONE
 
 
 js-lint:
 	@$(foreach DFILE, $(shell cat $(CONFIG_PATH)/js.lint), \
-	make -s $(shell echo $(DFILE) | cut -d '.' -f 1).js-lint > /dev/null)
+	$(MAKE) -s $(shell echo $(DFILE) | cut -d '.' -f 1).js-lint > /dev/null)
 	@if [ ! -f $(CONFIG_PATH)/js.lint ] ; then \
 	$(foreach DFILE, $(wildcard $(SOURCES_LISTS_PATH)/js/*), \
-	make -s $(shell echo $(DFILE) | rev | cut -d '/' -f 1 | rev | \
+	$(MAKE) -s $(shell echo $(DFILE) | rev | cut -d '/' -f 1 | rev | \
 	cut -d '.' -f 1).js-lint > /dev/null) ; \
 	fi;
 	@echo $@: DONE
@@ -167,7 +172,7 @@ js-lint:
 
 js-check: js-lint
 	@$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
-	$(shell make -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
+	$(shell $(MAKE) -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
 	cut -d '.' -f 1).js-check))
 	@echo $@: DONE
 
@@ -175,10 +180,10 @@ js-check: js-lint
 js-externs:
 	@mkdir -p $(JS_EXTERNS_PATH)
 	@$(foreach FILE, $(shell cat $(CONFIG_PATH)/js.externs), \
-	make -s $(FILE)-extract-externs)
+	$(MAKE) -s $(FILE)-extract-externs)
 	@if [ ! -f $(CONFIG_PATH)/js.externs ] ; then \
 	$(foreach FILE, $(shell ls $(JS_BUILD_PATH)), \
-	make -s $(FILE)-extract-externs) ; \
+	$(MAKE) -s $(FILE)-extract-externs) ; \
 	fi;
 	@echo $@: DONE
 
@@ -191,7 +196,7 @@ js-clean:
 js-build: js-clean js-check
 	@mkdir -p $(JS_BUILD_PATH)
 	$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
-	$(shell make -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
+	$(shell $(MAKE) -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
 	cut -d '.' -f 1).js-assemble))
 	@echo $@: DONE
 
@@ -203,10 +208,3 @@ publish: js-build
 	@git push
 	@echo $@: DONE
 
-
-%: force
-	@$(MAKE) -f $(BACKPORTS_PATH)/Makefile
-	@echo $@: DONE
-
-
-force: ;
