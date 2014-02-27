@@ -26,14 +26,14 @@ Project should contain in its root directory a folder **etc/build** with followi
     |              `----*.csst  
     ` Makefile  
     
-+ **Templates:** *.jst and *.csst  
++ **Templates:** *.jst, *.csst  
     ```
     TAG     : %%COMMAND%%    
     COMMAND : any command which can be executed via teminal or make command contained in Makefile  
     !note   : it is preferably to use -s make's flag  
     ```
 
-+ **Sources lists:** *.jsd and *.cssd  
++ **Sources lists:** *.jsd, *.cssd  
 Lists of files that can be used like prerequisites for make's targets  
 
 + **Makefile:**  
