@@ -34,7 +34,7 @@ Project should contain in its root directory a folder **etc/build** with followi
     ```
 
 + **Sources lists:** *.jsd, *.cssd  
-Lists of files that can be used like prerequisites for targets in make  
+Lists of files that can be used as prerequisites for targets in make  
 
 + **Makefile:**  
 Main file, which includes rules:  
