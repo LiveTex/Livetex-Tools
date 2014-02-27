@@ -8,76 +8,104 @@ Build system from LiveTex.
 
 ## Principles: 
 
-Build system works with artifacts by means of Make.    
-Every command runs according to pattern: %suffix,     
-where % is the name of artifact.    
+Build system works with artifacts by means of Make.
 
+Project should contain in its root directory a folder **etc/build** with following structure:
 
-Project should contain in its root directory:
+    | etc
+    `----build  
+    |    |----templates  
+    |    |    |----js  
+    |    |    |    `----*.jst  
+    |    |    `----css  
+    |    |         `----*.csst  
+    |    `----sources-lists  
+    |         |----js  
+    |         |    `----*.jsd  
+    |         `----css  
+    |              `----*.csst  
+    ` Makefile  
+    
++ **Templates:** *.jst, *.csst  
+    ```
+    TAG     : %%COMMAND%%    
+    COMMAND : any command which can be executed via teminal or make command contained in Makefile  
+    !note   : it is preferably to use -s flag with make 
+    ```
 
-+ **./etc/index.d**     
-The list of project files paths relating to SOURCE_PATH in rule.    
++ **Sources lists:** *.jsd, *.cssd  
+Lists of files that can be used as prerequisites for targets in make  
 
-+ **./etc/index.jst**   
-The structure of compiled code:    
-    - requires   
-    - %%CONTENT%%   
-    - exports   
-    and maybe some additional code.   
-
-+ **./etc/config.json**   
-Configuration file for Jstuff tool, which generates externs and documentation.   
-
-+ **./Makefile**   
++ **Makefile:**  
 Main file, which includes rules:  
     
-    include node_modules/livetex-tools/rules/%%RULE_NAME%%.mk   
+    ```
+    include node_modules/livetex-tools/rules/web.mk     for web-projects  
+    include node_modules/livetex-tools/rules/cpp.mk     for cpp-projects  
+    include node_modules/livetex-tools/rules/js.mk      default rules which have to be included the last  
+    ```
 
-## Rules:
+## Rules: 
 
++ **For templates**:     
+can be used as COMMAND in TAG   
 
-### Javascript: js.mk
+    ```
+    syntax: %.extension-prefix
+            %         - name of sources list
+            extension - js or css
+            prefix    - name of action
+    ```
+    
+**js**: js.mk    
 
-**1. To create the main script:**
+    %.js-compile                    :   glues all js files mentioned in sources list into single stream   
+                                        and inserts it instead of TAG
+                                        
+    %.js-compile-compressed         :   compiles and compresses all js files mentioned in sources list   
+                                        by means of google-closure-compiler  
+                      !note         :   code shouldn dependend on any library
+                                        
+    %.js-externs-compile-compressed :   compiles and compresses all js files mentioned in sources list   
+                                        by means of google-closure-compiler with externs taken from  
+                                        ./externs folder of each dependency (node_modules)
+    
+**css**: css.mk  
 
-    make
+    %.css-compile                   :   compiles all css files mentioned in sources list into single stream   
+                                        and inserts it instead of TAG
 
-**2. To run the main script with nodejs:** 
++ **General**:  
+can be used as script in NPM  
 
-    make %.js-run
-
-**3. To assemble code:**  
-
-    make %.js-compile
-
-**4. To check compiled code:**
-
-    make %.js-lint
-
-**5. To compile code and check it with linter:**  
-
-    make %.js-check
-
-**6. To remove the main script:**    
-
-    make %.js-clean
-
-**7. To generates externs for code:**     
-
-    make %-externs
-
-
-### CSS: css.mk
-
-**1. To create the main css file:**   
-
-    make %.css-compile
-
-**2. To create the main css file for mobile layout:**   
-
-    make %.css-mobile-compile
-
-
+**js**: js.mk  
+    
+    js          : general rule for js  
+    js-lint     : checks with google-closure-linter code style of sources mentioned in sources lists   
+      !note     : if you have restrictions for this operation you can list only necessary sources lists  
+                  at JS_LINT variable in Makefile
+    js-check    : checks syntax with google-closure-compiler     
+    js-externs  : extracts externs from built files   
+         !note  : if you have restrictions for this operation you can list only necessary built files  
+                  at JS_EXTERNS variable in Makefile
+    js-build    : assembles js templates  
+    js-clean    : removes built files and externs  
+    publish     : increments patch version, publishes to NPM and pushes tag into GIT  
+    
+**css**: web.mk     
+    
+    css         : general rule for css  
+    css-build   : assembles css templates  
+    css-clean   : removes built files  
+    
+**cpp**: cpp.mk   
+    
+    cpp         : general rule for cpp  
+    cpp-build   : moves files built by means of node-gyp into built path and removes all node-gyp extra data  
+    cpp-clean   : removes built files  
+    !note       : cpp rules have to be used after node-gyp build/rebuild commands  
+    
+    
 ## License
 
 Modified BSD License
