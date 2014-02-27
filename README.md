@@ -30,7 +30,7 @@ Project should contain in its root directory a folder **etc/build** with followi
     ```
     TAG     : %%COMMAND%%    
     COMMAND : any command which can be executed via teminal or make command contained in Makefile  
-    !note   : it is preferably to use -s make's flag  
+    !note   : it is preferably to use -s flag with make 
     ```
 
 + **Sources lists:** *.jsd, *.cssd  
