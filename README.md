@@ -29,7 +29,8 @@ Project should contain in its root directory a folder **etc/build** with followi
 + **Templates:** *.jst, *.csst  
     ```
     TAG     : %%COMMAND%%    
-    COMMAND : any command which can be executed via teminal or make command contained in Makefile  
+    COMMAND : any command which can be executed via teminal or make command  
+              contained in Makefile  
     !note   : it is preferably to use -s flag with make 
     ```
 
@@ -42,7 +43,8 @@ Main file, which includes rules:
     ```
     include node_modules/livetex-tools/rules/web.mk     for web-projects  
     include node_modules/livetex-tools/rules/cpp.mk     for cpp-projects  
-    include node_modules/livetex-tools/rules/js.mk      default rules which have to be included the last  
+    include node_modules/livetex-tools/rules/js.mk      default rules which have  
+                                                        to be included the last  
     ```
 
 ## Rules: 
@@ -59,21 +61,22 @@ can be used as COMMAND in TAG
     
 **js**: js.mk    
 
-    %.js-compile                    :   glues all js files mentioned in sources list into single stream   
-                                        and inserts it instead of TAG
+    %.js-compile                    :   glues all js files mentioned in sources list  
+                                        into single stream and inserts it instead of TAG
                                         
-    %.js-compile-compressed         :   compiles and compresses all js files mentioned in sources list   
-                                        by means of google-closure-compiler  
+    %.js-compile-compressed         :   compiles and compresses all js files mentioned  
+                                        in sources list by means of google-closure-compiler  
                       !note         :   code shouldn dependend on any library
                                         
-    %.js-externs-compile-compressed :   compiles and compresses all js files mentioned in sources list   
-                                        by means of google-closure-compiler with externs taken from  
-                                        ./externs folder of each dependency (node_modules)
+    %.js-externs-compile-compressed :   compiles and compresses all js files mentioned 
+                                        in sources list by means of google-closure-compiler   
+                                        with externs taken from ./externs folder   
+                                        of each dependency (node_modules)
     
 **css**: css.mk  
 
-    %.css-compile                   :   compiles all css files mentioned in sources list into single stream   
-                                        and inserts it instead of TAG
+    %.css-compile                   :   compiles all css files mentioned in sources list   
+                                        into single stream and inserts it instead of TAG
 
 + **General**:  
 can be used as script in NPM  
@@ -81,12 +84,15 @@ can be used as script in NPM
 **js**: js.mk  
     
     js          : general rule for js  
-    js-lint     : checks with google-closure-linter code style of sources mentioned in sources lists   
-      !note     : if you have restrictions for this operation you can list only necessary sources lists  
+    js-lint     : checks with google-closure-linter code style of sources  
+                  mentioned in sources lists   
+      !note     : if you have restrictions for this operation you can list  
+                  only necessary sources lists  
                   at JS_LINT variable in Makefile
     js-check    : checks syntax with google-closure-compiler     
     js-externs  : extracts externs from built files   
-         !note  : if you have restrictions for this operation you can list only necessary built files  
+         !note  : if you have restrictions for this operation you can list  
+                  only necessary built files  
                   at JS_EXTERNS variable in Makefile
     js-build    : assembles js templates  
     js-clean    : removes built files and externs  
@@ -101,7 +107,8 @@ can be used as script in NPM
 **cpp**: cpp.mk   
     
     cpp         : general rule for cpp  
-    cpp-build   : moves files built by means of node-gyp into built path and removes all node-gyp extra data  
+    cpp-build   : moves files built by means of node-gyp into built path and  
+                  removes all node-gyp extra data  
     cpp-clean   : removes built files  
     !note       : cpp rules have to be used after node-gyp build/rebuild commands  
     
