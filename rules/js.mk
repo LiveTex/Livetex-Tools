@@ -27,7 +27,7 @@ BACKPORTS_PATH      ?= $(TOOLS_PATH)/rules/backports
 
 
 JS_LINT             ?= $(shell ls $(SOURCES_LISTS_PATH)/js)
-JS_EXTERNS          ?= $(shell ls $(wildcard $(JS_BUILD_PATH)/*.js) | \
+JS_EXTERNS          ?= $(shell ls $(wildcard $(JS_BUILD_PATH)) | \
                                   rev | cut -d '/' -f 1 | rev )
 
 
@@ -70,12 +70,6 @@ vpath %.js    $(JS_BUILD_PATH)
 
 
 # HEADERS ######################################################################
-
-
-%.jso: %.jst
-	@mkdir -p $(JS_EXTERNS_PATH)
-	@$(TEMPLATER) -s True $< > \
-	$(shell echo $(JS_EXTERNS_PATH)/$(shell basename $<) | cut -d '.' -f 1).jso
 
 
 %.jsh: %.js-env-headers %.js-custom-headers %.js-headers
@@ -146,11 +140,10 @@ vpath %.js    $(JS_BUILD_PATH)
 	$(shell echo $(JS_BUILD_PATH)/$(shell basename $<) | cut -d '.' -f 1).js
 
 
-%.js-extract-externs: %.jso
+%.js-extract-externs: %.js
 	@mkdir -p $(JS_EXTERNS_PATH)
-	@$(JS_EXTERNS_EXTRACTOR) $(JS_EXTERNS_PATH)/$^ > \
-	$(JS_EXTERNS_PATH)/$(shell echo $@ | cut -d '.' -f 1).js
-	@rm $(JS_EXTERNS_PATH)/$^
+	@$(JS_EXTERNS_EXTRACTOR) $< \
+	> $(JS_EXTERNS_PATH)/$(shell echo $< | rev | cut -d '/' -f 1 | rev)
 
 
 ################################################################################
@@ -182,8 +175,7 @@ js-check: js-lint
 
 js-externs:
 	@mkdir -p $(JS_EXTERNS_PATH)
-	@$(foreach FILE, $(JS_EXTERNS), \
-	$(MAKE) -s $(FILE)-extract-externs)
+	@$(foreach FILE, $(JS_EXTERNS), $(MAKE) -s $(FILE)-extract-externs)
 	@echo $@: DONE
 
 
