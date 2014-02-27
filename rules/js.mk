@@ -27,8 +27,9 @@ BACKPORTS_PATH      ?= $(TOOLS_PATH)/rules/backports
 
 
 JS_LINT             ?= $(shell ls $(SOURCES_LISTS_PATH)/js)
-JS_EXTERNS          ?= $(shell ls $(JS_BUILD_PATH) | \
-                               rev | cut -d '/' -f 1 | rev )
+JS_EXTERNS          ?= $(foreach FILE, \
+                       $(shell find $(JS_BUILD_PATH) -maxdepth 1 -iname '*.js'), \
+                       $(shell echo $(FILE) | rev | cut -d '/' -f 1 | rev))
 
 
 # TOOLS ########################################################################
@@ -152,8 +153,8 @@ vpath %.js    $(JS_BUILD_PATH)
 
 
 all:
-	test -d $(TEMPLATES_PATH) || $(MAKE) -f $(BACKPORTS_PATH)/Makefile $@ && \
-	exit 0
+	@test -d $(TEMPLATES_PATH) || $(MAKE) -f $(BACKPORTS_PATH)/Makefile $@ && \
+	@exit 0
 
 
 js: js-build js-externs
