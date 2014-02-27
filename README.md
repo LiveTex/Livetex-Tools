@@ -81,9 +81,13 @@ can be used as script in NPM
 **js**: js.mk  
     
     js          : general rule for js  
-    js-lint     : checks style with google-closure-linter  
+    js-lint     : checks with google-closure-linter code style of sources mentioned in sources lists   
+      !note     : if you have restrictions for this operation you can list only necessary sources lists  
+                  at JS_LINT variable in Makefile
     js-check    : checks syntax with google-closure-compiler     
-    js-externs  : extracts externs for library   
+    js-externs  : extracts externs from built files   
+         !note  : if you have restrictions for this operation you can list only necessary built files  
+                  at JS_EXTERNS variable in Makefile
     js-build    : assembles js templates  
     js-clean    : removes built files and externs  
     publish     : increments patch version, publishes to NPM and pushes tag into GIT  
