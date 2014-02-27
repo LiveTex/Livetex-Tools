@@ -3,6 +3,14 @@ from entities.elements import *
 from entities.jsDoc import JsDoc
 
 
+class externsError(Exception):
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return repr(self.value)
+
+
 def __getElements(text):
     """
         Finds JsDocs and code of elements
@@ -18,12 +26,20 @@ def __getElements(text):
     while jsDoc:
         jsDocText = jsDoc.getOriginal()
         position = text.find(jsDocText, position) + len(jsDocText)
-        element = __extractElement(text[position:], jsDoc)
-        elements.append(element)
-        position = text.find(element.getCode(), position) + \
-                   len(element.getCode())
+        if __checkJsDoc(text, jsDocText):
+            element = __extractElement(text[position:], jsDoc)
+            elements.append(element)
+            position = text.find(element.getCode(), position) + \
+                       len(element.getCode())
         jsDoc = __extractJsDoc(text[position:])
     return elements
+
+
+def __checkJsDoc(text, jsDoc):
+    index = text.find(jsDoc) + len(jsDoc)
+    if ord(text[index]) == ord(text[index + 1]) == 10:
+        return False
+    return True
 
 
 def __extractJsDoc(text):
@@ -121,12 +137,13 @@ def __extractProperty(text, jsDoc):
         @return {jsCodeParser.elements.Property} Property.
     """
     recordType = jsDoc.getRecordsByTag('@type')[0].getType()
-    if recordType.find('function') + 1:
+    if recordType.strip('?!.').find('function') == 0:
         function = __extractFunction(text, jsDoc, Method)
         if function:
             return function
     eqPos = text.find('=')
     value = text[eqPos + 1:].strip()
+
     if value[0] in ['[', '{']:
         value = extractTextBetweenTokens(value, value[0])
         end = text.find(value) + len(value)
@@ -137,6 +154,7 @@ def __extractProperty(text, jsDoc):
         end = text.find(value) + findEnd(value)
     if end != len(text) and text[end] == ';':
         end += 1
+
     code = text[:end].strip()
     element = Property(code, jsDoc)
     return element
@@ -197,7 +215,7 @@ def __extractFunction(text, jsDoc, classConstructor):
     if realization[0] == '{':
         realization = extractTextBetweenTokens(realization, '{')
         end = text.find(realization) + len(realization)
-    if text[end] == ';':
+    if end < len(text) and text[end] == ';':
         end += 1
     code = text[:end].strip()
     return classConstructor(code, jsDoc)
