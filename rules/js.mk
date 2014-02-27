@@ -27,8 +27,8 @@ BACKPORTS_PATH      ?= $(TOOLS_PATH)/rules/backports
 
 
 JS_LINT             ?= $(shell ls $(SOURCES_LISTS_PATH)/js)
-JS_EXTERNS          ?= $(shell ls $(wildcard $(JS_BUILD_PATH)) | \
-                                  rev | cut -d '/' -f 1 | rev )
+JS_EXTERNS          ?= $(shell ls $(JS_BUILD_PATH) | \
+                               rev | cut -d '/' -f 1 | rev )
 
 
 # TOOLS ########################################################################
