@@ -187,16 +187,16 @@ js-externs:
 	@echo $@: DONE
 
 
-js-clean:
-	@rm -rf $(wildcard $(JS_BUILD_PATH)/*.js) $(JS_EXTERNS_PATH)
-	@echo $@: DONE
-
-
 js-build: js-clean js-check
 	@mkdir -p $(JS_BUILD_PATH)
 	$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
 	$(shell $(MAKE) -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
 	cut -d '.' -f 1).js-assemble))
+	@echo $@: DONE
+
+
+js-clean:
+	@rm -rf $(wildcard $(JS_BUILD_PATH)/*.js) $(JS_EXTERNS_PATH)
 	@echo $@: DONE
 
 
