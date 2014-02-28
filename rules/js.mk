@@ -26,7 +26,10 @@ BACKPORTS_PATH      ?= $(TOOLS_PATH)/rules/backports
 # VARS #########################################################################
 
 
-JS_LINT             ?= $(shell ls $(SOURCES_LISTS_PATH)/js)
+JS_LINT             ?= $(foreach FILE, \
+                       $(shell find $(SOURCES_LISTS_PATH)/js -maxdepth 1 \
+                       -iname '*.jsd'), \
+                       $(shell echo $(FILE) | rev | cut -d '/' -f 1 | rev))
 JS_EXTERNS          ?= $(foreach FILE, \
                        $(shell find $(JS_BUILD_PATH) -maxdepth 1 -iname '*.js'), \
                        $(shell echo $(FILE) | rev | cut -d '/' -f 1 | rev))
@@ -166,8 +169,8 @@ js: js-build js-externs
 
 
 js-lint:
-	@$(foreach DFILE, $(JS_LINT), \
-	$(MAKE) -s $(shell echo $(DFILE) | cut -d '.' -f 1).js-lint > /dev/null)
+	$(foreach DFILE, $(JS_LINT), \
+	$(shell $(MAKE) -s $(shell echo $(DFILE) | cut -d '.' -f 1).js-lint > /dev/null))
 	@echo $@: DONE
 
 
@@ -180,7 +183,8 @@ js-check: js-lint
 
 js-externs:
 	@mkdir -p $(JS_EXTERNS_PATH)
-	@$(foreach FILE, $(JS_EXTERNS), $(MAKE) -s $(FILE)-extract-externs)
+	@$(foreach FILE, $(JS_EXTERNS), \
+	$(shell $(MAKE) -s $(FILE)-extract-externs))
 	@echo $@: DONE
 
 
