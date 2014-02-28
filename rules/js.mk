@@ -28,10 +28,11 @@ BACKPORTS_PATH      ?= $(TOOLS_PATH)/rules/backports
 
 JS_LINT             ?= $(foreach FILE, \
                        $(shell find $(SOURCES_LISTS_PATH)/js -maxdepth 1 \
-                       -iname '*.jsd'), \
+                       -iname '*.jsd' ), \
                        $(shell echo $(FILE) | rev | cut -d '/' -f 1 | rev))
 JS_EXTERNS          ?= $(foreach FILE, \
-                       $(shell find $(JS_BUILD_PATH) -maxdepth 1 -iname '*.js'), \
+                       $(shell find $(JS_BUILD_PATH) -maxdepth 1 \
+                       -iname '*.js'), \
                        $(shell echo $(FILE) | rev | cut -d '/' -f 1 | rev))
 
 
@@ -118,9 +119,10 @@ vpath %.js    $(JS_BUILD_PATH)
 # ADVANCED COMPILATION #########################################################
 
 
-%.js-externs-compile-advanced: %.jsd %.jsh
+%.js-compile-advanced: %.jsd %.jsh
 	$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
+	--jscomp_error      checkTypes \
 	--js          $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
 	--externs     $(shell echo "$^" | cut -d " " -f 2)
 
@@ -170,7 +172,8 @@ js: js-build js-externs
 
 js-lint:
 	$(foreach DFILE, $(JS_LINT), \
-	$(shell $(MAKE) -s $(shell echo $(DFILE) | cut -d '.' -f 1).js-lint > /dev/null))
+	$(shell $(MAKE) -s $(shell echo $(DFILE) | cut -d '.' -f 1).js-lint > \
+	/dev/null))
 	@echo $@: DONE
 
 
