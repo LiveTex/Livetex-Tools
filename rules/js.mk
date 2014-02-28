@@ -171,9 +171,7 @@ js: js-build js-externs
 
 
 js-lint:
-	$(foreach DFILE, $(JS_LINT), \
-	$(shell $(MAKE) -s $(shell echo $(DFILE) | cut -d '.' -f 1).js-lint > \
-	/dev/null))
+	@$(foreach DFILE, $(JS_LINT), echo '$(shell make $(shell echo '$(shell echo $(DFILE) | cut -d '.' -f 1).js-lint' ))')
 	@echo $@: DONE
 
 
