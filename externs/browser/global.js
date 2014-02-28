@@ -1,5 +1,10 @@
 
 
+/**
+ * @namespace
+ */
+var window = {};
+
 
 /**
  * @param {string} str
