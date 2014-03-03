@@ -171,7 +171,8 @@ js: js-build js-externs
 
 
 js-lint:
-	@$(foreach DFILE, $(JS_LINT), echo '$(shell make $(shell echo '$(shell echo $(DFILE) | cut -d '.' -f 1).js-lint' ))')
+	@$(foreach DFILE, $(JS_LINT), echo '$(shell \
+	make $(shell echo '$(shell echo $(DFILE) | cut -d '.' -f 1).js-lint' ))')
 	@echo $@: DONE
 
 
@@ -189,7 +190,7 @@ js-externs:
 	@echo $@: DONE
 
 
-js-build: js-clean js-check
+js-build: js-clean
 	@mkdir -p $(JS_BUILD_PATH)
 	$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
 	$(shell $(MAKE) -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
@@ -202,7 +203,7 @@ js-clean:
 	@echo $@: DONE
 
 
-publish: js-build
+publish: js-check js-build
 	@npm version patch
 	@npm login
 	@npm publish
