@@ -52,9 +52,11 @@ Buffer.prototype.copy =
 
 /**
  * @param {string=} opt_encoding
+ * @param {number=} opt_start
+ * @param {number=} opt_end
  * @return {string}
  */
-Buffer.prototype.toString = function(opt_encoding) {};
+Buffer.prototype.toString = function(opt_encoding, opt_start, opt_end) {};
 
 
 /**
