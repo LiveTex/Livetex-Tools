@@ -82,7 +82,6 @@ vpath %.js    $(JS_BUILD_PATH)
 
 
 %.js-headers:
-	npm install && \
 	@echo $(foreach DIR, $(wildcard $(MODULES_PATH)/*), \
 	$(wildcard $(DIR)/externs/*.js)) > $@
 
