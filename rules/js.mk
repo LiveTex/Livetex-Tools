@@ -203,7 +203,7 @@ js-clean:
 	@echo $@: DONE
 
 
-publish: js-check js-build
+publish: js-check js
 	@npm version patch
 	@npm login
 	@npm publish
