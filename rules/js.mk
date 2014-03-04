@@ -210,3 +210,11 @@ publish: js-check js
 	@git push
 	@echo $@: DONE
 
+
+link:
+	@$(foreach MODULE, $(shell find $(MODULES_PATH) -maxdepth 1 \
+	-not -name 'livetex-tools' -not -name 'node_modules'), \
+	$(shell rm -rf $(JS_SOURCES_PATH)/$(shell echo $(MODULE) | \
+	rev | cut -d '/' -f 1 | rev) && \
+	ln -s $(MODULE)/bin \
+	$(JS_SOURCES_PATH)/$(shell echo $(MODULE) | rev | cut -d '/' -f 1 | rev)))
