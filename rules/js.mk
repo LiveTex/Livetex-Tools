@@ -162,8 +162,8 @@ vpath %.js    $(JS_BUILD_PATH)
 
 
 all:
-	@test -d $(TEMPLATES_PATH) || $(MAKE) -f $(BACKPORTS_PATH)/Makefile $@ && \
-	exit 0
+	@test -d $(TEMPLATES_PATH) || $(MAKE) -f $(BACKPORTS_PATH)/Makefile $@ > \
+	/dev/null && exit 0
 
 
 js: js-build js-externs
