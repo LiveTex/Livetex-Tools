@@ -6,8 +6,7 @@
 ################################################################################
 
 
-# PATHS ########################################################################
-
+# PROJECT PATHS ################################################################
 
 PROJECT_PATH        ?= $(shell pwd)
 CONFIG_PATH         ?= $(PROJECT_PATH)/etc/build
@@ -20,33 +19,59 @@ JS_SOURCES_PATH     ?= $(PROJECT_PATH)/lib
 MODULES_PATH        ?= $(PROJECT_PATH)/node_modules
 TOOLS_PATH          ?= $(MODULES_PATH)/livetex-tools
 ENV_EXTERNS_PATH    ?= $(TOOLS_PATH)/externs
-BACKPORTS_PATH      ?= $(TOOLS_PATH)/rules/backports
 
 
-# VARS #########################################################################
+# ENVIRONMENT ##################################################################
 
+JS_ENVIRONMENT      ?= node
+
+
+# AUX VARS #####################################################################
 
 JS_LINT             ?= $(foreach FILE, \
                        $(shell find $(SOURCES_LISTS_PATH)/js -maxdepth 1 \
                        -iname '*.jsd' ), \
-                       $(shell echo $(FILE) | rev | cut -d '/' -f 1 | rev))
+                       $(shell basename $(FILE) | cut -d '.' -f 1))
+
+
 JS_EXTERNS          ?= $(foreach FILE, \
                        $(shell find $(JS_BUILD_PATH) -maxdepth 1 \
                        -iname '*.js'), \
-                       $(shell echo $(FILE) | rev | cut -d '/' -f 1 | rev))
+                       $(shell basename $(FILE) | cut -d '.' -f 1))
 
 
-# TOOLS ########################################################################
+JS_TEMPLATES        ?= $(foreach FILE, \
+                       $(shell find $(TEMPLATES_PATH)/js -maxdepth 1 \
+                       -iname '*.jst'), \
+                       $(shell basename $(FILE) | cut -d '.' -f 1))
 
+
+# TMP
+JS_TESTS            ?= $(foreach FILE, \
+                       $(shell find $(JS_BUILD_PATH) -maxdepth 1 \
+                       -iname '*.js'), \
+                       $(shell basename $(FILE) | cut -d '.' -f 1))
+
+
+# PREREQUISITES PATHS ##########################################################
+
+vpath %.jst         $(TEMPLATES_PATH)/js
+vpath %.jsd         $(SOURCES_LISTS_PATH)/js
+vpath %.js          $(JS_BUILD_PATH)
+
+
+################################################################################
+# TOOLS
+################################################################################
 
 JS_COMPILER ?= java -jar $(TOOLS_PATH)/tools/closure-compiler.jar \
-                --warning_level     VERBOSE \
-                --language_in       ECMASCRIPT5_STRICT
+                    --warning_level     VERBOSE \
+                    --language_in       ECMASCRIPT5_STRICT
 
 
-JS_LINTER ?= $(TOOLS_PATH)/tools/gjslint/closure_linter/gjslint.py \
-		            --strict \
-		            --custom_jsdoc_tags "namespace, event"
+JS_LINTER ?= $(TOOLS_PATH)/tools/closure-jslinter/gjslint.py \
+		                --strict \
+		                --custom_jsdoc_tags "namespace, event"
 
 
 JS_EXTERNS_EXTRACTOR ?= $(TOOLS_PATH)/tools/externs-extractor/externsExtractor.py
@@ -55,30 +80,18 @@ JS_EXTERNS_EXTRACTOR ?= $(TOOLS_PATH)/tools/externs-extractor/externsExtractor.p
 TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
 
 
-# ENVIRONMENT ##################################################################
-
-
-JS_ENVIRONMENT ?= node
-
-
-# PREREQUISITES PATHS ##########################################################
-
-
-vpath %.jst   $(TEMPLATES_PATH)/js
-vpath %.jsd   $(SOURCES_LISTS_PATH)/js
-vpath %.js    $(JS_BUILD_PATH)
-
+################################################################################
+# RULES
+################################################################################
 
 ################################################################################
-# AUX RULES
-################################################################################
+# AUX RULES ####################################################################
 
 
 # HEADERS ######################################################################
 
-
 %.jsh: %.js-env-headers %.js-custom-headers %.js-headers
-	@cat `cat $^ < /dev/null` > $@
+	@cat $(shell cat $^ < /dev/null) > $@
 
 
 %.js-headers:
@@ -87,7 +100,8 @@ vpath %.js    $(JS_BUILD_PATH)
 
 
 %.js-custom-headers:
-	@echo $(foreach DIR, $(INCLUDES_PATH), $(wildcard $(DIR)/*.js)) > $@
+	@echo $(foreach DIR, $(INCLUDES_PATH), \
+	$(wildcard $(DIR)/*.js)) > $@
 
 
 %.js-env-headers:
@@ -97,14 +111,14 @@ vpath %.js    $(JS_BUILD_PATH)
 
 # COMPILATIONS #################################################################
 
-
 %.js-compile: %.jsd
 	@cat $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE))
 
 
 %.js-compile-compressed: %.jsd
 	@$(JS_COMPILER) \
-	--js          $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
+	--js                $(foreach FILE, $(shell cat $<), \
+	                    $(JS_SOURCES_PATH)/$(FILE))
 
 
 # COMPRESSED COMPILATIONS ######################################################
@@ -112,28 +126,32 @@ vpath %.js    $(JS_BUILD_PATH)
 
 %.js-externs-compile-compressed: %.jsd %.jsh
 	@$(JS_COMPILER) \
-	--js          $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs     $(shell echo "$^" | cut -d " " -f 2)
+	--js                $(foreach FILE, $(shell cat $<), \
+	                    $(JS_SOURCES_PATH)/$(FILE)) \
+	--externs           $(shell echo "$^" | cut -d " " -f 2)
 
 
 # ADVANCED COMPILATION #########################################################
 
-
 %.js-compile-advanced: %.jsd %.jsh
-	$(JS_COMPILER) \
+	@$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
 	--jscomp_error      checkTypes \
-	--js          $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs     $(shell echo "$^" | cut -d " " -f 2)
+	--js                $(foreach FILE, $(shell cat $<), \
+	                    $(JS_SOURCES_PATH)/$(FILE)) \
+	--externs           $(shell echo "$^" | cut -d " " -f 2)
+
+
+#################################################################### AUX RULES #
+################################################################################
 
 
 ################################################################################
-# MAIN RULES
-################################################################################
-
+# MAIN RULES ###################################################################
 
 %.js-lint: %.jsd
-	@$(JS_LINTER) $(foreach FILE, $(shell cat $^), $(JS_SOURCES_PATH)/$(FILE))
+	@$(JS_LINTER) \
+	$(foreach FILE, $(shell cat $^), $(JS_SOURCES_PATH)/$(FILE)) > /dev/null
 
 
 %.js-check: %.jst
@@ -149,52 +167,23 @@ vpath %.js    $(JS_BUILD_PATH)
 %.js-extract-externs: %.js
 	@mkdir -p $(JS_EXTERNS_PATH)
 	@$(JS_EXTERNS_EXTRACTOR) $< \
-	> $(JS_EXTERNS_PATH)/$(shell echo $< | rev | cut -d '/' -f 1 | rev)
+	> $(JS_EXTERNS_PATH)/$(shell basename $<)
 
 
+# TMP
 %.js-test: %.js
 	@node --eval "require('$^').test.run('$(names)')"
 
 
+################################################################### MAIN RULES #
 ################################################################################
-# GENERAL RULES
+
+
 ################################################################################
+# GENERAL RULES ################################################################
 
 
-all:
-	@test -d $(TEMPLATES_PATH) || $(MAKE) -f $(BACKPORTS_PATH)/Makefile $@ > \
-	/dev/null && exit 0
-
-
-js: js-build js-externs
-	@echo $@: DONE
-
-
-js-lint:
-	@$(foreach DFILE, $(JS_LINT), echo '$(shell \
-	make $(shell echo '$(shell echo $(DFILE) | cut -d '.' -f 1).js-lint' ))')
-	@echo $@: DONE
-
-
-js-check: js-lint
-	@$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
-	$(shell $(MAKE) -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
-	cut -d '.' -f 1).js-check))
-	@echo $@: DONE
-
-
-js-externs:
-	@mkdir -p $(JS_EXTERNS_PATH)
-	@$(foreach FILE, $(JS_EXTERNS), \
-	$(shell $(MAKE) -s $(FILE)-extract-externs))
-	@echo $@: DONE
-
-
-js-build: js-clean
-	@mkdir -p $(JS_BUILD_PATH)
-	$(foreach TEMPLATE, $(wildcard $(TEMPLATES_PATH)/js/*), \
-	$(shell $(MAKE) -s $(shell echo $(TEMPLATE) | rev | cut -d '/' -f 1 | rev | \
-	cut -d '.' -f 1).js-assemble))
+js: | js-build js-externs
 	@echo $@: DONE
 
 
@@ -203,18 +192,49 @@ js-clean:
 	@echo $@: DONE
 
 
-publish: js-check js
-	@npm version patch
-	@npm login
-	@npm publish
-	@git push
+js-lint:
+	@$(foreach TARGET_NAME, $(JS_LINT), \
+	$(MAKE) -s $(shell echo $(TARGET_NAME).js-lint);)
 	@echo $@: DONE
 
 
-link:
-	@$(foreach MODULE, $(shell find $(MODULES_PATH) -maxdepth 1 \
-	-not -name 'livetex-tools' -not -name 'node_modules'), \
-	$(shell rm -rf $(JS_SOURCES_PATH)/$(shell echo $(MODULE) | \
-	rev | cut -d '/' -f 1 | rev) && \
-	ln -s $(MODULE)/bin \
-	$(JS_SOURCES_PATH)/$(shell echo $(MODULE) | rev | cut -d '/' -f 1 | rev)))
+js-check: js-lint
+	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
+	$(MAKE) -s $(shell echo $(TARGET_NAME).js-check);)
+	@echo $@: DONE
+
+
+js-build: js-clean
+	@mkdir -p $(JS_BUILD_PATH)
+	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
+	$(MAKE) -s $(shell echo $(TARGET_NAME).js-assemble);)
+	@echo $@: DONE
+
+
+js-externs:
+	@mkdir -p $(JS_EXTERNS_PATH)
+	@$(foreach TARGET_NAME, $(JS_EXTERNS), \
+	$(MAKE) -s $(shell echo $(TARGET_NAME).js-extract-externs);)
+	@echo $@: DONE
+
+
+# TMP
+js-tests:
+	@$(foreach TARGET_NAME, $(JS_TESTS), \
+	$(MAKE) -s $(shell echo $(TARGET_NAME).js-test);)
+	@echo $@: DONE
+
+
+publish: | js-check js
+	@npm version patch
+	@npm login
+	@npm publish
+
+	@#TMP
+	@#git push
+
+	@echo $@: DONE
+
+
+################################################################ GENERAL RULES #
+################################################################################

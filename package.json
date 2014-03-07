@@ -1,8 +1,13 @@
 {
   "name": "livetex-tools",
-  "version": "0.2.11",
+  "version": "0.2.22",
   "repository": {
     "type": "git",
     "url": "https://github.com/LiveTex/Livetex-Tools"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/LiveTex/Livetex-Tools/issues"
+  },
+  "_id": "tools@0.0.2",
+  "_from": "tools@*"
 }
