@@ -46,10 +46,9 @@ JS_TEMPLATES        ?= $(foreach FILE, \
                        $(shell basename $(FILE) | cut -d '.' -f 1))
 
 
-# TMP
 JS_TESTS            ?= $(foreach FILE, \
                        $(shell find $(JS_BUILD_PATH) -maxdepth 1 \
-                       -iname '*.js'), \
+                       -iname 'test-*.js'), \
                        $(shell basename $(FILE) | cut -d '.' -f 1))
 
 
@@ -170,7 +169,6 @@ TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
 	> $(JS_EXTERNS_PATH)/$(shell basename $<)
 
 
-# TMP
 %.js-test: %.js
 	@node --eval "require('$^').test.run('$(names)')"
 
@@ -218,7 +216,6 @@ js-externs:
 	@echo $@: DONE
 
 
-# TMP
 js-tests:
 	@$(foreach TARGET_NAME, $(JS_TESTS), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-test);)
