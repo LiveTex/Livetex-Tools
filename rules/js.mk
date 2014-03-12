@@ -225,11 +225,9 @@ js-tests:
 publish: | js-check js
 	@npm version patch
 	@npm login
+	@npm ls 1> /dev/null
 	@npm publish
-
-	@#TMP
-	@#git push
-
+	@git push
 	@echo $@: DONE
 
 
