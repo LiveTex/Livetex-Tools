@@ -150,7 +150,7 @@ TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
 
 %.js-lint: %.jsd
 	@$(JS_LINTER) \
-	$(foreach FILE, $(shell cat $^), $(JS_SOURCES_PATH)/$(FILE))
+	$(foreach FILE, $(shell cat $^), $(JS_SOURCES_PATH)/$(FILE)) > /dev/null
 
 
 %.js-check: %.jst
