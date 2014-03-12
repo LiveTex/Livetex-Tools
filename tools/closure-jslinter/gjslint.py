@@ -283,12 +283,12 @@ def main(argv=None):
             else:
                 fix_args.append(flag)
 
-            #     print """
-            # Some of the errors reported by GJsLint may be auto-fixable using the script
-            # fixjsstyle. Please double check any changes it makes and report any bugs. The
-            # script can be run by executing:
-            #
-            # fixjsstyle %s """ % ' '.join(fix_args)
+                print """
+                Some of the errors reported by GJsLint may be auto-fixable using the script
+                fixjsstyle. Please double check any changes it makes and report any bugs. The
+                script can be run by executing:
+
+                fixjsstyle %s """ % ' '.join(fix_args)
 
     if FLAGS.time:
         print 'Done in %s.' % _FormatTime(time.time() - start_time)
