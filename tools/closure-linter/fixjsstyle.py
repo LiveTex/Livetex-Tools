@@ -22,37 +22,37 @@ import sys
 
 import gflags as flags
 
-from closure_linter import error_fixer
-from closure_linter import runner
-from closure_linter.common import simplefileflags as fileflags
+import error_fixer
+import runner
+from common import simplefileflags as fileflags
 
 FLAGS = flags.FLAGS
 flags.DEFINE_list('additional_extensions', None, 'List of additional file '
-                  'extensions (not js) that should be treated as '
-                  'JavaScript files.')
+                                                 'extensions (not js) that should be treated as '
+                                                 'JavaScript files.')
 
 
 def main(argv=None):
-  """Main function.
+    """Main function.
 
-  Args:
-    argv: Sequence of command line arguments.
-  """
-  if argv is None:
-    argv = flags.FLAGS(sys.argv)
+    Args:
+      argv: Sequence of command line arguments.
+    """
+    if argv is None:
+        argv = flags.FLAGS(sys.argv)
 
-  suffixes = ['.js']
-  if FLAGS.additional_extensions:
-    suffixes += ['.%s' % ext for ext in FLAGS.additional_extensions]
+    suffixes = ['.js']
+    if FLAGS.additional_extensions:
+        suffixes += ['.%s' % ext for ext in FLAGS.additional_extensions]
 
-  files = fileflags.GetFileList(argv, 'JavaScript', suffixes)
+    files = fileflags.GetFileList(argv, 'JavaScript', suffixes)
 
-  fixer = error_fixer.ErrorFixer()
+    fixer = error_fixer.ErrorFixer()
 
-  # Check the list of files.
-  for filename in files:
-    runner.Run(filename, fixer)
+    # Check the list of files.
+    for filename in files:
+        runner.Run(filename, fixer)
 
 
 if __name__ == '__main__':
-  main()
+    main()
