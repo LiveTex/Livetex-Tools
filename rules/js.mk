@@ -68,7 +68,7 @@ JS_COMPILER ?= java -jar $(TOOLS_PATH)/tools/closure-compiler.jar \
                     --language_in       ECMASCRIPT5_STRICT
 
 
-JS_LINTER ?= $(TOOLS_PATH)/tools/closure-jslinter/gjslint.py \
+JS_LINTER ?= $(TOOLS_PATH)/tools/closure-linter/gjslint.py \
 		                --strict \
 		                --custom_jsdoc_tags "namespace, event"
 
