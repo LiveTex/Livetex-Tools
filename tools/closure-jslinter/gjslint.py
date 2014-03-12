@@ -50,10 +50,10 @@ from common import simplefileflags as fileflags
 
 # Attempt import of multiprocessing (should be available in Python 2.6 and up).
 try:
-  # pylint: disable=g-import-not-at-top
-  import multiprocessing
+    # pylint: disable=g-import-not-at-top
+    import multiprocessing
 except ImportError:
-  multiprocessing = None
+    multiprocessing = None
 
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('unix_mode', False,
@@ -65,8 +65,8 @@ flags.DEFINE_boolean('check_html', False,
 flags.DEFINE_boolean('summary', False,
                      'Whether to show an error count summary.')
 flags.DEFINE_list('additional_extensions', None, 'List of additional file '
-                  'extensions (not js) that should be treated as '
-                  'JavaScript files.')
+                                                 'extensions (not js) that should be treated as '
+                                                 'JavaScript files.')
 flags.DEFINE_boolean('multiprocess',
                      platform.system() is 'Linux' and bool(multiprocessing),
                      'Whether to attempt parallelized linting using the '
@@ -75,227 +75,226 @@ flags.DEFINE_boolean('multiprocess',
                      'Otherwise disabled by default. '
                      'Disabling may make debugging easier.')
 
-
 GJSLINT_ONLY_FLAGS = ['--unix_mode', '--beep', '--nobeep', '--time',
                       '--check_html', '--summary']
 
 
 def _MultiprocessCheckPaths(paths):
-  """Run _CheckPath over mutltiple processes.
+    """Run _CheckPath over mutltiple processes.
 
-  Tokenization, passes, and checks are expensive operations.  Running in a
-  single process, they can only run on one CPU/core.  Instead,
-  shard out linting over all CPUs with multiprocessing to parallelize.
+    Tokenization, passes, and checks are expensive operations.  Running in a
+    single process, they can only run on one CPU/core.  Instead,
+    shard out linting over all CPUs with multiprocessing to parallelize.
 
-  Args:
-    paths: paths to check.
+    Args:
+      paths: paths to check.
 
-  Yields:
-    errorrecord.ErrorRecords for any found errors.
-  """
+    Yields:
+      errorrecord.ErrorRecords for any found errors.
+    """
 
-  pool = multiprocessing.Pool()
+    pool = multiprocessing.Pool()
 
-  path_results = pool.imap(_CheckPath, paths)
-  for results in path_results:
-    for result in results:
-      yield result
+    path_results = pool.imap(_CheckPath, paths)
+    for results in path_results:
+        for result in results:
+            yield result
 
-  # Force destruct before returning, as this can sometimes raise spurious
-  # "interrupted system call" (EINTR), which we can ignore.
-  try:
-    pool.close()
-    pool.join()
-    del pool
-  except OSError as err:
-    if err.errno is not errno.EINTR:
-      raise err
+    # Force destruct before returning, as this can sometimes raise spurious
+    # "interrupted system call" (EINTR), which we can ignore.
+    try:
+        pool.close()
+        pool.join()
+        del pool
+    except OSError as err:
+        if err.errno is not errno.EINTR:
+            raise err
 
 
 def _CheckPaths(paths):
-  """Run _CheckPath on all paths in one thread.
+    """Run _CheckPath on all paths in one thread.
 
-  Args:
-    paths: paths to check.
+    Args:
+      paths: paths to check.
 
-  Yields:
-    errorrecord.ErrorRecords for any found errors.
-  """
+    Yields:
+      errorrecord.ErrorRecords for any found errors.
+    """
 
-  for path in paths:
-    results = _CheckPath(path)
-    for record in results:
-      yield record
+    for path in paths:
+        results = _CheckPath(path)
+        for record in results:
+            yield record
 
 
 def _CheckPath(path):
-  """Check a path and return any errors.
+    """Check a path and return any errors.
 
-  Args:
-    path: paths to check.
+    Args:
+      path: paths to check.
 
-  Returns:
-    A list of errorrecord.ErrorRecords for any found errors.
-  """
+    Returns:
+      A list of errorrecord.ErrorRecords for any found errors.
+    """
 
-  error_handler = erroraccumulator.ErrorAccumulator()
-  runner.Run(path, error_handler)
+    error_handler = erroraccumulator.ErrorAccumulator()
+    runner.Run(path, error_handler)
 
-  make_error_record = lambda err: errorrecord.MakeErrorRecord(path, err)
-  return map(make_error_record, error_handler.GetErrors())
+    make_error_record = lambda err: errorrecord.MakeErrorRecord(path, err)
+    return map(make_error_record, error_handler.GetErrors())
 
 
 def _GetFilePaths(argv):
-  suffixes = ['.js']
-  if FLAGS.additional_extensions:
-    suffixes += ['.%s' % ext for ext in FLAGS.additional_extensions]
-  if FLAGS.check_html:
-    suffixes += ['.html', '.htm']
-  return fileflags.GetFileList(argv, 'JavaScript', suffixes)
+    suffixes = ['.js']
+    if FLAGS.additional_extensions:
+        suffixes += ['.%s' % ext for ext in FLAGS.additional_extensions]
+    if FLAGS.check_html:
+        suffixes += ['.html', '.htm']
+    return fileflags.GetFileList(argv, 'JavaScript', suffixes)
 
 
 # Error printing functions
 
 
 def _PrintFileSummary(paths, records):
-  """Print a detailed summary of the number of errors in each file."""
+    """Print a detailed summary of the number of errors in each file."""
 
-  paths = list(paths)
-  paths.sort()
+    paths = list(paths)
+    paths.sort()
 
-  for path in paths:
-    path_errors = [e for e in records if e.path == path]
-    print '%s: %d' % (path, len(path_errors))
+    for path in paths:
+        path_errors = [e for e in records if e.path == path]
+        print '%s: %d' % (path, len(path_errors))
 
 
 def _PrintFileSeparator(path):
-  print '----- FILE  :  %s -----' % path
+    print '----- FILE  :  %s -----' % path
 
 
 def _PrintSummary(paths, error_records):
-  """Print a summary of the number of errors and files."""
+    """Print a summary of the number of errors and files."""
 
-  error_count = len(error_records)
-  all_paths = set(paths)
-  all_paths_count = len(all_paths)
+    error_count = len(error_records)
+    all_paths = set(paths)
+    all_paths_count = len(all_paths)
 
-  if error_count is 0:
-    print '%d files checked, no errors found.' % all_paths_count
+    if error_count is 0:
+        print '%d files checked, no errors found.' % all_paths_count
 
-  new_error_count = len([e for e in error_records if e.new_error])
+    new_error_count = len([e for e in error_records if e.new_error])
 
-  error_paths = set([e.path for e in error_records])
-  error_paths_count = len(error_paths)
-  no_error_paths_count = all_paths_count - error_paths_count
+    error_paths = set([e.path for e in error_records])
+    error_paths_count = len(error_paths)
+    no_error_paths_count = all_paths_count - error_paths_count
 
-  if error_count or new_error_count:
-    print ('Found %d errors, including %d new errors, in %d files '
-           '(%d files OK).' % (
-               error_count,
-               new_error_count,
-               error_paths_count,
-               no_error_paths_count))
+    if error_count or new_error_count:
+        print ('Found %d errors, including %d new errors, in %d files '
+               '(%d files OK).' % (
+                   error_count,
+                   new_error_count,
+                   error_paths_count,
+                   no_error_paths_count))
 
 
 def _PrintErrorRecords(error_records):
-  """Print error records strings in the expected format."""
+    """Print error records strings in the expected format."""
 
-  current_path = None
-  for record in error_records:
+    current_path = None
+    for record in error_records:
 
-    if current_path != record.path:
-      current_path = record.path
-      if not FLAGS.unix_mode:
-        _PrintFileSeparator(current_path)
+        if current_path != record.path:
+            current_path = record.path
+            if not FLAGS.unix_mode:
+                _PrintFileSeparator(current_path)
 
-    print record.error_string
+        print record.error_string
 
 
 def _FormatTime(t):
-  """Formats a duration as a human-readable string.
+    """Formats a duration as a human-readable string.
 
-  Args:
-    t: A duration in seconds.
+    Args:
+      t: A duration in seconds.
 
-  Returns:
-    A formatted duration string.
-  """
-  if t < 1:
-    return '%dms' % round(t * 1000)
-  else:
-    return '%.2fs' % t
+    Returns:
+      A formatted duration string.
+    """
+    if t < 1:
+        return '%dms' % round(t * 1000)
+    else:
+        return '%.2fs' % t
 
 
-def main(argv = None):
-  """Main function.
+def main(argv=None):
+    """Main function.
 
-  Args:
-    argv: Sequence of command line arguments.
-  """
-  if argv is None:
-    argv = flags.FLAGS(sys.argv)
+    Args:
+      argv: Sequence of command line arguments.
+    """
+    if argv is None:
+        argv = flags.FLAGS(sys.argv)
 
-  if FLAGS.time:
-    start_time = time.time()
+    if FLAGS.time:
+        start_time = time.time()
 
-  suffixes = ['.js']
-  if FLAGS.additional_extensions:
-    suffixes += ['.%s' % ext for ext in FLAGS.additional_extensions]
-  if FLAGS.check_html:
-    suffixes += ['.html', '.htm']
-  paths = fileflags.GetFileList(argv, 'JavaScript', suffixes)
+    suffixes = ['.js']
+    if FLAGS.additional_extensions:
+        suffixes += ['.%s' % ext for ext in FLAGS.additional_extensions]
+    if FLAGS.check_html:
+        suffixes += ['.html', '.htm']
+    paths = fileflags.GetFileList(argv, 'JavaScript', suffixes)
 
-  if FLAGS.multiprocess:
-    records_iter = _MultiprocessCheckPaths(paths)
-  else:
-    records_iter = _CheckPaths(paths)
+    if FLAGS.multiprocess:
+        records_iter = _MultiprocessCheckPaths(paths)
+    else:
+        records_iter = _CheckPaths(paths)
 
-  records_iter, records_iter_copy = itertools.tee(records_iter, 2)
-  _PrintErrorRecords(records_iter_copy)
+    records_iter, records_iter_copy = itertools.tee(records_iter, 2)
+    _PrintErrorRecords(records_iter_copy)
 
-  error_records = list(records_iter)
-  _PrintSummary(paths, error_records)
+    error_records = list(records_iter)
+    _PrintSummary(paths, error_records)
 
-  exit_code = 0
+    exit_code = 0
 
-  # If there are any errors
-  if error_records:
-    exit_code += 1
+    # If there are any errors
+    if error_records:
+        exit_code += 1
 
-  # If there are any new errors
-  if [r for r in error_records if r.new_error]:
-    exit_code += 2
+    # If there are any new errors
+    if [r for r in error_records if r.new_error]:
+        exit_code += 2
 
-  if exit_code:
-    if FLAGS.summary:
-      _PrintFileSummary(paths, error_records)
+    if exit_code:
+        if FLAGS.summary:
+            _PrintFileSummary(paths, error_records)
 
-    if FLAGS.beep:
-      # Make a beep noise.
-      sys.stdout.write(chr(7))
+        if FLAGS.beep:
+            # Make a beep noise.
+            sys.stdout.write(chr(7))
 
-    # Write out instructions for using fixjsstyle script to fix some of the
-    # reported errors.
-    fix_args = []
-    for flag in sys.argv[1:]:
-      for f in GJSLINT_ONLY_FLAGS:
-        if flag.startswith(f):
-          break
-      else:
-        fix_args.append(flag)
+        # Write out instructions for using fixjsstyle script to fix some of the
+        # reported errors.
+        fix_args = []
+        for flag in sys.argv[1:]:
+            for f in GJSLINT_ONLY_FLAGS:
+                if flag.startswith(f):
+                    break
+            else:
+                fix_args.append(flag)
 
-#     print """
-# Some of the errors reported by GJsLint may be auto-fixable using the script
-# fixjsstyle. Please double check any changes it makes and report any bugs. The
-# script can be run by executing:
-#
-# fixjsstyle %s """ % ' '.join(fix_args)
+            #     print """
+            # Some of the errors reported by GJsLint may be auto-fixable using the script
+            # fixjsstyle. Please double check any changes it makes and report any bugs. The
+            # script can be run by executing:
+            #
+            # fixjsstyle %s """ % ' '.join(fix_args)
 
-  if FLAGS.time:
-    print 'Done in %s.' % _FormatTime(time.time() - start_time)
+    if FLAGS.time:
+        print 'Done in %s.' % _FormatTime(time.time() - start_time)
 
-  sys.exit(exit_code)
+    sys.exit(exit_code)
 
 
 if __name__ == '__main__':
-  main()
+    main()

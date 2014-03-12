@@ -29,82 +29,82 @@ from common import erroraccumulator
 
 
 def _GetTokenByLineAndString(start_token, string, line_number):
-  for token in start_token:
-    if token.line_number == line_number and token.string == string:
-      return token
+    for token in start_token:
+        if token.line_number == line_number and token.string == string:
+            return token
 
 
 class AliasPassTest(googletest.TestCase):
+    def testInvalidGoogScopeCall(self):
+        start_token = testutil.TokenizeSourceAndRunEcmaPass(_TEST_SCOPE_SCRIPT)
 
-  def testInvalidGoogScopeCall(self):
-    start_token = testutil.TokenizeSourceAndRunEcmaPass(_TEST_SCOPE_SCRIPT)
+        error_accumulator = erroraccumulator.ErrorAccumulator()
+        alias_pass = aliaspass.AliasPass(
+            error_handler=error_accumulator)
+        alias_pass.Process(start_token)
 
-    error_accumulator = erroraccumulator.ErrorAccumulator()
-    alias_pass = aliaspass.AliasPass(
-        error_handler=error_accumulator)
-    alias_pass.Process(start_token)
+        alias_errors = error_accumulator.GetErrors()
+        self.assertEquals(1, len(alias_errors))
 
-    alias_errors = error_accumulator.GetErrors()
-    self.assertEquals(1, len(alias_errors))
+        alias_error = alias_errors[0]
 
-    alias_error = alias_errors[0]
+        self.assertEquals(errors.INVALID_USE_OF_GOOG_SCOPE, alias_error.code)
+        self.assertEquals('goog.scope', alias_error.token.string)
 
-    self.assertEquals(errors.INVALID_USE_OF_GOOG_SCOPE, alias_error.code)
-    self.assertEquals('goog.scope', alias_error.token.string)
+    def testAliasedIdentifiers(self):
+        start_token = testutil.TokenizeSourceAndRunEcmaPass(_TEST_ALIAS_SCRIPT)
+        alias_pass = aliaspass.AliasPass(set(['goog', 'myproject']))
+        alias_pass.Process(start_token)
 
-  def testAliasedIdentifiers(self):
-    start_token = testutil.TokenizeSourceAndRunEcmaPass(_TEST_ALIAS_SCRIPT)
-    alias_pass = aliaspass.AliasPass(set(['goog', 'myproject']))
-    alias_pass.Process(start_token)
+        alias_token = _GetTokenByLineAndString(start_token, 'Event', 4)
+        self.assertTrue(alias_token.metadata.is_alias_definition)
 
-    alias_token = _GetTokenByLineAndString(start_token, 'Event', 4)
-    self.assertTrue(alias_token.metadata.is_alias_definition)
+        my_class_token = _GetTokenByLineAndString(start_token, 'myClass', 8)
+        self.assertIsNone(my_class_token.metadata.aliased_symbol)
 
-    my_class_token = _GetTokenByLineAndString(start_token, 'myClass', 8)
-    self.assertIsNone(my_class_token.metadata.aliased_symbol)
+        component_token = _GetTokenByLineAndString(start_token, 'Component', 16)
+        self.assertEquals('goog.ui.Component',
+                          component_token.metadata.aliased_symbol)
 
-    component_token = _GetTokenByLineAndString(start_token, 'Component', 16)
-    self.assertEquals('goog.ui.Component',
-                      component_token.metadata.aliased_symbol)
+        event_token = _GetTokenByLineAndString(start_token, 'Event.Something',
+                                               16)
+        self.assertEquals('goog.events.Event.Something',
+                          event_token.metadata.aliased_symbol)
 
-    event_token = _GetTokenByLineAndString(start_token, 'Event.Something', 16)
-    self.assertEquals('goog.events.Event.Something',
-                      event_token.metadata.aliased_symbol)
+        non_closurized_token = _GetTokenByLineAndString(
+            start_token, 'NonClosurizedClass', 17)
+        self.assertIsNone(non_closurized_token.metadata.aliased_symbol)
 
-    non_closurized_token = _GetTokenByLineAndString(
-        start_token, 'NonClosurizedClass', 17)
-    self.assertIsNone(non_closurized_token.metadata.aliased_symbol)
+        long_start_token = _GetTokenByLineAndString(start_token, 'Event.', 20)
+        self.assertEquals('goog.events.Event.MultilineIdentifier.someMethod',
+                          long_start_token.metadata.aliased_symbol)
 
-    long_start_token = _GetTokenByLineAndString(start_token, 'Event.', 20)
-    self.assertEquals('goog.events.Event.MultilineIdentifier.someMethod',
-                      long_start_token.metadata.aliased_symbol)
+    def testMultipleGoogScopeCalls(self):
+        start_token = testutil.TokenizeSourceAndRunEcmaPass(
+            _TEST_MULTIPLE_SCOPE_SCRIPT)
 
-  def testMultipleGoogScopeCalls(self):
-    start_token = testutil.TokenizeSourceAndRunEcmaPass(
-        _TEST_MULTIPLE_SCOPE_SCRIPT)
+        error_accumulator = erroraccumulator.ErrorAccumulator()
 
-    error_accumulator = erroraccumulator.ErrorAccumulator()
+        alias_pass = aliaspass.AliasPass(
+            set(['goog', 'myproject']),
+            error_handler=error_accumulator)
+        alias_pass.Process(start_token)
 
-    alias_pass = aliaspass.AliasPass(
-        set(['goog', 'myproject']),
-        error_handler=error_accumulator)
-    alias_pass.Process(start_token)
+        alias_errors = error_accumulator.GetErrors()
 
-    alias_errors = error_accumulator.GetErrors()
+        self.assertEquals(3, len(alias_errors))
 
-    self.assertEquals(3, len(alias_errors))
+        error = alias_errors[0]
+        self.assertEquals(errors.INVALID_USE_OF_GOOG_SCOPE, error.code)
+        self.assertEquals(7, error.token.line_number)
 
-    error = alias_errors[0]
-    self.assertEquals(errors.INVALID_USE_OF_GOOG_SCOPE, error.code)
-    self.assertEquals(7, error.token.line_number)
+        error = alias_errors[1]
+        self.assertEquals(errors.EXTRA_GOOG_SCOPE_USAGE, error.code)
+        self.assertEquals(7, error.token.line_number)
 
-    error = alias_errors[1]
-    self.assertEquals(errors.EXTRA_GOOG_SCOPE_USAGE, error.code)
-    self.assertEquals(7, error.token.line_number)
-
-    error = alias_errors[2]
-    self.assertEquals(errors.EXTRA_GOOG_SCOPE_USAGE, error.code)
-    self.assertEquals(11, error.token.line_number)
+        error = alias_errors[2]
+        self.assertEquals(errors.EXTRA_GOOG_SCOPE_USAGE, error.code)
+        self.assertEquals(11, error.token.line_number)
 
 
 _TEST_ALIAS_SCRIPT = """
@@ -156,6 +156,5 @@ goog.scope(function() {
 });
 """
 
-
 if __name__ == '__main__':
-  googletest.main()
+    googletest.main()

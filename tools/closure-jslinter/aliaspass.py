@@ -35,185 +35,190 @@ from common import error
 
 
 def _GetAliasForIdentifier(identifier, alias_map):
-  """Returns the aliased_symbol name for an identifier.
+    """Returns the aliased_symbol name for an identifier.
 
-  Example usage:
-    >>> alias_map = {'MyClass': 'goog.foo.MyClass'}
-    >>> _GetAliasForIdentifier('MyClass.prototype.action', alias_map)
-    'goog.foo.MyClass.prototype.action'
+    Example usage:
+      >>> alias_map = {'MyClass': 'goog.foo.MyClass'}
+      >>> _GetAliasForIdentifier('MyClass.prototype.action', alias_map)
+      'goog.foo.MyClass.prototype.action'
 
-    >>> _GetAliasForIdentifier('MyClass.prototype.action', {})
-    None
+      >>> _GetAliasForIdentifier('MyClass.prototype.action', {})
+      None
 
-  Args:
-    identifier: The identifier.
-    alias_map: A dictionary mapping a symbol to an alias.
+    Args:
+      identifier: The identifier.
+      alias_map: A dictionary mapping a symbol to an alias.
 
-  Returns:
-    The aliased symbol name or None if not found.
-  """
-  ns = identifier.split('.', 1)[0]
-  aliased_symbol = alias_map.get(ns)
-  if aliased_symbol:
-    return aliased_symbol + identifier[len(ns):]
+    Returns:
+      The aliased symbol name or None if not found.
+    """
+    ns = identifier.split('.', 1)[0]
+    aliased_symbol = alias_map.get(ns)
+    if aliased_symbol:
+        return aliased_symbol + identifier[len(ns):]
 
 
 class AliasPass(object):
-  """Pass to identify goog.scope() usages.
+    """Pass to identify goog.scope() usages.
 
-  Identifies goog.scope() usages and finds lint/usage errors.  Notes any
-  aliases of symbols in Closurized namespaces (that is, reassignments
-  such as "var MyClass = goog.foo.MyClass;") and annotates identifiers
-  when they're using an alias (so they may be expanded to the full symbol
-  later -- that "MyClass.prototype.action" refers to
-  "goog.foo.MyClass.prototype.action" when expanded.).
-  """
-
-  def __init__(self, closurized_namespaces=None, error_handler=None):
-    """Creates a new pass.
-
-    Args:
-      closurized_namespaces: A set of Closurized namespaces (e.g. 'goog').
-      error_handler: An error handler to report lint errors to.
+    Identifies goog.scope() usages and finds lint/usage errors.  Notes any
+    aliases of symbols in Closurized namespaces (that is, reassignments
+    such as "var MyClass = goog.foo.MyClass;") and annotates identifiers
+    when they're using an alias (so they may be expanded to the full symbol
+    later -- that "MyClass.prototype.action" refers to
+    "goog.foo.MyClass.prototype.action" when expanded.).
     """
 
-    self._error_handler = error_handler
+    def __init__(self, closurized_namespaces=None, error_handler=None):
+        """Creates a new pass.
 
-    # If we have namespaces, freeze the set.
-    if closurized_namespaces:
-      closurized_namespaces = frozenset(closurized_namespaces)
+        Args:
+          closurized_namespaces: A set of Closurized namespaces (e.g. 'goog').
+          error_handler: An error handler to report lint errors to.
+        """
 
-    self._closurized_namespaces = closurized_namespaces
+        self._error_handler = error_handler
 
-  def Process(self, start_token):
-    """Runs the pass on a token stream.
+        # If we have namespaces, freeze the set.
+        if closurized_namespaces:
+            closurized_namespaces = frozenset(closurized_namespaces)
 
-    Args:
-      start_token: The first token in the stream.
-    """
+        self._closurized_namespaces = closurized_namespaces
 
-    # TODO(nnaze): Add more goog.scope usage checks.
-    self._CheckGoogScopeCalls(start_token)
+    def Process(self, start_token):
+        """Runs the pass on a token stream.
 
-    # If we have closurized namespaces, identify aliased identifiers.
-    if self._closurized_namespaces:
-      context = start_token.metadata.context
-      root_context = context.GetRoot()
-      self._ProcessRootContext(root_context)
+        Args:
+          start_token: The first token in the stream.
+        """
 
-  def _CheckGoogScopeCalls(self, start_token):
-    """Check goog.scope calls for lint/usage errors."""
+        # TODO(nnaze): Add more goog.scope usage checks.
+        self._CheckGoogScopeCalls(start_token)
 
-    def IsScopeToken(token):
-      return (token.type is javascripttokens.JavaScriptTokenType.IDENTIFIER and
-              token.string == 'goog.scope')
+        # If we have closurized namespaces, identify aliased identifiers.
+        if self._closurized_namespaces:
+            context = start_token.metadata.context
+            root_context = context.GetRoot()
+            self._ProcessRootContext(root_context)
 
-    # Find all the goog.scope tokens in the file
-    scope_tokens = [t for t in start_token if IsScopeToken(t)]
+    def _CheckGoogScopeCalls(self, start_token):
+        """Check goog.scope calls for lint/usage errors."""
 
-    for token in scope_tokens:
-      scope_context = token.metadata.context
+        def IsScopeToken(token):
+            return (
+                token.type is javascripttokens.JavaScriptTokenType.IDENTIFIER and
+                token.string == 'goog.scope')
 
-      if not (scope_context.type == ecmametadatapass.EcmaContext.STATEMENT and
-              scope_context.parent.type == ecmametadatapass.EcmaContext.ROOT):
-        self._MaybeReportError(
-            error.Error(errors.INVALID_USE_OF_GOOG_SCOPE,
-                        'goog.scope call not in global scope', token))
+        # Find all the goog.scope tokens in the file
+        scope_tokens = [t for t in start_token if IsScopeToken(t)]
 
-    # There should be only one goog.scope reference.  Register errors for
-    # every instance after the first.
-    for token in scope_tokens[1:]:
-      self._MaybeReportError(
-          error.Error(errors.EXTRA_GOOG_SCOPE_USAGE,
-                      'More than one goog.scope call in file.', token))
+        for token in scope_tokens:
+            scope_context = token.metadata.context
 
-  def _MaybeReportError(self, err):
-    """Report an error to the handler (if registered)."""
-    if self._error_handler:
-      self._error_handler.HandleError(err)
+            if not (
+                        scope_context.type == ecmametadatapass.EcmaContext.STATEMENT and
+                        scope_context.parent.type == ecmametadatapass.EcmaContext.ROOT):
+                self._MaybeReportError(
+                    error.Error(errors.INVALID_USE_OF_GOOG_SCOPE,
+                                'goog.scope call not in global scope', token))
 
-  @classmethod
-  def _YieldAllContexts(cls, context):
-    """Yields all contexts that are contained by the given context."""
-    yield context
-    for child_context in context.children:
-      for descendent_child in cls._YieldAllContexts(child_context):
-        yield descendent_child
+        # There should be only one goog.scope reference.  Register errors for
+        # every instance after the first.
+        for token in scope_tokens[1:]:
+            self._MaybeReportError(
+                error.Error(errors.EXTRA_GOOG_SCOPE_USAGE,
+                            'More than one goog.scope call in file.', token))
 
-  @staticmethod
-  def _IsTokenInParentBlock(token, parent_block):
-    """Determines whether the given token is contained by the given block.
+    def _MaybeReportError(self, err):
+        """Report an error to the handler (if registered)."""
+        if self._error_handler:
+            self._error_handler.HandleError(err)
 
-    Args:
-      token: A token
-      parent_block: An EcmaContext.
+    @classmethod
+    def _YieldAllContexts(cls, context):
+        """Yields all contexts that are contained by the given context."""
+        yield context
+        for child_context in context.children:
+            for descendent_child in cls._YieldAllContexts(child_context):
+                yield descendent_child
 
-    Returns:
-      Whether the token is in a context that is or is a child of the given
-      parent_block context.
-    """
-    context = token.metadata.context
+    @staticmethod
+    def _IsTokenInParentBlock(token, parent_block):
+        """Determines whether the given token is contained by the given block.
 
-    while context:
-      if context is parent_block:
-        return True
-      context = context.parent
+        Args:
+          token: A token
+          parent_block: An EcmaContext.
 
-    return False
+        Returns:
+          Whether the token is in a context that is or is a child of the given
+          parent_block context.
+        """
+        context = token.metadata.context
 
-  def _ProcessRootContext(self, root_context):
-    """Processes all goog.scope blocks under the root context."""
+        while context:
+            if context is parent_block:
+                return True
+            context = context.parent
 
-    assert root_context.type is ecmametadatapass.EcmaContext.ROOT
+        return False
 
-    # Identify all goog.scope blocks.
-    goog_scope_blocks = itertools.ifilter(
-        scopeutil.IsGoogScopeBlock,
-        self._YieldAllContexts(root_context))
+    def _ProcessRootContext(self, root_context):
+        """Processes all goog.scope blocks under the root context."""
 
-    # Process each block to find aliases.
-    for scope_block in goog_scope_blocks:
-      self._ProcessGoogScopeBlock(scope_block)
+        assert root_context.type is ecmametadatapass.EcmaContext.ROOT
 
-  def _ProcessGoogScopeBlock(self, scope_block):
-    """Scans a goog.scope block to find aliases and mark alias tokens."""
+        # Identify all goog.scope blocks.
+        goog_scope_blocks = itertools.ifilter(
+            scopeutil.IsGoogScopeBlock,
+            self._YieldAllContexts(root_context))
 
-    alias_map = dict()
+        # Process each block to find aliases.
+        for scope_block in goog_scope_blocks:
+            self._ProcessGoogScopeBlock(scope_block)
 
-    # Iterate over every token in the scope_block. Each token points to one
-    # context, but multiple tokens may point to the same context. We only want
-    # to check each context once, so keep track of those we've seen.
-    seen_contexts = set()
-    token = scope_block.start_token
-    while token and self._IsTokenInParentBlock(token, scope_block):
+    def _ProcessGoogScopeBlock(self, scope_block):
+        """Scans a goog.scope block to find aliases and mark alias tokens."""
 
-      token_context = token.metadata.context
+        alias_map = dict()
 
-      # Check to see if this token is an alias.
-      if token_context not in seen_contexts:
-        seen_contexts.add(token_context)
+        # Iterate over every token in the scope_block. Each token points to one
+        # context, but multiple tokens may point to the same context. We only want
+        # to check each context once, so keep track of those we've seen.
+        seen_contexts = set()
+        token = scope_block.start_token
+        while token and self._IsTokenInParentBlock(token, scope_block):
 
-        # If this is a alias statement in the goog.scope block.
-        if (token_context.type == ecmametadatapass.EcmaContext.VAR and
-            token_context.parent.parent is scope_block):
-          match = scopeutil.MatchAlias(token_context.parent)
+            token_context = token.metadata.context
 
-          # If this is an alias, remember it in the map.
-          if match:
-            alias, symbol = match
-            symbol = _GetAliasForIdentifier(symbol, alias_map) or symbol
-            if scopeutil.IsInClosurizedNamespace(symbol,
-                                                 self._closurized_namespaces):
-              alias_map[alias] = symbol
+            # Check to see if this token is an alias.
+            if token_context not in seen_contexts:
+                seen_contexts.add(token_context)
 
-      # If this token is an identifier that matches an alias,
-      # mark the token as an alias to the original symbol.
-      if (token.type is javascripttokens.JavaScriptTokenType.SIMPLE_LVALUE or
-          token.type is javascripttokens.JavaScriptTokenType.IDENTIFIER):
-        identifier = tokenutil.GetIdentifierForToken(token)
-        if identifier:
-          aliased_symbol = _GetAliasForIdentifier(identifier, alias_map)
-          if aliased_symbol:
-            token.metadata.aliased_symbol = aliased_symbol
+                # If this is a alias statement in the goog.scope block.
+                if (token_context.type == ecmametadatapass.EcmaContext.VAR and
+                            token_context.parent.parent is scope_block):
+                    match = scopeutil.MatchAlias(token_context.parent)
 
-      token = token.next  # Get next token
+                    # If this is an alias, remember it in the map.
+                    if match:
+                        alias, symbol = match
+                        symbol = _GetAliasForIdentifier(symbol,
+                                                        alias_map) or symbol
+                        if scopeutil.IsInClosurizedNamespace(symbol,
+                                                             self._closurized_namespaces):
+                            alias_map[alias] = symbol
+
+            # If this token is an identifier that matches an alias,
+            # mark the token as an alias to the original symbol.
+            if (
+                        token.type is javascripttokens.JavaScriptTokenType.SIMPLE_LVALUE or
+                        token.type is javascripttokens.JavaScriptTokenType.IDENTIFIER):
+                identifier = tokenutil.GetIdentifierForToken(token)
+                if identifier:
+                    aliased_symbol = _GetAliasForIdentifier(identifier,
+                                                            alias_map)
+                    if aliased_symbol:
+                        token.metadata.aliased_symbol = aliased_symbol
+
+            token = token.next  # Get next token

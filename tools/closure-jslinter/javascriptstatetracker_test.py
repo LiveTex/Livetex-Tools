@@ -20,7 +20,6 @@
 
 __author__ = ('nnaze@google.com (Nathan Naze)')
 
-
 import unittest as googletest
 
 import javascripttokens
@@ -58,117 +57,114 @@ var baz = function(ggg, hhh, iii) {
 
 
 class FunctionTest(googletest.TestCase):
+    def testFunctionParse(self):
+        functions, _ = testutil.ParseFunctionsAndComments(_FUNCTION_SCRIPT)
+        self.assertEquals(4, len(functions))
 
-  def testFunctionParse(self):
-    functions, _ = testutil.ParseFunctionsAndComments(_FUNCTION_SCRIPT)
-    self.assertEquals(4, len(functions))
+        # First function
+        function = functions[0]
+        self.assertEquals(['aaa', 'bbb', 'ccc'], function.parameters)
 
-    # First function
-    function = functions[0]
-    self.assertEquals(['aaa', 'bbb', 'ccc'], function.parameters)
+        start_token = function.start_token
+        end_token = function.end_token
 
-    start_token = function.start_token
-    end_token = function.end_token
+        self.assertEquals(
+            javascripttokens.JavaScriptTokenType.FUNCTION_DECLARATION,
+            function.start_token.type)
 
-    self.assertEquals(
-        javascripttokens.JavaScriptTokenType.FUNCTION_DECLARATION,
-        function.start_token.type)
+        self.assertEquals('function', start_token.string)
+        self.assertEquals(3, start_token.line_number)
+        self.assertEquals(0, start_token.start_index)
 
-    self.assertEquals('function', start_token.string)
-    self.assertEquals(3, start_token.line_number)
-    self.assertEquals(0, start_token.start_index)
+        self.assertEquals('}', end_token.string)
+        self.assertEquals(5, end_token.line_number)
+        self.assertEquals(0, end_token.start_index)
 
-    self.assertEquals('}', end_token.string)
-    self.assertEquals(5, end_token.line_number)
-    self.assertEquals(0, end_token.start_index)
+        self.assertEquals('foo', function.name)
 
-    self.assertEquals('foo', function.name)
+        self.assertIsNone(function.doc)
 
-    self.assertIsNone(function.doc)
+        # Second function
+        function = functions[1]
+        self.assertEquals(['ddd', 'eee', 'fff'], function.parameters)
 
-    # Second function
-    function = functions[1]
-    self.assertEquals(['ddd', 'eee', 'fff'], function.parameters)
+        start_token = function.start_token
+        end_token = function.end_token
 
-    start_token = function.start_token
-    end_token = function.end_token
+        self.assertEquals(
+            javascripttokens.JavaScriptTokenType.FUNCTION_DECLARATION,
+            function.start_token.type)
 
-    self.assertEquals(
-        javascripttokens.JavaScriptTokenType.FUNCTION_DECLARATION,
-        function.start_token.type)
+        self.assertEquals('function', start_token.string)
+        self.assertEquals(11, start_token.line_number)
+        self.assertEquals(10, start_token.start_index)
 
-    self.assertEquals('function', start_token.string)
-    self.assertEquals(11, start_token.line_number)
-    self.assertEquals(10, start_token.start_index)
+        self.assertEquals('}', end_token.string)
+        self.assertEquals(13, end_token.line_number)
+        self.assertEquals(0, end_token.start_index)
 
-    self.assertEquals('}', end_token.string)
-    self.assertEquals(13, end_token.line_number)
-    self.assertEquals(0, end_token.start_index)
+        self.assertEquals('bar', function.name)
 
-    self.assertEquals('bar', function.name)
+        self.assertIsNotNone(function.doc)
 
-    self.assertIsNotNone(function.doc)
+        # Check function JSDoc
+        doc = function.doc
+        doc_tokens = tokenutil.GetTokenRange(doc.start_token, doc.end_token)
 
-    # Check function JSDoc
-    doc = function.doc
-    doc_tokens = tokenutil.GetTokenRange(doc.start_token, doc.end_token)
+        comment_type = javascripttokens.JavaScriptTokenType.COMMENT
+        comment_tokens = filter(lambda t: t.type is comment_type, doc_tokens)
 
-    comment_type = javascripttokens.JavaScriptTokenType.COMMENT
-    comment_tokens = filter(lambda t: t.type is comment_type, doc_tokens)
+        self.assertEquals('JSDoc comment.',
+                          tokenutil.TokensToString(comment_tokens).strip())
 
-    self.assertEquals('JSDoc comment.',
-                      tokenutil.TokensToString(comment_tokens).strip())
+        # Third function
+        function = functions[2]
+        self.assertEquals(['ggg', 'hhh', 'iii'], function.parameters)
 
-    # Third function
-    function = functions[2]
-    self.assertEquals(['ggg', 'hhh', 'iii'], function.parameters)
+        start_token = function.start_token
+        end_token = function.end_token
 
-    start_token = function.start_token
-    end_token = function.end_token
+        self.assertEquals(
+            javascripttokens.JavaScriptTokenType.FUNCTION_DECLARATION,
+            function.start_token.type)
 
-    self.assertEquals(
-        javascripttokens.JavaScriptTokenType.FUNCTION_DECLARATION,
-        function.start_token.type)
+        self.assertEquals('function', start_token.string)
+        self.assertEquals(19, start_token.line_number)
+        self.assertEquals(10, start_token.start_index)
 
-    self.assertEquals('function', start_token.string)
-    self.assertEquals(19, start_token.line_number)
-    self.assertEquals(10, start_token.start_index)
+        self.assertEquals('}', end_token.string)
+        self.assertEquals(24, end_token.line_number)
+        self.assertEquals(0, end_token.start_index)
 
-    self.assertEquals('}', end_token.string)
-    self.assertEquals(24, end_token.line_number)
-    self.assertEquals(0, end_token.start_index)
+        self.assertEquals('baz', function.name)
+        self.assertIsNotNone(function.doc)
 
-    self.assertEquals('baz', function.name)
-    self.assertIsNotNone(function.doc)
+        # Fourth function (inside third function)
+        function = functions[3]
+        self.assertEquals(['jjj', 'kkk', 'lll'], function.parameters)
 
-    # Fourth function (inside third function)
-    function = functions[3]
-    self.assertEquals(['jjj', 'kkk', 'lll'], function.parameters)
+        start_token = function.start_token
+        end_token = function.end_token
 
-    start_token = function.start_token
-    end_token = function.end_token
+        self.assertEquals(
+            javascripttokens.JavaScriptTokenType.FUNCTION_DECLARATION,
+            function.start_token.type)
 
-    self.assertEquals(
-        javascripttokens.JavaScriptTokenType.FUNCTION_DECLARATION,
-        function.start_token.type)
+        self.assertEquals('function', start_token.string)
+        self.assertEquals(20, start_token.line_number)
+        self.assertEquals(12, start_token.start_index)
 
-    self.assertEquals('function', start_token.string)
-    self.assertEquals(20, start_token.line_number)
-    self.assertEquals(12, start_token.start_index)
+        self.assertEquals('}', end_token.string)
+        self.assertEquals(21, end_token.line_number)
+        self.assertEquals(2, end_token.start_index)
 
-    self.assertEquals('}', end_token.string)
-    self.assertEquals(21, end_token.line_number)
-    self.assertEquals(2, end_token.start_index)
-
-    self.assertEquals('qux', function.name)
-    self.assertIsNone(function.doc)
-
+        self.assertEquals('qux', function.name)
+        self.assertIsNone(function.doc)
 
 
 class CommentTest(googletest.TestCase):
-
-  def testGetDescription(self):
-    comment = self._ParseComment("""
+    def testGetDescription(self):
+        comment = self._ParseComment("""
         /**
          * Comment targeting goog.foo.
          *
@@ -177,33 +173,33 @@ class CommentTest(googletest.TestCase):
          */
         target;""")
 
-    self.assertEqual(
-        'Comment targeting goog.foo.\n\nThis is the second line.',
-        comment.description)
+        self.assertEqual(
+            'Comment targeting goog.foo.\n\nThis is the second line.',
+            comment.description)
 
-  def testCommentGetTarget(self):
-    self.assertCommentTarget('goog.foo', """
+    def testCommentGetTarget(self):
+        self.assertCommentTarget('goog.foo', """
         /**
          * Comment targeting goog.foo.
          */
         goog.foo = 6;
         """)
 
-    self.assertCommentTarget('bar', """
+        self.assertCommentTarget('bar', """
         /**
          * Comment targeting bar.
          */
         var bar = "Karate!";
         """)
 
-    self.assertCommentTarget('doThing', """
+        self.assertCommentTarget('doThing', """
         /**
          * Comment targeting doThing.
          */
         function doThing() {};
         """)
 
-    self.assertCommentTarget('this.targetProperty', """
+        self.assertCommentTarget('this.targetProperty', """
         goog.bar.Baz = function() {
           /**
            * Comment targeting targetProperty.
@@ -212,21 +208,21 @@ class CommentTest(googletest.TestCase):
         };
         """)
 
-    self.assertCommentTarget('goog.bar.prop', """
+        self.assertCommentTarget('goog.bar.prop', """
         /**
          * Comment targeting goog.bar.prop.
          */
         goog.bar.prop;
         """)
 
-    self.assertCommentTarget('goog.aaa.bbb', """
+        self.assertCommentTarget('goog.aaa.bbb', """
         /**
          * Comment targeting goog.aaa.bbb.
          */
         (goog.aaa.bbb)
         """)
 
-    self.assertCommentTarget('theTarget', """
+        self.assertCommentTarget('theTarget', """
         /**
          * Comment targeting symbol preceded by newlines, whitespace,
          * and parens -- things we ignore.
@@ -234,20 +230,20 @@ class CommentTest(googletest.TestCase):
         (theTarget)
         """)
 
-    self.assertCommentTarget(None, """
+        self.assertCommentTarget(None, """
         /**
          * @fileoverview File overview.
          */
         (notATarget)
         """)
 
-    self.assertCommentTarget(None, """
+        self.assertCommentTarget(None, """
         /**
          * Comment that doesn't find a target.
          */
         """)
 
-    self.assertCommentTarget('theTarget.is.split.across.lines', """
+        self.assertCommentTarget('theTarget.is.split.across.lines', """
         /**
          * Comment that addresses a symbol split across lines.
          */
@@ -255,7 +251,7 @@ class CommentTest(googletest.TestCase):
              .across.lines)
         """)
 
-    self.assertCommentTarget('theTarget.is.split.across.lines', """
+        self.assertCommentTarget('theTarget.is.split.across.lines', """
         /**
          * Comment that addresses a symbol split across lines.
          */
@@ -263,16 +259,16 @@ class CommentTest(googletest.TestCase):
                 across.lines)
         """)
 
-  def _ParseComment(self, script):
-    """Parse a script that contains one comment and return it."""
-    _, comments = testutil.ParseFunctionsAndComments(script)
-    self.assertEquals(1, len(comments))
-    return comments[0]
+    def _ParseComment(self, script):
+        """Parse a script that contains one comment and return it."""
+        _, comments = testutil.ParseFunctionsAndComments(script)
+        self.assertEquals(1, len(comments))
+        return comments[0]
 
-  def assertCommentTarget(self, target, script):
-    comment = self._ParseComment(script)
-    self.assertEquals(target, comment.GetTargetIdentifier())
+    def assertCommentTarget(self, target, script):
+        comment = self._ParseComment(script)
+        self.assertEquals(target, comment.GetTargetIdentifier())
 
 
 if __name__ == '__main__':
-  googletest.main()
+    googletest.main()
