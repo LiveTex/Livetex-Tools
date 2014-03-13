@@ -26,7 +26,7 @@ Project should contain in its root directory a folder **etc/build** with followi
     |              `----*.csst  
     ` Makefile  
     
-+ **Templates:** *.jst, *.csst test-*.jst
++ **Templates:** \*.jst, \*.csst, test-\*.jst
     ```
     TAG     : %%COMMAND%%    
     COMMAND : any command which can be executed via teminal or make command  
