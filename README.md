@@ -26,7 +26,7 @@ Project should contain in its root directory a folder **etc/build** with followi
     |              `----*.csst  
     ` Makefile  
     
-+ **Templates:** *.jst, *.csst  
++ **Templates:** *.jst, *.csst test-*.jst
     ```
     TAG     : %%COMMAND%%    
     COMMAND : any command which can be executed via teminal or make command  
@@ -78,6 +78,34 @@ can be used as COMMAND in TAG
     %.css-compile                   :   compiles all css files mentioned in sources list   
                                         into single stream and inserts it instead of TAG
 
+
++ **Main**:
+can be used for one template or sources-list or module
+
+**js**: js.mk
+
+    %.js-lint             : checks with google-closure-linter code style
+                            of sources mentioned in sources list
+                            % - name of sources list
+    %.js-check            : checks syntax with google-closure-compiler
+                            % - name of template
+    %.js-assemble         : assembles js template to js build path
+                            % - name of template
+    %.js-extract-externs  : extracts externs from built files
+                            % - name of built file
+    %.js-test             : runs test
+                            % - name of the test
+    %.highest-version     : sets module version to highest version found in npm
+                            % - module name
+    %.latest-version      : sets module version to latest version found in npm
+                            % - module name
+
+**css**: web.mk
+
+    %.css-assemble        : assembles css template to css build path
+                            % - name of template
+
+
 + **General**:  
 can be used as script in NPM  
 
@@ -95,7 +123,8 @@ can be used as script in NPM
                   only necessary built files  
                   at JS_EXTERNS variable in Makefile
     js-build    : assembles js templates  
-    js-clean    : removes built files and externs  
+    js-clean    : removes built files and externs
+    js-tests    : runs all tests
     publish     : increments patch version, publishes to NPM and pushes tag into GIT  
     
 **css**: web.mk     
