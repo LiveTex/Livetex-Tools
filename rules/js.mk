@@ -76,7 +76,7 @@ JS_LINTER ?= $(TOOLS_PATH)/tools/closure-linter/gjslint.py \
 JS_EXTERNS_EXTRACTOR ?= $(TOOLS_PATH)/tools/externs-extractor/externsExtractor.py
 
 
-REVERSIONER ?= $(TOOLS_PATH)/tools/reversioner.py
+REVERSIONER ?= $(TOOLS_PATH)/tools/reversioner.py package.json
 
 
 TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
@@ -177,13 +177,22 @@ TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
 	@node --eval "require('$^').test.run('$(names)')"
 
 
+################################################################################
+
+%.highest-version:
+	@$(REVERSIONER) -H True $(shell echo $@ | cut -d '.' -f 1)
+
+
+%.latest-version:
+	@$(REVERSIONER) -L True $(shell echo $@ | cut -d '.' -f 1)
+
+
 ################################################################### MAIN RULES #
 ################################################################################
 
 
 ################################################################################
 # GENERAL RULES ################################################################
-
 
 js: | js-build js-externs
 	@echo $@: DONE
@@ -226,8 +235,21 @@ js-tests:
 	@echo $@: DONE
 
 
+################################################################################
+
 versions:
 	@$(REVERSIONER)
+
+
+set-latest-versions:
+	@$(foreach MODULE, $(shell $(REVERSIONER) -M True), \
+	$(MAKE) -s $(MODULE).latest-version;)
+
+
+
+set-highest-versions:
+	@$(foreach MODULE, $(shell $(REVERSIONER) -M True), \
+	$(MAKE) -s $(MODULE).highest-version;)
 
 
 publish: | js-check js
