@@ -67,7 +67,7 @@ can be used as COMMAND in TAG
                                         
     %.js-compile-compressed         :   compiles and compresses all js files mentioned  
                                         in sources list by means of google-closure-compiler  
-                      !note         :   code shouldn dependend on any library
+                      !note         :   code shouldn`t dependend on any library
                                         
     %.js-externs-compile-compressed :   compiles and compresses all js files mentioned 
                                         in sources list by means of google-closure-compiler   
