@@ -160,7 +160,8 @@ TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
 %.js-assemble: %.jst
 	@mkdir -p $(JS_BUILD_PATH)
 	@$(TEMPLATER) $< > \
-	$(shell echo $(JS_BUILD_PATH)/$($(shell basename $<) | cut -d '.' -f 1)).js
+	$(shell echo $(JS_BUILD_PATH)/$(shell echo $(shell basename $<) | \
+	cut -d '.' -f 1).js)
 
 
 %.js-extract-externs: %.js
