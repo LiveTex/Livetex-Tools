@@ -16,7 +16,8 @@ Project should contain in its root directory a folder **etc/build** with followi
     `----build  
     |    |----templates  
     |    |    |----js  
-    |    |    |    `----*.jst  
+    |    |    |    `----*.jst
+    |    |    |    `----test-*.jst 
     |    |    `----css  
     |    |         `----*.csst  
     |    `----sources-lists  
