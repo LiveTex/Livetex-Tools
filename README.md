@@ -50,7 +50,7 @@ Main file, which includes rules:
 
 ## Rules: 
 
-+ **For templates**:     
++ **For templates**:        
 can be used as COMMAND in TAG   
 
     ```
@@ -80,7 +80,7 @@ can be used as COMMAND in TAG
                                         into single stream and inserts it instead of TAG
 
 
-+ **Main**:
++ **Main**:   
 can be used for one template or sources-list or module
 
 **js**: js.mk
@@ -107,7 +107,7 @@ can be used for one template or sources-list or module
                             % - name of template
 
 
-+ **General**:  
++ **General**:    
 can be used as script in NPM  
 
 **js**: js.mk  
