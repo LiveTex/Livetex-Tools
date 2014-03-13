@@ -227,7 +227,7 @@ js-tests:
 
 
 versions:
-  @$(REVERSIONER)
+	@$(REVERSIONER)
 
 
 publish: | js-check js
