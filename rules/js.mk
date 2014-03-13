@@ -76,6 +76,9 @@ JS_LINTER ?= $(TOOLS_PATH)/tools/closure-linter/gjslint.py \
 JS_EXTERNS_EXTRACTOR ?= $(TOOLS_PATH)/tools/externs-extractor/externsExtractor.py
 
 
+REVERSIONER ?= $(TOOLS_PATH)/tools/reversioner.py
+
+
 TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
 
 
@@ -221,6 +224,10 @@ js-tests:
 	@$(foreach TARGET_NAME, $(JS_TESTS), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-test);)
 	@echo $@: DONE
+
+
+versions:
+  @$(REVERSIONER)
 
 
 publish: | js-check js
