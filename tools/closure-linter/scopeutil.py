@@ -24,7 +24,7 @@ import itertools
 
 import ecmametadatapass
 import tokenutil
-from closure_linter.javascripttokens import JavaScriptTokenType
+from javascripttokens import JavaScriptTokenType
 
 
 def IsGoogScopeBlock(context):

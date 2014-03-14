@@ -23,8 +23,8 @@ import copy
 import StringIO
 
 from common import tokens
-from closure_linter.javascripttokens import JavaScriptToken
-from closure_linter.javascripttokens import JavaScriptTokenType
+from javascripttokens import JavaScriptToken
+from javascripttokens import JavaScriptTokenType
 
 # Shorthand
 Type = tokens.TokenType
