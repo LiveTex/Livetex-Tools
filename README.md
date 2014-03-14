@@ -16,7 +16,8 @@ Project should contain in its root directory a folder **etc/build** with followi
     `----build  
     |    |----templates  
     |    |    |----js  
-    |    |    |    `----*.jst  
+    |    |    |    `----*.jst
+    |    |    |    `----test-*.jst 
     |    |    `----css  
     |    |         `----*.csst  
     |    `----sources-lists  
@@ -26,7 +27,7 @@ Project should contain in its root directory a folder **etc/build** with followi
     |              `----*.csst  
     ` Makefile  
     
-+ **Templates:** *.jst, *.csst test-*.jst
++ **Templates:** \*.jst, \*.csst, test-\*.jst
     ```
     TAG     : %%COMMAND%%    
     COMMAND : any command which can be executed via teminal or make command  
@@ -49,7 +50,7 @@ Main file, which includes rules:
 
 ## Rules: 
 
-+ **For templates**:     
++ **For templates**:        
 can be used as COMMAND in TAG   
 
     ```
@@ -66,7 +67,7 @@ can be used as COMMAND in TAG
                                         
     %.js-compile-compressed         :   compiles and compresses all js files mentioned  
                                         in sources list by means of google-closure-compiler  
-                      !note         :   code shouldn dependend on any library
+                      !note         :   code shouldn`t dependend on any library
                                         
     %.js-externs-compile-compressed :   compiles and compresses all js files mentioned 
                                         in sources list by means of google-closure-compiler   
@@ -79,67 +80,67 @@ can be used as COMMAND in TAG
                                         into single stream and inserts it instead of TAG
 
 
-+ **Main**:
++ **Main**:   
 can be used for one template or sources-list or module
 
 **js**: js.mk
 
-    %.js-lint             : checks with google-closure-linter code style
-                            of sources mentioned in sources list
-                            % - name of sources list
-    %.js-check            : checks syntax with google-closure-compiler
-                            % - name of template
-    %.js-assemble         : assembles js template to js build path
-                            % - name of template
-    %.js-extract-externs  : extracts externs from built files
-                            % - name of built file
-    %.js-test             : runs test
-                            % - name of the test
-    %.highest-version     : sets module version to highest version found in npm
-                            % - module name
-    %.latest-version      : sets module version to latest version found in npm
-                            % - module name
+    %.js-lint                       :   checks with google-closure-linter code style
+                                        of sources mentioned in sources list
+                                        % - name of sources list
+    %.js-check                      :   checks syntax with google-closure-compiler
+                                        % - name of template
+    %.js-assemble                   :   assembles js template to js build path
+                                        % - name of template
+    %.js-extract-externs            :   extracts externs from built files
+                                        % - name of built file
+    %.js-test                       :   runs test
+                                        % - name of the test
+    %.highest-version               :   sets module version to highest version found in npm
+                                        % - module name
+    %.latest-version                :   sets module version to latest version found in npm
+                                        % - module name
 
 **css**: web.mk
 
-    %.css-assemble        : assembles css template to css build path
-                            % - name of template
+    %.css-assemble                  :   assembles css template to css build path
+                                        % - name of template
 
 
-+ **General**:  
++ **General**:    
 can be used as script in NPM  
 
 **js**: js.mk  
     
-    js          : general rule for js  
-    js-lint     : checks with google-closure-linter code style of sources  
-                  mentioned in sources lists   
-      !note     : if you have restrictions for this operation you can list  
-                  only necessary sources lists  
-                  at JS_LINT variable in Makefile
-    js-check    : checks syntax with google-closure-compiler     
-    js-externs  : extracts externs from built files   
-         !note  : if you have restrictions for this operation you can list  
-                  only necessary built files  
-                  at JS_EXTERNS variable in Makefile
-    js-build    : assembles js templates  
-    js-clean    : removes built files and externs
-    js-tests    : runs all tests
-    publish     : increments patch version, publishes to NPM and pushes tag into GIT  
+    js                              :   general rule for js  
+    js-lint                         :   checks with google-closure-linter code style of sources  
+                                        mentioned in sources lists   
+      !note                         :   if you have restrictions for this operation you can list  
+                                        only necessary sources lists  
+                                        at JS_LINT variable in Makefile
+    js-check                        :   checks syntax with google-closure-compiler     
+    js-externs                      :   extracts externs from built files   
+         !note                      :   if you have restrictions for this operation you can list  
+                                        only necessary built files  
+                                        at JS_EXTERNS variable in Makefile
+    js-build                        :   assembles js templates  
+    js-clean                        :   removes built files and externs
+    js-tests                        :   runs all tests
+    publish                         :   increments patch version, publishes to NPM and pushes tag into GIT  
     
 **css**: web.mk     
     
-    css         : general rule for css  
-    css-build   : assembles css templates  
-    css-clean   : removes built files  
+    css                             :   general rule for css  
+    css-build                       :   assembles css templates  
+    css-clean                       :   removes built files  
     
 **cpp**: cpp.mk   
     
-    cpp         : general rule for cpp  
-    cpp-build   : moves files built by means of node-gyp into built path and  
-                  removes all node-gyp extra data  
-    cpp-clean   : removes built files  
-    !note       : cpp rules have to be used after node-gyp build/rebuild commands  
+    cpp                             :   general rule for cpp  
+    cpp-build                       :   moves files built by means of node-gyp into built path and  
+                                        removes all node-gyp extra data  
+    cpp-clean                       :   removes built files  
+    !note                           :   cpp rules have to be used after node-gyp build/rebuild commands  
     
     
 ## License
