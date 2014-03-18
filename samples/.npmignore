@@ -1,5 +1,5 @@
 *.iml
-*.pyc
-.gitignore
+*.log
+.project
 .idea/
-__pycache__/
+node_modules/
