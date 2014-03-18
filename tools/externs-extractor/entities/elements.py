@@ -22,6 +22,8 @@ class Element:
         eqPos = name.find('=')
         if eqPos != -1:
             name = name[:eqPos]
+        if name[:3] == 'var':
+            name = name[3:]
         name = name.strip('; ')
         return name
 
