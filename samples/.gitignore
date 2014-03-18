@@ -1,4 +1,7 @@
 *.iml
-*.pyc
+*.log
+.project
 .idea/
-__pycache__/
+bin/
+externs/
+node_modules/
