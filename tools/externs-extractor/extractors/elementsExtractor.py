@@ -106,7 +106,11 @@ def __extractNamespace(text, jsDoc):
 
         @return {jsCodeParser.elements.Namespace} Namespace.
     """
-    end = text.find('}') + 1
+    end = text.find('=')
+    if text[end + 1:].strip()[0] == '{':
+        end = text.find('}') + 1
+    if text[end + 1:].strip().find('require') == 0:
+        end = text.find(')') + 1
     if text[end] == ';':
         end += 1
     code = text[:end].strip()
