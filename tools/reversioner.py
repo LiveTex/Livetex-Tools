@@ -53,7 +53,7 @@ def getHighestVersion(module):
         build = builds[-1]
     version = '.'.join([str(major), str(minor), str(patch)])
     if build:
-        version += '-' + build
+        version += '-' + str(build)
     return version.strip()
 
 
