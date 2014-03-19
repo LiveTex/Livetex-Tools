@@ -1,11 +1,10 @@
 #!/usr/bin/python
 
 
-import sys
 import json
 from collections import OrderedDict
 from optparse import OptionParser
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, check_call
 
 
 def loadPackage(packagePath):
@@ -76,6 +75,7 @@ def getLatestVersion(module):
 
 def setVersion(version):
     cmd = 'npm version ' + version
+    check_call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
     Popen(cmd, shell=True).wait()
 
 

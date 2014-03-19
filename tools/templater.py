@@ -3,9 +3,8 @@
 
 import os
 import re
-import sys
 from optparse import OptionParser
-from subprocess import Popen, STDOUT, PIPE, check_call, CalledProcessError
+from subprocess import Popen, PIPE, check_call
 
 
 def getTemplateText(templatePath):
