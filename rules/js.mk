@@ -180,11 +180,11 @@ TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
 ################################################################################
 
 %.highest-version:
-	@$(REVERSIONER) -H True $(shell echo $@ | cut -d '.' -f 1)
+	@$(REVERSIONER) -H $(shell echo $@ | cut -d '.' -f 1)
 
 
 %.latest-version:
-	@$(REVERSIONER) -L True $(shell echo $@ | cut -d '.' -f 1)
+	@$(REVERSIONER) -L $(shell echo $@ | cut -d '.' -f 1)
 
 
 ################################################################### MAIN RULES #
@@ -242,22 +242,23 @@ versions:
 
 
 set-latest-versions:
-	@$(foreach MODULE, $(shell $(REVERSIONER) -M True), \
+	@$(foreach MODULE, $(shell $(REVERSIONER) -S True), \
 	$(MAKE) -s $(MODULE).latest-version;)
 
 
-
 set-highest-versions:
-	@$(foreach MODULE, $(shell $(REVERSIONER) -M True), \
+	@$(foreach MODULE, $(shell $(REVERSIONER) -S True), \
 	$(MAKE) -s $(MODULE).highest-version;)
 
 
-publish: | js-check js
-	@npm version patch
+set-version:
+	@$(REVERSIONER) -I True
+
+
+publish: | js-check js set-version
 	@npm login
 	@npm ls 1> /dev/null
 	@npm publish
-	@git push
 	@echo $@: DONE
 
 
