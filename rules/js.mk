@@ -259,7 +259,7 @@ publish: | js-check js set-version
 	@npm login
 	@npm ls 1> /dev/null
 	@npm publish
-	@npm push
+	@git push
 	@echo $@: DONE
 
 
