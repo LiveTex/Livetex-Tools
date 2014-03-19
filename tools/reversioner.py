@@ -74,10 +74,9 @@ def getLatestVersion(module):
     return str(version).strip('\b\n\'" []')
 
 
-def setVersion(version, packagePath):
-    package = loadPackage(packagePath)
-    package['version'] = version
-    writePackage(package, packagePath)
+def setVersion(version):
+    cmd = 'npm version ' + version
+    Popen(cmd, shell=True).wait()
 
 
 def setHighestVersion(module, packagePath):
@@ -218,7 +217,7 @@ def main():
         if field in ['major', 'minor', 'patch', 'build']:
             incrementVersion(field, packagePath)
         else:
-            setVersion(field, packagePath)
+            setVersion(field)
     elif options.version:
         showModuleVersion(packagePath)
     else:
