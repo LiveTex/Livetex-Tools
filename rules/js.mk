@@ -256,10 +256,11 @@ set-version:
 
 
 publish: | js-check js set-version
+	@npm version $(shell @$(REVERSIONER) -V True)
 	@npm login
 	@npm ls 1> /dev/null
 	@npm publish
-	@echo DO NOT FORGET TO PUSH YOUR CHANGES TO GIT!
+	@git push
 	@echo $@: DONE
 
 
