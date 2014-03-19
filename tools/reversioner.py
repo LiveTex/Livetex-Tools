@@ -164,6 +164,7 @@ def main():
                             [-L <module> ]
                             [-S true     ]
                             [-I true     ]
+                            [-V true     ]
                                             package.json
     """
     parser = OptionParser(usage)
