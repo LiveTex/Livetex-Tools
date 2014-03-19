@@ -22,25 +22,19 @@ def writePackage(content, packagePath):
     file.close()
 
 
-def writeModuleVersion(version, packagePath):
-    package = loadPackage(packagePath)
-    package['version'] = version
-    writePackage(package, packagePath)
-
-
 def checkModule(module, packagePath):
     package = loadPackage(packagePath)
     modules = package['dependencies'].keys()
     if module not in modules:
-        raise Exception('Module ' + module + 'is not in package\'s '
-                                             'dependencies')
+        raise Exception("""
+        Module """ + module + """ is not in package's dependencies""")
 
 
 def getModulesVersions(module):
     cmd = 'npm --loglevel=silent show ' + module + ' versions'
     versions = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-    versions = [version.strip('[\\" \',bn]')
-                for version in str(versions).split(',')]
+    versions = [version.strip('\b\n\'" []')
+                for version in str(versions).strip('\b\n\'" []').split(',')]
     return versions
 
 
@@ -63,12 +57,12 @@ def getHighestVersion(module):
     patch = max([version[2] for version in versions
                  if version[0] == major and
                     version[1] == minor])
-    version = '.'.join([str(major), str(minor), str(patch)])
     builds = [version[3] for version in versions
               if len(version) > 3 and
                  version[0] == major and
                  version[1] == minor and
                  version[2] == patch]
+    version = '.'.join([str(major), str(minor), str(patch)])
     if builds:
         version += '-' + str(max(builds))
     return version.strip()
@@ -77,7 +71,13 @@ def getHighestVersion(module):
 def getLatestVersion(module):
     cmd = 'npm --loglevel=silent show ' + module + ' version'
     version = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-    return str(version).strip('bn\' \\')
+    return str(version).strip('\b\n\'" []')
+
+
+def setVersion(version, packagePath):
+    package = loadPackage(packagePath)
+    package['version'] = version
+    writePackage(package, packagePath)
 
 
 def setHighestVersion(module, packagePath):
@@ -113,23 +113,22 @@ def showDiffVersions(packagePath):
                version != highestVersion or \
                latestVersion != highestVersion:
                 print("""
-                ------------------------------
-                MODULE  : """ + module + """
-                VERSION : """ + version + """
-                LATEST  : """ + latestVersion + """
-                HIGHEST : """ + highestVersion)
+        ------------------------------
+        MODULE  : """ + module + """
+        VERSION : """ + version + """
+        LATEST  : """ + latestVersion + """
+        HIGHEST : """ + highestVersion)
                 count += 1
         if not count:
-            print('>> All modules versions are specified as '
-                  'highest and latest.')
+            print("""
+        All modules versions are specified as highest and latest""")
     else:
-        print('>> Module doesn\'t have dependencies')
+        print("""
+        Module doesn\'t have dependencies""")
 
 
-def showModuleVersion(packagePath):
-    package = loadPackage(packagePath)
-    print("""
-    Package version: """ + package['version'])
+def showModuleVersion(packagePath, message=''):
+    print(message + loadPackage(packagePath)['version'])
 
 
 def showModulesList(packagePath):
@@ -161,11 +160,11 @@ def incrementVersion(field, packagePath):
 
 def main():
     usage = """
-    usage: reversioner  [--H highest]   module
-                        [--L latest]    module
-                        [--S show]      true
-                        [-I increment]  true
-                                        package.json
+        usage: reversioner  [-H <module> ]
+                            [-L <module> ]
+                            [-S true     ]
+                            [-I true     ]
+                                            package.json
     """
     parser = OptionParser(usage)
     parser.add_option("-H", "--highest",
@@ -188,6 +187,11 @@ def main():
                       default=False,
                       dest="increment",
                       help="Increments specified field of package's version")
+    parser.add_option("-V", "--version",
+                      action="store",
+                      default=False,
+                      dest="version",
+                      help="Shows current version of the package")
 
     (options, args) = parser.parse_args()
 
@@ -203,14 +207,20 @@ def main():
     elif options.latest:
         setLatestVersion(options.latest, packagePath)
     elif options.increment:
-        showModuleVersion(packagePath)
+        message = """
+        Package version:
+        """
+        showModuleVersion(packagePath, message)
         field = raw_input("""
-    Increment version field: major/minor/patch/build/<version>
-    """)
+        Increment version field:    major/minor/patch/build
+        Set version:                <version>
+        """)
         if field in ['major', 'minor', 'patch', 'build']:
             incrementVersion(field, packagePath)
         else:
-            writeModuleVersion(field, packagePath)
+            setVersion(field, packagePath)
+    elif options.version:
+        showModuleVersion(packagePath)
     else:
         showDiffVersions(packagePath)
 
