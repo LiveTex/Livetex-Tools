@@ -5,53 +5,34 @@ from optparse import OptionParser
 from extractors.elementsExtractor import extractElements
 
 
-def getPaths(path):
-    paths = list()
-    pathsListFile = open(path, 'r')
-    pathsList = pathsListFile.read().splitlines()
-    for path in pathsList:
-        if path:
-            paths.append('./lib/' + path)
-    return paths
+def getExternsFromFiles(paths):
+    externs = ''
+    for path in paths:
+        for element in extractElements(path):
+            if not (element.isPrivate() or element.isTest()):
+                externs += element.getExterns()
+                externs += '\n\n'
+    externs += '\n'
+    return externs
 
 
 def main():
-    usage = "usage: jstuff [--p path_to_files_set]"
+    usage = "usage: externs-extractor [--o output]"
     parser = OptionParser(usage)
-    parser.add_option("-i", "--input",
+    parser.add_option("-o", "--output",
                       action="store",
-                      default='./etc/build/index.d',
-                      dest="input",
-                      help="Input path to file with project files.")
-    parser.add_option("-o", "--out",
-                      action="store",
-                      default='./externs/index.js',
+                      default=None,
                       dest="output",
                       help="Input path to externs file.")
     (options, args) = parser.parse_args()
-    indexdpaths = options.input
-    if not os.path.exists(indexdpaths):
-        indexdpaths = './etc/index.d'
-    paths = getPaths(indexdpaths)
-    out = options.output
-    externs = ''
-    if os.path.exists(out):
-        os.remove(out)
-    file = open(out, 'w')
-    excluded = []
-    for path in paths:
-        elements = extractElements(path)
-        for element in elements:
-            if element.isExcluded(excluded):
-                excluded.append(element)
-            elif not element.isPrivate() and \
-                    not element.isTest() and \
-                    not element.isExcluded(excluded):
-                externs += element.getExterns()
-                externs += '\n\n'
-        externs += '\n'
-    file.write(externs)
-    file.close()
+    externs = getExternsFromFiles(args)
+    if options.output:
+        output = open(options.output, 'w')
+        output.write(externs)
+        output.close()
+    else:
+        print(externs)
+
 
 if __name__ == "__main__":
     main()
