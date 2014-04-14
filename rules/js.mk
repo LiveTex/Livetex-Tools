@@ -82,33 +82,29 @@ REVERSIONER ?= $(TOOLS_PATH)/tools/reversioner.py package.json
 TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
 
 
+# HEADERS ######################################################################
+
+
+JS_MODULES_HEADERS = $(foreach DIR, $(wildcard $(MODULES_PATH)/*), \
+		     $(wildcard $(DIR)/externs/*.js))
+
+
+JS_CUSTOM_HEADERS = $(foreach DIR, $(INCLUDES_PATH), $(wildcard $(DIR)/*.js))
+
+
+JS_ENV_HEADERS = $(foreach DIR, $(ENV_EXTERNS_PATH)/$(JS_ENVIRONMENT), \
+		 $(wildcard $(DIR)/*.js))
+
+
+JS_HEADERS = $(JS_MODULES_HEADERS) $(JS_CUSTOM_HEADERS) $(JS_ENV_HEADERS)
+
+
 ################################################################################
 # RULES
 ################################################################################
 
 ################################################################################
 # AUX RULES ####################################################################
-
-
-# HEADERS ######################################################################
-
-%.jsh: %.js-env-headers %.js-custom-headers %.js-headers
-	@cat $(shell cat $^ < /dev/null) > $@
-
-
-%.js-headers:
-	@echo $(foreach DIR, $(wildcard $(MODULES_PATH)/*), \
-	$(wildcard $(DIR)/externs/*.js)) > $@
-
-
-%.js-custom-headers:
-	@echo $(foreach DIR, $(INCLUDES_PATH), \
-	$(wildcard $(DIR)/*.js)) > $@
-
-
-%.js-env-headers:
-	@echo $(foreach DIR, $(ENV_EXTERNS_PATH)/$(JS_ENVIRONMENT), \
-	$(wildcard $(DIR)/*.js)) > $@
 
 
 # COMPILATIONS #################################################################
@@ -126,22 +122,22 @@ TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
 # COMPRESSED COMPILATIONS ######################################################
 
 
-%.js-externs-compile-compressed: %.jsd %.jsh
+%.js-externs-compile-compressed: %.jsd
 	@$(JS_COMPILER) \
 	--js                $(foreach FILE, $(shell cat $<), \
 	                    $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs           $(shell echo "$^" | cut -d " " -f 2)
+	--externs           $(JS_HEADERS)
 
 
 # ADVANCED COMPILATION #########################################################
 
-%.js-compile-advanced: %.jsd %.jsh
+%.js-compile-advanced: %.jsd
 	@$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
 	--jscomp_error      checkTypes \
 	--js                $(foreach FILE, $(shell cat $<), \
 	                    $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs           $(shell echo "$^" | cut -d " " -f 2)
+	--externs           $(JS_HEADERS)
 
 
 #################################################################### AUX RULES #
@@ -167,10 +163,10 @@ TEMPLATER ?= $(TOOLS_PATH)/tools/templater.py
 	cut -d '.' -f 1).js)
 
 
-%.js-extract-externs: %.js
+%.js-extract-externs: %.jsd
 	@mkdir -p $(JS_EXTERNS_PATH)
-	@$(JS_EXTERNS_EXTRACTOR) $< \
-	> $(JS_EXTERNS_PATH)/$(shell basename $<)
+	@$(JS_EXTERNS_EXTRACTOR) $(foreach FILE, $(shell cat $^), \
+	$(JS_SOURCES_PATH)/$(FILE)) > $(JS_EXTERNS_PATH)/$(shell echo $@ | cut -d '.' -f 1).js
 
 
 %.js-test: %.js
