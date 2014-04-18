@@ -3,6 +3,7 @@
 
 import os
 import json
+import sys
 from collections import OrderedDict
 from optparse import OptionParser
 from subprocess import Popen, PIPE, check_call
@@ -110,8 +111,8 @@ def showDiffVersions(packagePath):
             latestVersion = getLatestVersion(module)
             highestVersion = getHighestVersion(module)
             if version != latestVersion or \
-               version != highestVersion or \
-               latestVersion != highestVersion:
+                            version != highestVersion or \
+                            latestVersion != highestVersion:
                 print("""
         ------------------------------
         MODULE  : """ + module + """
@@ -159,8 +160,11 @@ def incrementVersion(field, packagePath):
 
 
 def commitVersion(packagePath):
-    issue = raw_input('    issue:  ')
-    status = raw_input('    status: ')
+    sys.stdin = open('/dev/tty')
+    issue = raw_input("""
+    issue:  """)
+    status = raw_input("""
+    status: """)
     package = loadPackage(packagePath)
     project = package['name']
     version = package['version']
@@ -213,7 +217,7 @@ def main():
                       action="store",
                       default=False,
                       dest="commit",
-                      help="Commits version into git in youtrack format")
+                      help="Commits version into git in YouTrack format")
 
     (options, args) = parser.parse_args()
 
@@ -224,8 +228,6 @@ def main():
 
     if options.show:
         showModulesList(packagePath)
-    elif options.commit:
-        commitVersion(packagePath)
     elif options.highest:
         setHighestVersion(options.highest, packagePath)
     elif options.latest:
@@ -245,6 +247,8 @@ def main():
             setVersion(field)
     elif options.version:
         showModuleVersion(packagePath)
+    elif options.commit:
+        commitVersion(packagePath)
     else:
         showDiffVersions(packagePath)
 

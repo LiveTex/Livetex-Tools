@@ -263,11 +263,14 @@ commit:
 	@echo $@: DONE
 
 
-publish: | js-check js set-version
+npm-publish:
 	@npm login
 	@npm ls 1> /dev/null
 	@npm publish
-	@$(MAKE) commit
+	@echo $@: DONE
+
+
+publish: | js-check js set-version npm-publish commit
 	@echo $@: DONE
 
 
