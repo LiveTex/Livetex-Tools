@@ -244,19 +244,23 @@ versions:
 set-latest-versions:
 	@$(foreach MODULE, $(shell $(REVERSIONER) -S True), \
 	$(MAKE) -s $(MODULE).latest-version;)
+	@echo $@: DONE
 
 
 set-highest-versions:
 	@$(foreach MODULE, $(shell $(REVERSIONER) -S True), \
 	$(MAKE) -s $(MODULE).highest-version;)
+	@echo $@: DONE
 
 
 set-version:
 	@$(REVERSIONER) -I True
+	@echo $@: DONE
 
 
 commit:
 	@$(REVERSIONER) -C True
+	@echo $@: DONE
 
 
 publish: | js-check js set-version
