@@ -170,6 +170,9 @@ def commitVersion(packagePath):
     print('>>', message)
     cmd = 'git commit --allow-empty -m "' + message + '"'
     Popen(cmd, shell=True).wait()
+    branch = Popen('git branch', shell=True, stdout=PIPE).communicate()[0]
+    cmd = 'git push origin ' + str(branch)
+    Popen(cmd, shell=True).wait()
 
 
 def main():
