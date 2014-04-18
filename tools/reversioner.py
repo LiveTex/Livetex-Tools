@@ -158,13 +158,28 @@ def incrementVersion(field, packagePath):
     writePackage(package, packagePath)
 
 
+def commitVersion(packagePath):
+    issue = raw_input("""
+    issue: \n""")
+    status = raw_input("""
+    status: \n""")
+    package = loadPackage(packagePath)
+    project = package['name']
+    version = package['version']
+    message = '#' + issue + ' ' + status + ' Build ' + project + '@' + version
+    print('>>', message)
+    cmd = 'git commit --allow-empty -m "' + message + '"'
+    Popen(cmd, shell=True).wait()
+
+
 def main():
     usage = """
         usage: reversioner  [-H <module> ]
                             [-L <module> ]
-                            [-S true     ]
-                            [-I true     ]
-                            [-V true     ]
+                            [-S True     ]
+                            [-I True     ]
+                            [-V True     ]
+                            [-C True     ]
                                             package.json
     """
     parser = OptionParser(usage)
@@ -193,6 +208,11 @@ def main():
                       default=False,
                       dest="version",
                       help="Shows current version of the package")
+    parser.add_option("-C", "--commit",
+                      action="store",
+                      default=False,
+                      dest="commit",
+                      help="Commits version into git in youtrack format")
 
     (options, args) = parser.parse_args()
 
@@ -203,6 +223,8 @@ def main():
 
     if options.show:
         showModulesList(packagePath)
+    elif options.commit:
+        commitVersion(packagePath)
     elif options.highest:
         setHighestVersion(options.highest, packagePath)
     elif options.latest:

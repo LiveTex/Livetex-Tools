@@ -255,11 +255,16 @@ set-version:
 	@$(REVERSIONER) -I True
 
 
+commit:
+  @$(REVERSIONER) -C True
+
+
 publish: | js-check js set-version
 	@npm login
 	@npm ls 1> /dev/null
 	@npm publish
 	@git push
+	@$(MAKE) commit
 	@echo $@: DONE
 
 
