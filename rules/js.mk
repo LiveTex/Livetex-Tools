@@ -256,7 +256,7 @@ set-version:
 
 
 commit:
-  @$(REVERSIONER) -C True
+	@$(REVERSIONER) -C True
 
 
 publish: | js-check js set-version
