@@ -76,7 +76,7 @@ def getLatestVersion(module):
 
 
 def setVersion(version):
-    cmd = 'npm version ' + version
+    cmd = 'npm --loglevel=silent version ' + version
     check_call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
     Popen(cmd, shell=True).wait()
 
@@ -162,18 +162,19 @@ def incrementVersion(field, packagePath):
 def commitVersion(packagePath):
     sys.stdin = open('/dev/tty')
     issue = raw_input("""
-    issue:  """)
+        issue:  """)
     status = raw_input("""
-    status: """)
+        status: """)
     package = loadPackage(packagePath)
     project = package['name']
     version = package['version']
     message = '#' + issue + ' ' + status + ' Build ' + project + '@' + version
-    print('>>', message)
     cmd = 'git commit --allow-empty -m "' + message + '"'
-    Popen(cmd, shell=True).wait()
+    message = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+    print("""
+        """ + str(message))
     branch = Popen('git branch', shell=True, stdout=PIPE).communicate()[0]
-    cmd = 'git push origin ' + str(branch)
+    cmd = 'git push --quiet origin ' + str(branch).strip('* ')
     Popen(cmd, shell=True).wait()
 
 
@@ -245,6 +246,10 @@ def main():
             incrementVersion(field, packagePath)
         else:
             setVersion(field)
+        message = """
+        New version:
+        """
+        showModuleVersion(packagePath, message)
     elif options.version:
         showModuleVersion(packagePath)
     elif options.commit:

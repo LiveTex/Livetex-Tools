@@ -264,9 +264,9 @@ commit:
 
 
 npm-publish:
-	@npm login
+	@npm login --loglevel=silent
 	@npm ls 1> /dev/null
-	@npm publish
+	@npm publish --loglevel=silent
 	@echo $@: DONE
 
 
