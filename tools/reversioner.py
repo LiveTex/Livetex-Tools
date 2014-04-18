@@ -160,9 +160,9 @@ def incrementVersion(field, packagePath):
 
 def commitVersion(packagePath):
     issue = raw_input("""
-    issue: \n""")
+    issue:  """)
     status = raw_input("""
-    status: \n""")
+    status: """)
     package = loadPackage(packagePath)
     project = package['name']
     version = package['version']
