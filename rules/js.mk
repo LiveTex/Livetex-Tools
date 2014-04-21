@@ -164,13 +164,10 @@ JS_HEADERS = $(JS_MODULES_HEADERS) $(JS_CUSTOM_HEADERS) $(JS_ENV_HEADERS)
 	cut -d '.' -f 1).js)
 
 
-%.js-extract-externs: %.jsd
+%.js-extract-externs: %.js
  	@mkdir -p $(JS_EXTERNS_PATH)
  	@$(JS_EXTERNS_EXTRACTOR) $< \
  	> $(JS_EXTERNS_PATH)/$(shell basename $<)
- 	@$(JS_EXTERNS_EXTRACTOR) $(foreach FILE, $(shell cat $^), \
- 	$(JS_SOURCES_PATH)/$(FILE)) > $(JS_EXTERNS_PATH)/$(shell echo $@ | \
- 	cut -d '.' -f 1).js
 
 
 %.js-test: %.js
