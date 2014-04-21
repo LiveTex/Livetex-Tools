@@ -132,6 +132,7 @@ JS_HEADERS = $(JS_MODULES_HEADERS) $(JS_CUSTOM_HEADERS) $(JS_ENV_HEADERS)
 # ADVANCED COMPILATION #########################################################
 
 %.js-compile-advanced: %.jsd
+  echo $(JS_HEADERS)
 	@$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
 	--jscomp_error      checkTypes \
@@ -164,9 +165,12 @@ JS_HEADERS = $(JS_MODULES_HEADERS) $(JS_CUSTOM_HEADERS) $(JS_ENV_HEADERS)
 
 
 %.js-extract-externs: %.jsd
-	@mkdir -p $(JS_EXTERNS_PATH)
-	@$(JS_EXTERNS_EXTRACTOR) $(foreach FILE, $(shell cat $^), \
-	$(JS_SOURCES_PATH)/$(FILE)) > $(JS_EXTERNS_PATH)/$(shell echo $@ | cut -d '.' -f 1).js
+ 	@mkdir -p $(JS_EXTERNS_PATH)
+ 	@$(JS_EXTERNS_EXTRACTOR) $< \
+ 	> $(JS_EXTERNS_PATH)/$(shell basename $<)
+ 	@$(JS_EXTERNS_EXTRACTOR) $(foreach FILE, $(shell cat $^), \
+ 	$(JS_SOURCES_PATH)/$(FILE)) > $(JS_EXTERNS_PATH)/$(shell echo $@ | \
+ 	cut -d '.' -f 1).js
 
 
 %.js-test: %.js
