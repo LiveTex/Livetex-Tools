@@ -214,6 +214,7 @@ js-lint:
 
 
 js-check: js-lint
+	@npm --loglevel=silent i
 	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-check);)
 	@echo $@: DONE
