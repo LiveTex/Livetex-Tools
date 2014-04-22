@@ -214,14 +214,14 @@ js-lint:
 
 
 js-check: js-lint
-	@npm --loglevel=silent i
+	@npm --loglevel=silent i > /dev/null
 	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-check);)
 	@echo $@: DONE
 
 
 js-build: js-clean
-	@npm --loglevel=silent i
+	@npm --loglevel=silent i > /dev/null
 	@mkdir -p $(JS_BUILD_PATH)
 	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-assemble);)
