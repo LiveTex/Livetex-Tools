@@ -220,6 +220,7 @@ js-check: js-lint
 
 
 js-build: js-clean
+	@npm --loglevel=silent i
 	@mkdir -p $(JS_BUILD_PATH)
 	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-assemble);)
