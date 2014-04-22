@@ -173,8 +173,10 @@ def commitVersion(packagePath):
     message = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
     print("""
         """ + str(message))
-    branch = Popen('git branch', shell=True, stdout=PIPE).communicate()[0]
-    cmd = 'git push --quiet origin ' + str(branch).strip('* ')
+    branch = str(Popen('git branch', shell=True, stdout=PIPE).communicate()[0])
+    branch = [line.strip('* ') for line in branch.splitlines()
+              if '*' in line][0]
+    cmd = 'git push --quiet origin ' + branch
     Popen(cmd, shell=True).wait()
 
 
