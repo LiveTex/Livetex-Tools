@@ -3,6 +3,7 @@
 
 import os
 import json
+import sys
 from collections import OrderedDict
 from optparse import OptionParser
 from subprocess import Popen, PIPE, check_call
@@ -75,7 +76,7 @@ def getLatestVersion(module):
 
 
 def setVersion(version):
-    cmd = 'npm version ' + version
+    cmd = 'npm --loglevel=silent version ' + version
     check_call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
     Popen(cmd, shell=True).wait()
 
@@ -110,8 +111,8 @@ def showDiffVersions(packagePath):
             latestVersion = getLatestVersion(module)
             highestVersion = getHighestVersion(module)
             if version != latestVersion or \
-               version != highestVersion or \
-               latestVersion != highestVersion:
+                            version != highestVersion or \
+                            latestVersion != highestVersion:
                 print("""
         ------------------------------
         MODULE  : """ + module + """
@@ -158,13 +159,33 @@ def incrementVersion(field, packagePath):
     writePackage(package, packagePath)
 
 
+def commitVersion(packagePath):
+    sys.stdin = open('/dev/tty')
+    issue = raw_input("""
+        issue:  """)
+    status = raw_input("""
+        status: """)
+    package = loadPackage(packagePath)
+    project = package['name']
+    version = package['version']
+    message = '#' + issue + ' ' + status + ' Build ' + project + '@' + version
+    cmd = 'git commit --allow-empty -m "' + message + '"'
+    message = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+    print("""
+        """ + str(message))
+    branch = Popen('git branch', shell=True, stdout=PIPE).communicate()[0]
+    cmd = 'git push --quiet origin ' + str(branch).strip('* ')
+    Popen(cmd, shell=True).wait()
+
+
 def main():
     usage = """
         usage: reversioner  [-H <module> ]
                             [-L <module> ]
-                            [-S true     ]
-                            [-I true     ]
-                            [-V true     ]
+                            [-S True     ]
+                            [-I True     ]
+                            [-V True     ]
+                            [-C True     ]
                                             package.json
     """
     parser = OptionParser(usage)
@@ -193,6 +214,11 @@ def main():
                       default=False,
                       dest="version",
                       help="Shows current version of the package")
+    parser.add_option("-C", "--commit",
+                      action="store",
+                      default=False,
+                      dest="commit",
+                      help="Commits version into git in YouTrack format")
 
     (options, args) = parser.parse_args()
 
@@ -220,8 +246,14 @@ def main():
             incrementVersion(field, packagePath)
         else:
             setVersion(field)
+        message = """
+        New version:
+        """
+        showModuleVersion(packagePath, message)
     elif options.version:
         showModuleVersion(packagePath)
+    elif options.commit:
+        commitVersion(packagePath)
     else:
         showDiffVersions(packagePath)
 
