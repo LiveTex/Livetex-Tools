@@ -240,6 +240,7 @@ js-tests:
 
 versions:
 	@$(REVERSIONER)
+	@echo $@: DONE
 
 
 set-latest-versions:
