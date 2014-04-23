@@ -169,7 +169,7 @@ def commitVersion(packagePath):
     project = package['name']
     version = package['version']
     message = '#' + issue + ' ' + status + ' Build ' + project + '@' + version
-    cmd = 'git commit --allow-empty -m "' + message + '"'
+    cmd = 'git commit -am "' + message + '"'
     message = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
     print("""
         """ + str(message))
