@@ -243,27 +243,39 @@ js-tests:
 
 versions:
 	@$(REVERSIONER)
+	@echo $@: DONE
 
 
 set-latest-versions:
 	@$(foreach MODULE, $(shell $(REVERSIONER) -S True), \
 	$(MAKE) -s $(MODULE).latest-version;)
+	@echo $@: DONE
 
 
 set-highest-versions:
 	@$(foreach MODULE, $(shell $(REVERSIONER) -S True), \
 	$(MAKE) -s $(MODULE).highest-version;)
+	@echo $@: DONE
 
 
 set-version:
 	@$(REVERSIONER) -I True
+	@echo $@: DONE
 
 
-publish: | js-check js set-version
-	@npm login
+commit:
+	@$(REVERSIONER) -C True
+	@echo $@: DONE
+
+
+npm-publish:
+	@npm login --loglevel=silent
 	@npm ls 1> /dev/null
-	@npm publish
-	@git push
+	@npm publish --loglevel=silent
+	@echo $@: DONE
+
+
+publish: | js-check js set-version npm-publish commit
 	@echo $@: DONE
 
 

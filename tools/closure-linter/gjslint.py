@@ -41,6 +41,7 @@ __author__ = ('robbyw@google.com (Robert Walker)',
 
 import errno
 import itertools
+import os
 import platform
 import sys
 import time
@@ -302,10 +303,12 @@ def main(argv=None):
             else:
                 fix_args.append(flag)
 
+        fixjsstyle_path = str(os.path.dirname(os.path.realpath(__file__))) + \
+                          os.sep + 'fixjsstyle.py'
         message += """
         TRY:
 
-        ./node_modules/livetex-tools/tools/closure-linter/fixjsstyle.py %s
+        """ + fixjsstyle_path + """ %s
 
         """ % ' '.join(fix_args)
         exit_code = message
