@@ -34,6 +34,8 @@ def interpretAdvanced(templateText):
                                         '.js-compile-advanced')
     templateText = templateText.replace('.js-externs-compile-compressed',
                                         '.js-compile-advanced')
+    templateText = templateText.replace('.js-web-externs-compile-compressed',
+                                        '.js-web-compile-advanced')
     return templateText
 
 

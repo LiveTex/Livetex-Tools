@@ -43,25 +43,6 @@ JS_LINTER           ?= $(TOOLS_PATH)/tools/closure-linter/gjslint.py \
 JS_EXTERNS_XTRACTOR ?= $(TOOLS_PATH)/tools/externs-extractor/externsExtractor.py
 
 
-# HEADERS ######################################################################
-
-
-JS_DEPS_HEADERS     ?= $(foreach DIR, $(wildcard $(MODULES_PATH)/*), \
-                       $(wildcard $(DIR)/externs/*.js))
-
-
-JS_NODE_HEADERS     ?= $(foreach FILE, \
-                       $(wildcard $(ENV_EXTERNS_PATH)/node/*), \
-                       $(FILE)) \
-                       $(JS_DEPS_HEADERS)
-
-
-JS_WEB_HEADERS      ?= $(foreach FILE, \
-                       $(wildcard $(ENV_EXTERNS_PATH)/browser/*), \
-                       $(FILE)) \
-                       $(JS_DEPS_HEADERS)
-
-
 # NAMES ########################################################################
 
 

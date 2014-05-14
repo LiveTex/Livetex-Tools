@@ -9,33 +9,33 @@
   --js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE))
 
 
-%.js-externs-compile-compressed: %.jsd
+%.js-externs-compile-compressed: %.jsd %.jsh-node
 	@$(JS_COMPILER) \
   --js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs   $(JS_NODE_HEADERS)
+	--externs   $(shell echo "$^" | cut -d " " -f 2)
 
 
-%.js-compile-advanced: %.jsd
-	@$(JS_COMPILER) \
+%.js-compile-advanced: %.jsd %.jsh-node
+	$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
 	--jscomp_error      checkTypes \
 	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs   $(JS_NODE_HEADERS)
+	--externs   $(shell echo "$^" | cut -d " " -f 2)
 
 
 # WEB ##########################################################################
 
 
-%.js-web-externs-compile-compressed: %.jsd
+%.js-web-externs-compile-compressed: %.jsd %.js-web-headers
 	@$(JS_COMPILER) \
   --js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs   $(JS_WEB_HEADERS)
+	--externs   $(shell echo "$^" | cut -d " " -f 2)
 
 
-%.js-web-compile-advanced: %.jsd
+%.js-web-compile-advanced: %.jsd %.js-web-headers
 	@$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
 	--jscomp_error      checkTypes \
 	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs   $(JS_WEB_HEADERS)
+	--externs   $(shell echo "$^" | cut -d " " -f 2)
 
