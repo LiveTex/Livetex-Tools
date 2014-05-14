@@ -26,8 +26,7 @@ npm-publish:
 
 
 modules:
-	@rm -rf $(MODULES_PATH)
-	@npm --loglevel=silent i > /dev/null
+	@npm --loglevel=silent update > /dev/null
 	@if [ $(wildcard $(PROJECT_PATH)/.gitmodules) ] ; \
 	then \
 		git submodule update --init ; \

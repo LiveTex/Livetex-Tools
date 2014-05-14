@@ -15,33 +15,33 @@ js-clean:
 
 
 js-tests:
-	@$(foreach TARGET_NAME, $(JS_TESTS_NAMES), \
+	@$(foreach TARGET_NAME, $(JS_TESTS), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-test);)
 	@echo $@: DONE
 
 
 js-lint:
-	@$(foreach TARGET_NAME, $(JS_LISTS_NAMES), \
+	@$(foreach TARGET_NAME, $(JS_LISTS), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-lint);)
 	@echo $@: DONE
 
 
 js-check: js-lint
-	@$(foreach TARGET_NAME, $(JS_TEMPLATES_NAMES), \
+	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-check);)
 	@echo $@: DONE
 
 
 js-build: js-clean
 	@mkdir -p $(JS_BUILD_PATH)
-	@$(foreach TARGET_NAME, $(JS_TEMPLATES_NAMES), \
+	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-assemble);)
 	@echo $@: DONE
 
 
 js-externs:
 	@mkdir -p $(JS_EXTERNS_PATH)
-	@$(foreach TARGET_NAME, $(JS_FILES_NAMES), \
+	@$(foreach TARGET_NAME, $(JS_FILES), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-extract-externs);)
 	@echo $@: DONE
 

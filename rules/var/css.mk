@@ -34,7 +34,7 @@ CSS_COMPILER        ?= java -jar $(TOOLS_PATH)/tools/closure-stylesheets.jar
 # NAMES ########################################################################
 
 
-CSS_TEMPLATES_NAMES ?= $(foreach FILE, \
+CSS_TEMPLATES       ?= $(foreach FILE, \
                        $(shell find $(TEMPLATES_PATH)/css -maxdepth 1 \
                        -iname '*.csst'), \
                        $(shell basename $(FILE) | cut -d '.' -f 1))

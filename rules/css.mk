@@ -14,7 +14,7 @@ css-clean:
 
 css-build: css-clean
 	@mkdir -p $(CSS_BUILD_PATH)
-	@$(foreach TARGET_NAME, $(CSS_TEMPLATES_NAMES), \
+	@$(foreach TARGET_NAME, $(CSS_TEMPLATES), \
 	$(MAKE) -s $(TARGET_NAME).css-assemble;)
 	@echo $@: DONE
 
