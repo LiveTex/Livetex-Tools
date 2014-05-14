@@ -18,7 +18,14 @@ CPP_NODES_PATH      ?= $(GIP_BUILD_PATH)/Release
 ################################################################################
 
 
-CPP_NODES           ?= $(foreach FILE, \
+BUILT_NODES_NAMES   ?= $(foreach FILE, \
+                       $(shell find $(CPP_BUILD_PATH) \
+                       -maxdepth 1 \
+                       -iname '*.node'), \
+                       $(shell basename $(FILE) | cut -d '.' -f 1))
+
+
+GYP_NODES_NAMES     ?= $(foreach FILE, \
                        $(shell find $(CPP_NODES_PATH) \
                        -maxdepth 1 \
                        -iname '*.node'), \
