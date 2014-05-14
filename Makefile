@@ -7,3 +7,4 @@ publish:
 	@npm publish
 	@git push
 	@echo $@: DONE
+
