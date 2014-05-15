@@ -30,8 +30,7 @@
 
 
 %.js-check: %.jst
-	$(TEMPLATER) -a True $< > /dev/null
-	@echo $@: DONE
+	@$(TEMPLATER) -a True $< > /dev/null
 
 
 %.js-assemble: %.jst
