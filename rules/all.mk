@@ -33,7 +33,7 @@ npm-modules:
 git-modules:
 	@git submodule update --init > /dev/null
 	@$(foreach SUBMODULE, $(SUBMODULES), \
-	cd $(SUBMODULE); $(MAKE) -s js; cd -;)
+	cd $(SUBMODULE); $(MAKE) -s js > /dev/null; cd - > /dev/null;)
 	@echo $@: DONE
 
 
