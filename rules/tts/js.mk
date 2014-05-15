@@ -26,6 +26,10 @@
 # WEB ##########################################################################
 
 
+%.js-web-compile: %.jsd
+	@cat $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE))
+
+
 %.js-web-compile-compressed: %.jsd
 	@$(JS_COMPILER) \
   --jscomp_warning    undefinedVars \
