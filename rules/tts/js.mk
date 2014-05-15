@@ -26,8 +26,15 @@
 # WEB ##########################################################################
 
 
+%.js-web-compile-compressed: %.jsd
+	@$(JS_COMPILER) \
+  --jscomp_warning    undefinedVars \
+  --js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE))
+
+
 %.js-web-externs-compile-compressed: %.jsd %.js-web-headers
 	@$(JS_COMPILER) \
+	--jscomp_warning    undefinedVars \
   --js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
 	--externs   $(shell echo "$^" | cut -d " " -f 2)
 
@@ -36,6 +43,7 @@
 	@$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
 	--jscomp_error      checkTypes \
+	--jscomp_warning    undefinedVars \
 	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
 	--externs   $(shell echo "$^" | cut -d " " -f 2)
 

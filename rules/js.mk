@@ -21,7 +21,7 @@ js-tests:
 
 
 js-lint:
-	@$(foreach TARGET_NAME, $(JS_LISTS), \
+	@$(foreach TARGET_NAME, $(JS_LINT), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-lint);)
 	@echo $@: DONE
 

@@ -25,12 +25,14 @@ npm-publish:
 	@echo $@: DONE
 
 
-modules:
-	@npm --loglevel=silent update > /dev/null
-	@if [ $(wildcard $(PROJECT_PATH)/.gitmodules) ] ; \
-	then \
-		git submodule update --init ; \
-	fi;
+npm-modules:
+  @npm --loglevel=silent update > /dev/null
+  @echo $@: DONE
+
+
+git-modules:
+	@git submodule update --init > /dev/null
+	$(foreach SUBMODULE, $(SUBMODULES), $(shell cd $(SUBMODULE) && $(MAKE) js && cd -);)
 	@echo $@: DONE
 
 

@@ -53,7 +53,7 @@ JS_FILES            ?= $(foreach FILE, \
                        $(shell basename $(FILE) | cut -d '.' -f 1))
 
 
-JS_LISTS            ?= $(foreach FILE, \
+JS_LINT            ?= $(foreach FILE, \
                        $(shell find $(SOURCES_LISTS_PATH)/js \
                        -maxdepth 1 \
                        -iname '*.jsd' ), \
