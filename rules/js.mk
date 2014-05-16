@@ -40,9 +40,9 @@ js-build: js-clean
 
 
 js-externs:
-	@mkdir -p $(JS_EXTERNS_PATH)
 	@$(foreach TARGET_NAME, $(JS_EXTERNS), \
-	$(MAKE) -s $(shell echo $(TARGET_NAME).js-extract-externs);)
+	$(MAKE) -s $(shell mkdir -p $(JS_EXTERNS_PATH) && \
+	echo $(TARGET_NAME).js-extract-externs);)
 	@echo $@: DONE
 
 
