@@ -27,7 +27,7 @@ js-lint:
 
 
 js-check: js-lint
-	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
+	@$(foreach TARGET_NAME, $(JS_CHECK), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-check);)
 	@echo $@: DONE
 
@@ -41,7 +41,7 @@ js-build: js-clean
 
 js-externs:
 	@mkdir -p $(JS_EXTERNS_PATH)
-	@$(foreach TARGET_NAME, $(JS_FILES), \
+	@$(foreach TARGET_NAME, $(JS_EXTERNS), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-extract-externs);)
 	@echo $@: DONE
 

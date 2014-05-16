@@ -32,7 +32,9 @@ vpath %.js          $(JS_BUILD_PATH)
 
 JS_COMPILER         ?= java -jar $(TOOLS_PATH)/tools/closure-compiler.jar \
                     --warning_level     VERBOSE \
-                    --language_in       ECMASCRIPT5_STRICT
+                    --language_in       ECMASCRIPT5_STRICT \
+                    --jscomp_error      checkTypes \
+                    --jscomp_error      suspiciousCode \
 
 
 JS_LINTER           ?= $(TOOLS_PATH)/tools/closure-linter/gjslint.py \
@@ -46,17 +48,24 @@ JS_EXTERNS_XTRACTOR ?= $(TOOLS_PATH)/tools/externs-extractor/externsExtractor.py
 # NAMES ########################################################################
 
 
-JS_FILES            ?= $(foreach FILE, \
+JS_EXTERNS          ?= $(foreach FILE, \
                        $(shell find $(JS_BUILD_PATH) \
                        -maxdepth 1 \
                        -iname '*.js'), \
                        $(shell basename $(FILE) | cut -d '.' -f 1))
 
 
-JS_LINT            ?= $(foreach FILE, \
+JS_LINT             ?= $(foreach FILE, \
                        $(shell find $(SOURCES_LISTS_PATH)/js \
                        -maxdepth 1 \
                        -iname '*.jsd' ), \
+                       $(shell basename $(FILE) | cut -d '.' -f 1))
+
+
+JS_CHECK            ?= $(foreach FILE, \
+                       $(shell find $(TEMPLATES_PATH)/js \
+                       -maxdepth 1 \
+                       -iname '*.jst'), \
                        $(shell basename $(FILE) | cut -d '.' -f 1))
 
 

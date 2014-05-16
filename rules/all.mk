@@ -25,16 +25,16 @@ npm-publish:
 	@echo $@: DONE
 
 
-npm-modules:
-  @npm --loglevel=silent update > /dev/null
-  @echo $@: DONE
+#npm-modules:
+#  @npm --loglevel=silent update > /dev/null
+#  @echo $@: DONE
 
 
-git-modules:
-	@git submodule update --init > /dev/null
-	@$(foreach SUBMODULE, $(SUBMODULES), \
-	cd $(SUBMODULE); $(MAKE) -s js > /dev/null; cd - > /dev/null;)
-	@echo $@: DONE
+#git-modules:
+#	@git submodule update --init > /dev/null
+#	@$(foreach SUBMODULE, $(SUBMODULES), \
+#	cd $(SUBMODULE); $(MAKE) -s js > /dev/null; cd - > /dev/null;)
+#	@echo $@: DONE
 
 
 publish: | js-check js set-version npm-publish commit-version

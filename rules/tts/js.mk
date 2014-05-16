@@ -18,7 +18,6 @@
 %.js-compile-advanced: %.jsd %.jsh-node
 	$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
-	--jscomp_error      checkTypes \
 	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
 	--externs   $(shell echo "$^" | cut -d " " -f 2)
 
@@ -44,7 +43,6 @@
 %.js-web-compile-advanced: %.jsd %.jsh-web
 	@$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
-	--jscomp_error      checkTypes \
 	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
 	--externs   $(shell echo "$^" | cut -d " " -f 2)
 
