@@ -28,12 +28,19 @@ def addIndent(text, indent):
 
 
 def interpretAdvanced(templateText):
-    templateText = templateText.replace('.js-compile',
-                                        '.js-compile-advanced')
-    templateText = templateText.replace('.js-compile-compressed',
-                                        '.js-compile-advanced')
-    templateText = templateText.replace('.js-externs-compile-compressed',
-                                        '.js-compile-advanced')
+    templateText = re.sub('\%\%make*.(\.js-compile)\%\%',
+                          '.js-compile-advanced', templateText)
+    templateText = re.sub('\%\%make*.(\.js-compile-compressed)\%\%',
+                          '.js-compile-advanced', templateText)
+    templateText = re.sub('\%\%make*.(\.js-externs-compile-compressed)\%\%',
+                          '.js-compile-advanced', templateText)
+
+    templateText = re.sub('\%\%make*.(\.js-web-compile)\%\%',
+                          '.js-web-compile-advanced', templateText)
+    templateText = re.sub('\%\%make*.(\.js-web-compile-compressed)\%\%',
+                          '.js-web-compile-advanced', templateText)
+    templateText = re.sub('\%\%make*.(\.js-web-externs-compile-compressed)\%\%',
+                          '.js-web-compile-advanced', templateText)
     return templateText
 
 

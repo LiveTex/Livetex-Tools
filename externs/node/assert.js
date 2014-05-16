@@ -1,11 +1,33 @@
 
 
+/**
+ * @param {*} value
+ * @param {string} message
+ * @throws {assert.AssertionError}
+ */
+var assert = function(value, message) {};
 
 
 /**
- * @namespace
+ * @param {{message: string, actual: *, expected: *, operator: string}} options
+ * @constructor
+ * @extends Error
  */
-var assert = {};
+assert.AssertionError = function(options) {};
+
+
+/**
+ * @return {string}
+ */
+assert.AssertionError.prototype.toString = function() {};
+
+
+/**
+ * @param {*} value
+ * @param {string=} message
+ * @throws {assert.AssertionError}
+ */
+assert.ok = function(value, message) {};
 
 
 /**
@@ -13,83 +35,77 @@ var assert = {};
  * @param {*} expected
  * @param {string} message
  * @param {string} operator
+ * @throws {assert.AssertionError}
  */
 assert.fail = function(actual, expected, message, operator) {};
 
 
 /**
- *
- * @param {*} value
- * @param {string=} opt_message
+ * @param {*} actual
+ * @param {*} expected
+ * @param {string} message
+ * @throws {assert.AssertionError}
  */
-assert.ok = function(value, opt_message) {};
+assert.equal = function(actual, expected, message) {};
 
 
 /**
  * @param {*} actual
  * @param {*} expected
- * @param {string=} opt_message
+ * @param {string} message
+ * @throws {assert.AssertionError}
  */
-assert.equal = function(actual, expected, opt_message) {};
+assert.notEqual = function(actual, expected, message) {};
 
 
 /**
  * @param {*} actual
  * @param {*} expected
- * @param {string=} opt_message
+ * @param {string} message
+ * @throws {assert.AssertionError}
  */
-assert.notEqual = function(actual, expected, opt_message) {};
+assert.deepEqual = function(actual, expected, message) {};
 
 
 /**
  * @param {*} actual
  * @param {*} expected
- * @param {string=} opt_message
+ * @param {string} message
+ * @throws {assert.AssertionError}
  */
-assert.deepEqual = function(actual, expected, opt_message) {};
+assert.notDeepEqual = function(actual, expected, message) {};
 
 
 /**
  * @param {*} actual
  * @param {*} expected
- * @param {string=} opt_message
+ * @param {string} message
+ * @throws {assert.AssertionError}
  */
-assert.notDeepEqual = function(actual, expected, opt_message) {};
+assert.strictEqual = function(actual, expected, message) {};
 
 
 /**
  * @param {*} actual
  * @param {*} expected
- * @param {string=} opt_message
+ * @param {string} message
+ * @throws {assert.AssertionError}
  */
-assert.strictEqual = function(actual, expected, opt_message) {};
+assert.notStrictEqual = function(actual, expected, message) {};
 
 
 /**
- * @param {*} actual
- * @param {*} expected
- * @param {string=} opt_message
+ * @param {function()} block
+ * @param {Function|RegExp|function(*)} error
+ * @param {string=} message
+ * @throws {assert.AssertionError}
  */
-assert.notStrictEqual = function(actual, expected, opt_message) {};
-
-
-/**
- * @param {function(...)} block
- * @param {Error=} opt_error
- * @param {string=} opt_message
- */
-assert.throws = function(block, opt_error, opt_message) {};
-
-
-/**
- * @param {function(...)} block
- * @param {Error=} opt_error
- * @param {string=} opt_message
- */
-assert.doesNotThrow = function(block, opt_error, opt_message) {};
+assert.doesNotThrow = function(block, error, message) {};
 
 
 /**
  * @param {*} value
+ * @throws {assert.AssertionError}
  */
 assert.ifError = function(value) {};
+

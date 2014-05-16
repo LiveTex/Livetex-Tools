@@ -1,95 +1,122 @@
 
 
-
-
-/**
- * @namespace
- */
 var http = {};
 
-
 /**
- * @param {function(!http.ServerRequest, !http.ServerResponse)=}
- *    opt_requestHandler
- * @return {!http.Server}
+ * @typedef {function(http.IncomingMessage, http.ServerResponse)}
  */
-http.createServer = function(opt_requestHandler) {};
-
+http.requestListener;
 
 /**
+ * @param {http.requestListener=} listener
+ * @return {http.Server}
+ */
+http.createServer = function(listener) {};
+
+/**
+ * @param {http.requestListener=} listener  
  * @constructor
- * @extends {events.EventEmitter}
+ * @extends events.EventEmitter
  */
-http.Server = function() {};
-
+http.Server = function(listener) {};
 
 /**
- * @param {number|string} port
- * @param {string=} opt_host
+ * @param {(number|string)} portOrPath
+ * @param {(string|Function)=} hostnameOrCallback
+ * @param {Function=} callback
  */
-http.Server.prototype.listen = function(port, opt_host) {};
+http.Server.prototype.listen = function(portOrPath, hostnameOrCallback,
+                                        callback) {};
 
-
+/**
+ */
 http.Server.prototype.close = function() {};
 
-
 /**
  * @constructor
- * @extends {events.EventEmitter}
+ * @extends stream.Readable
  */
-http.ServerRequest = function() {};
-
+http.IncomingMessage = function() {};
 
 /**
- * @type {!Object.<string, string>}
- */
-http.ServerRequest.prototype.headers = {};
-
-
+ * @type {?string}
+ * */
+http.IncomingMessage.prototype.method;
 
 /**
- * @type {!net.Socket}
+ * @type {?string}
  */
-http.ServerRequest.prototype.connection;
+http.IncomingMessage.prototype.url;
 
+/**
+ * @type {Object}
+ * */
+http.IncomingMessage.prototype.headers;
+
+/**
+ * @type {Object}
+ * */
+http.IncomingMessage.prototype.trailers;
 
 /**
  * @type {string}
  */
-http.ServerRequest.prototype.method = '';
-
+http.IncomingMessage.prototype.httpVersion;
 
 /**
  * @type {string}
  */
-http.ServerRequest.prototype.url = '';
-
-
-http.ServerRequest.prototype.resume = function() {};
-
-
-http.ServerRequest.prototype.pause = function() {};
-
+http.IncomingMessage.prototype.httpVersionMajor;
 
 /**
- * @param {string} event Событие.
- * @param {function(!Object)} callback Обработчик результата.
+ * @type {string}
  */
-http.ServerRequest.prototype.on = function(event, callback) {};
+http.IncomingMessage.prototype.httpVersionMinor;
 
+/**
+ * @type {*}
+ */
+http.IncomingMessage.prototype.connection;
+
+/**
+ * @type {?number}
+ */
+http.IncomingMessage.prototype.statusCode;
+
+/**
+ * @type {net.Socket}
+ */
+http.IncomingMessage.prototype.socket;
+
+/**
+ * @param {number} msecs
+ * @param {function()} callback
+ */
+http.IncomingMessage.prototype.setTimeout = function(msecs, callback) {};
 
 /**
  * @constructor
- * @extends {events.EventEmitter}
+ * @extends events.EventEmitter
+ * @private
  */
 http.ServerResponse = function() {};
 
+/**
+ */
+http.ServerResponse.prototype.writeContinue = function() {};
 
 /**
- * @param {(string|!Buffer)=} opt_data
+ * @param {number} statusCode
+ * @param {*=} reasonPhrase
+ * @param {*=} headers
  */
-http.ServerResponse.prototype.end = function(opt_data) {};
+http.ServerResponse.prototype.writeHead = function(statusCode, reasonPhrase,
+                                                   headers) {};
 
+/**
+ * @type {number}
+ */
+http.ServerResponse.prototype.statusCode;
 
 /**
  * @param {string} name
@@ -97,30 +124,93 @@ http.ServerResponse.prototype.end = function(opt_data) {};
  */
 http.ServerResponse.prototype.setHeader = function(name, value) {};
 
+/**
+ * @param {string} name
+ * @return {string|undefined} value
+ */
+http.ServerResponse.prototype.getHeader = function(name) {};
 
 /**
- * @param {number} code
- * @param {!Object=} opt_headers
+ * @param {string} name
  */
-http.ServerResponse.prototype.writeHead = function(code, opt_headers) {};
-
+http.ServerResponse.prototype.removeHeader = function(name) {};
 
 /**
- * @param {string | Buffer} chunk Данные.
- * @param {string=} opt_encode Кодировка для строковых данных.
+ * @param {string|Array|buffer.Buffer} chunk
+ * @param {string=} encoding
  */
-http.ServerResponse.prototype.write = function(chunk, opt_encode) {};
+http.ServerResponse.prototype.write = function(chunk, encoding) {};
 
+/**
+ * @param {Object} headers
+ */
+http.ServerResponse.prototype.addTrailers = function(headers) {};
+
+/**
+ * @param {(string|Array|buffer.Buffer)=} data
+ * @param {string=} encoding
+ */
+http.ServerResponse.prototype.end = function(data, encoding) {};
+
+/**
+ * @constructor
+ * @extends events.EventEmitter
+ * @private
+ */
+http.ClientRequest = function() {};
+
+/**
+ * @param {string|Array|buffer.Buffer} chunk
+ * @param {string=} encoding
+ */
+http.ClientRequest.prototype.write = function(chunk, encoding) {};
+
+/**
+ * @param {(string|Array|buffer.Buffer)=} data
+ * @param {string=} encoding
+ */
+http.ClientRequest.prototype.end = function(data, encoding) {};
+
+/**
+ */
+http.ClientRequest.prototype.abort = function() {};
+
+/**
+ * @param {Object} options
+ * @param {function(http.IncomingMessage)} callback
+ * @return {http.ClientRequest}
+ */
+http.request = function(options, callback) {};
+
+/**
+ * @param {Object} options
+ * @param {function(http.IncomingMessage)} callback
+ * @return {http.ClientRequest}
+ */
+http.get = function(options, callback) {};
+
+/**
+ * @constructor
+ * @extends events.EventEmitter
+ */
+http.Agent = function() {};
 
 /**
  * @type {number}
  */
-http.ServerResponse.prototype.statusCode = 200;
-
+http.Agent.prototype.maxSockets;
 
 /**
- * @type {!Object}
+ * @type {number}
  */
-http.ServerResponse.prototype.headers;
+http.Agent.prototype.sockets;
 
+/**
+ * @type {Array.<http.ClientRequest>}
+ */
+http.Agent.prototype.requests;
 
+/**
+ * @type {http.Agent}
+ */
+http.globalAgent;

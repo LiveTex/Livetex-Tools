@@ -1,1 +1,4 @@
-include ./node_modules/livetex-tools/rules/js.mk
+TOOLS_PATH = /PATH_TO_LIVETEX_TOOLS
+
+
+include $(TOOLS_PATH)/rules/js.mk

@@ -13,7 +13,7 @@ var LTX_IS_API;
 
 
 /**
- * @type {{HTTP_BALANCER: string}}
+ * @type {!Object}
  */
 var LivetexSettings;
 

@@ -1,84 +1,148 @@
 
 
 /**
- * @namespace
+ * @constructor
+ * @extends events.EventEmitter
  */
-var process = {};
-
+var process = function() {};
 
 /**
- * @param {function()} callback
+ * @type {stream.ReadableStream}
  */
-process.nextTick = function(callback) {};
-
+process.stdin;
 
 /**
- * @param {!Array.<number>=} opt_prevTime
- * @return {!Array.<number>}
+ * @type {stream.WritableStream}
  */
-process.hrtime = function(opt_prevTime) {};
-
+process.stdout;
 
 /**
- * @param {number} opt_code Код завершения.
+ * @type {stream.WritableStream}
  */
-process.exit = function(opt_code) {};
-
+process.stderr;
 
 /**
- * @param {string} pid Process ID.
- * @param {string} opt_signal Сигнал завершения.
+ * @type {Array.<string>}
  */
-process.kill = function(pid, opt_signal) {};
-
+process.argv;
 
 /**
  * @type {string}
  */
-process.pid = '';
-
+process.execPath;
 
 /**
- * @return {!process.MemoryUsageInfo}
+ */
+process.abort = function() {};
+
+/**
+ * @param {string} directory
+ */
+process.chdir = function(directory) {};
+
+/**
+ * @return {string}
+ * @nosideeffects
+ */
+process.cwd = function() {};
+
+/**
+ * @type {Object.<string,string>}
+ */
+process.env;
+
+/**
+ * @param {number=} code
+ */
+process.exit = function(code) {};
+
+/**
+ * @return {number}
+ * @nosideeffects
+ */
+process.getgid = function() {};
+
+/**
+ * @param {number} id
+ */
+process.setgid = function(id) {};
+
+/**
+ * @return {number}
+ * @nosideeffects
+ */
+process.getuid = function() {};
+
+/**
+ * @param {number} id
+ */
+process.setuid = function(id) {};
+
+/**
+ * @type {!string}
+ */
+process.version;
+
+/**
+ * @type {Object.<string,string>}
+ */
+process.versions;
+
+/**
+ * @type {Object.<string,*>}
+ */
+process.config;
+
+/**
+ * @param {number} pid
+ * @param {string=} signal
+ */
+process.kill = function(pid, signal) {};
+
+/**
+ * @type {number}
+ */
+process.pid;
+
+/**
+ * @type {string}
+ */
+process.title;
+
+/**
+ * @type {string}
+ */
+process.arch;
+
+/**
+ * @type {string}
+ */
+process.platform;
+
+/**
+ * @return {Object.<string,number>}
+ * @nosideeffects
  */
 process.memoryUsage = function() {};
 
+/**
+ * @param {!function()} callback
+ */
+process.nextTick = function(callback) {};
 
 /**
- * @constructor
+ * @param {number=} mask
  */
-process.MemoryUsageInfo = function() {
-
-  /**
-   * @type {number}
-   */
-  this.rss = 0;
-
-  /**
-   * @type {number}
-   */
-  this.heapTotal = 0;
-
-  /**
-   * @type {number}
-   */
-  this.heapUsed = 0;
-};
-
+process.umask = function(mask) {};
 
 /**
- * @type {!IStream}
+ * @return {number}
+ * @nosideeffects
  */
-process.stdin;
-
+process.uptime = function() {};
 
 /**
- * @type {!IStream}
+ * @return {number}
+ * @nosideeffects
  */
-process.stdout;
-
-
-/**
- * @type {!Array.<string>}
- */
-process.argv;
+process.hrtime = function() {};

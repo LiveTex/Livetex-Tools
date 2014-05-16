@@ -303,6 +303,8 @@ def main(argv=None):
             else:
                 fix_args.append(flag)
 
+        #MODIFICATION [LIVETEX]
+
         fixjsstyle_path = str(os.path.dirname(os.path.realpath(__file__))) + \
                           os.sep + 'fixjsstyle.py'
         message += """
