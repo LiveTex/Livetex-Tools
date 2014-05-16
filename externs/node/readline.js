@@ -1,76 +1,58 @@
 
 
-
 /**
- * @namespace
+ * @type {Object.<string,*>}
  */
 var readline = {};
 
-
 /**
- * Создаёт экземпляр интерфейса readline.
- *
- * @param {!Object} options Опции интерфейса.
- * @see http://nodejs.org/api/readline.html#readline_readline_createinterface_options
+ * @param {{
+ * input: stream.ReadableStream,
+ * output: stream.WritableStream,
+ * completer: function(string, function(*, Array)=),
+ * terminal: boolean
+ * }} options
+ * @return {readline.Interface}
  */
 readline.createInterface = function(options) {};
 
-
 /**
  * @constructor
+ * @extends events.EventEmitter
  */
 readline.Interface = function() {};
 
-
 /**
- * Устанавливает маркер начала ввода данных в консоль.
- *
- * @param {string} prompt Маркер начала ввода данных в консоль.
- * @param {number} length Длина prompt.
+ * @param {string} prompt
+ * @param {number} length
  */
 readline.Interface.prototype.setPrompt = function(prompt, length) {};
 
-
 /**
- * Показывает маркер начала ввода данных в консоль и устанавливает курсор.
- *
- * @param {boolean} preserveCursor Флаг. Если установлено значение true, то
- * курсор показываться не будет. (опционально)
+ * @param {boolean=} preserveCursor
  */
 readline.Interface.prototype.prompt = function(preserveCursor) {};
 
-
 /**
- * Выводит в консоль сообщение и вызывает обработчик ответа.
- *
- * @param {string} query Вопрос или сообщение, показываемое в консоли.
- * @param {function(string, number)} callback Обработчик ответа.
+ * @param {string} query
+ * @param {function(string)} callback
  */
 readline.Interface.prototype.question = function(query, callback) {};
 
-
 /**
- * Приостанавливает ввод данных в консоль.
  */
 readline.Interface.prototype.pause = function() {};
 
-
 /**
- * Возобновляет ввод данных через консоль.
  */
 readline.Interface.prototype.resume = function() {};
 
-
 /**
- * Закрывает readline интерфейс. Выбрасывает событие 'close'.
  */
 readline.Interface.prototype.close = function() {};
 
-
 /**
- * Записывает data в потк вывода.
- *
- * @param {*} data Данные, которые будут записаны в output.
- * @param {!Object} key Объект, представляющий собой набор клавиш.
+ * @param {string} data
+ * @param {Object.<string,*>=} key
  */
 readline.Interface.prototype.write = function(data, key) {};

@@ -1,65 +1,215 @@
 
 
+var stream = {};
 
 /**
- * @interface
+ * @constructor
+ * @param {Object=} options
+ * @extends events.EventEmitter
  */
-var __IAbstractStream = function() {};
+stream.Stream = function(options) {};
 
+/**
+ * @param {stream.Writable} dest
+ * @param {{end: boolean}=} pipeOpts
+ * @return {stream.Writable}
+ */
+stream.Stream.prototype.pipe = function(dest, pipeOpts) {};
 
-__IAbstractStream.prototype.destroy = function() {};
+/**
+ * @constructor
+ * @extends stream.Readable
+ */
+stream.ReadableStream = function() {};
 
+/**
+ * @type {boolean}
+ */
+stream.ReadableStream.prototype.readable;
+
+/**
+ * @param {string=} encoding
+ */
+stream.ReadableStream.prototype.setEncoding = function(encoding) {};
+
+/**
+ */
+stream.ReadableStream.prototype.destroy = function() {};
+
+/**
+ * @constructor
+ * @extends stream.Writable
+ */
+stream.WritableStream = function() {};
+
+/**
+ */
+stream.WritableStream.prototype.drain = function() {};
+
+/**
+ * @type {boolean}
+ */
+stream.WritableStream.prototype.writable;
+
+/**
+ * @param {string|buffer.Buffer} buffer
+ * @param {string=} encoding
+ */
+stream.WritableStream.prototype.write = function(buffer, encoding) {};
+
+/**
+ * @param {string|buffer.Buffer=} buffer
+ * @param {string=} encoding
+ * @param {function(*=)=} cb
+ */
+stream.WritableStream.prototype.end = function(buffer, encoding, cb) {};
+
+/**
+ */
+stream.WritableStream.prototype.destroy = function() {};
+
+/**
+ */
+stream.WritableStream.prototype.destroySoon = function() {};
 
 
 /**
- * @interface
- * @extends {events.IEventEmitter}
- * @extends {__IAbstractStream}
- *
- * @event data
- * @event error
- * @event end - EOF or FIN
+ * @constructor
+ * @param {Object=} options
+ * @extends stream.Stream
  */
-var IReadableStream = function() {};
+stream.Readable = function(options) {};
 
+/**
+ * @type {boolean}
+ * @deprecated
+ */
+stream.Readable.prototype.readable;
 
-IReadableStream.prototype.pause = function() {};
+/**
+ * @protected
+ * @param {string|buffer.Buffer|null} chunk
+ * @return {boolean}
+ */
+stream.Readable.prototype.push = function(chunk) {};
 
+/**
+ * @param {string|buffer.Buffer|null} chunk
+ * @return {boolean}
+ */
+stream.Readable.prototype.unshift = function(chunk) {};
 
-IReadableStream.prototype.resume = function() {};
+/**
+ * @param {string} enc
+ */
+stream.Readable.prototype.setEncoding = function(enc) {};
 
+/**
+ * @param {number=} n
+ * @return {buffer.Buffer|string|null}
+ */
+stream.Readable.prototype.read = function(n) {};
+
+/**
+ * @protected
+ * @param {number} n
+ */
+stream.Readable.prototype._read = function(n) {};
+
+/**
+ * @param {stream.Writable=} dest
+ * @return {stream.Readable}
+ */
+stream.Readable.prototype.unpipe = function(dest) {};
+
+/**
+ */
+stream.Readable.prototype.resume = function() {};
+
+/**
+ */
+stream.Readable.prototype.pause = function() {};
+
+/**
+ * @param {stream.Stream} stream
+ * @return {stream.Readable}
+ */
+stream.Readable.prototype.wrap = function(stream) {};
+
+/**
+ * @constructor
+ * @param {Object=} options
+ * @extends stream.Stream
+ */
+stream.Writable = function(options) {};
+
+/**
+ * @deprecated
+ * @type {boolean}
+ */
+stream.Writable.prototype.writable;
+
+/**
+ * @param {string|buffer.Buffer} chunk
+ * @param {string=} encoding
+ * @param {function(*=)=} cb
+ * @return {boolean}
+ */
+stream.Writable.prototype.write = function(chunk, encoding, cb) {};
+
+/**
+ * @protected
+ * @param {string|buffer.Buffer} chunk
+ * @param {string} encoding
+ * @param {function(*=)} cb
+ */
+stream.Writable.prototype._write = function(chunk, encoding, cb) {};
+
+/**
+ * @param {string|buffer.Buffer=} chunk
+ * @param {string=} encoding
+ * @param {function(*=)=} cb
+ */
+stream.Writable.prototype.end = function(chunk, encoding, cb) {};
+
+/**
+ * @constructor
+ * @param {Object=} options
+ * @extends stream.Readable
+ * Xextends stream.Writable
+ */
+stream.Duplex = function(options) {};
+
+/**
+ * @type {boolean}
+ */
+stream.Duplex.prototype.allowHalfOpen;
 
 
 /**
- * @interface
- * @extends {events.IEventEmitter}
- * @extends {__IAbstractStream}
- *
- * @event error
- * @event close
+ * @param {Object=} options
+ * @constructor
+ * @extends stream.Duplex
  */
-var IWritableStream = function() {};
-
+stream.Transform = function(options) {};
 
 /**
- * @param {!Buffer|string} bufferOrString
- * @param {string=} opt_encoding
- * @param {!Function=} opt_callback
+ * @protected
+ * @param {string|buffer.Buffer} chunk
+ * @param {string} encoding
+ * @param {function(*=)} cb
  */
-IWritableStream.prototype.write = function(bufferOrString, opt_encoding, opt_callback) {};
-
+stream.Transform._transform = function(chunk, encoding, cb) {};
 
 /**
- * @param {(!Buffer|string)=} opt_bufferOrString
- * @param {string=} opt_encoding
+ * @protected
+ * @param {function(*=)} cb
  */
-IWritableStream.prototype.end = function(opt_bufferOrString, opt_encoding) {};
-
-
+stream.Transform._flush = function(cb) {};
 
 /**
- * @interface
- * @extends {IWritableStream}
- * @extends {IReadableStream}
+ * @param {Object=} options
+ * @constructor
+ * @extends stream.Transform
  */
-var IStream = function() {};
+stream.PassThrough = function(options) {};
