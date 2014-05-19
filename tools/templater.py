@@ -28,23 +28,24 @@ def addIndent(text, indent):
 
 
 def interpretAdvanced(templateText):
-    templateText = re.sub('\%\%make*.(\.js-compile)\%\%',
+    templateText = re.sub('(\.js-compile)\%\%',
                           '.js-compile-advanced', templateText)
-    templateText = re.sub('\%\%make*.(\.js-compile-compressed)\%\%',
+    templateText = re.sub('(\.js-compile-compressed)\%\%',
                           '.js-compile-advanced', templateText)
-    templateText = re.sub('\%\%make*.(\.js-externs-compile-compressed)\%\%',
+    templateText = re.sub('(\.js-externs-compile-compressed)\%\%',
                           '.js-compile-advanced', templateText)
 
-    templateText = re.sub('\%\%make*.(\.js-web-compile)\%\%',
+    templateText = re.sub('(\.js-web-compile)\%\%',
                           '.js-web-compile-advanced', templateText)
-    templateText = re.sub('\%\%make*.(\.js-web-compile-compressed)\%\%',
+    templateText = re.sub('(\.js-web-compile-compressed)\%\%',
                           '.js-web-compile-advanced', templateText)
-    templateText = re.sub('\%\%make*.(\.js-web-externs-compile-compressed)\%\%',
+    templateText = re.sub('(\.js-web-externs-compile-compressed)\%\%',
                           '.js-web-compile-advanced', templateText)
     return templateText
 
 
 def assemble(templateText):
+    print templateText
     match = re.search('(\%\%.+\%\%)', templateText)
     while match:
         tag = match.group(0)
