@@ -1,74 +1,102 @@
 
 
+
 /**
- * @type {Object.<string,*>}
+ * @namespace
  */
 var events = {};
 
+
+/**
+ * @interface
+ */
+events.IEventEmitter = function() {};
+
+
+/**
+ * @param {string} type
+ * @param {function(...)} listener
+ */
+events.IEventEmitter.prototype.addListener = function(type, listener) {};
+
+
+/**
+ * @param {string} type
+ * @param {function(...)} listener
+ */
+events.IEventEmitter.prototype.once = function(type, listener) {};
+
+
+/**
+ * @param {string} type
+ * @param {function(...)} listener
+ */
+events.IEventEmitter.prototype.removeListener = function(type, listener) {};
+
+
+/**
+ * @param {string=} opt_type
+ */
+events.IEventEmitter.prototype.removeAllListeners = function(opt_type) {};
+
+
+/**
+ * @param {string} type
+ * @param {...} var_args
+ */
+events.IEventEmitter.prototype.emit = function(type, var_args) {};
+
+
+/**
+ * @param {string} type
+ * @return {!Array.<function(...)>}
+ */
+events.IEventEmitter.prototype.listeners = function(type) {};
+
+
 /**
  * @constructor
+ * @implements {events.IEventEmitter}
  */
 events.EventEmitter = function() {};
 
-/**
- * @param {string} event
- * @param {function(...)} listener
- * @return {events.EventEmitter}
- */
-events.EventEmitter.prototype.addListener = function(event, listener) {};
 
 /**
- * @param {string} event
- * @param {function(...)} listener
- * @return {events.EventEmitter}
- */
-events.EventEmitter.prototype.on = function(event, listener) {};
-
-/**
- * @param {string} event
- * @param {function(...)} listener
- * @return {events.EventEmitter}
- */
-events.EventEmitter.prototype.once = function(event, listener) {};
-
-/**
- * @param {string} event
- * @param {function(...)} listener
- * @return {events.EventEmitter}
- */
-events.EventEmitter.prototype.removeListener = function(event, listener) {};
-
-/**
- * @param {string=} event
- * @return {events.EventEmitter}
- */
-events.EventEmitter.prototype.removeAllListeners = function(event) {};
-
-/**
- * @param {number} n
- */
-events.EventEmitter.prototype.setMaxListeners = function(n) {};
-
-/**
- * @param {string} event
- * @return {Array.<function(...)>}
- */
-events.EventEmitter.prototype.listeners = function(event) {};
-
-/**
- * @param {string} event
- * @param {...*} var_args
- * @return {boolean}
- */
-events.EventEmitter.prototype.emit = function(event, var_args) {};
-
-/**
- * @type {boolean}
- */
-events.usingDomains;
-
-/**
- * @param {events.EventEmitter} emitter
  * @param {string} type
+ * @param {function(...)} listener
  */
-events.EventEmitter.listenerCount = function(emitter, type) {};
+events.EventEmitter.prototype.addListener = function(type, listener) {};
+
+
+/**
+ * @param {string} type
+ * @param {function(...)} listener
+ */
+events.EventEmitter.prototype.once = function(type, listener) {};
+
+
+/**
+ * @param {string} type
+ * @param {function(...)} listener
+ */
+events.EventEmitter.prototype.removeListener = function(type, listener) {};
+
+
+/**
+ * @param {string=} opt_type
+ */
+events.EventEmitter.prototype.removeAllListeners = function(opt_type) {};
+
+
+/**
+ * @param {string} type
+ * @param {...} var_args
+ */
+events.EventEmitter.prototype.emit = function(type, var_args) {};
+
+
+/**
+ * @param {string} type
+ * @return {!Array.<function(...)>}
+ */
+events.EventEmitter.prototype.listeners = function(type) {};

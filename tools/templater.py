@@ -2,6 +2,7 @@
 
 
 import os
+import os
 import re
 from optparse import OptionParser
 from subprocess import Popen, PIPE, check_call
@@ -29,18 +30,18 @@ def addIndent(text, indent):
 
 def interpretAdvanced(templateText):
     templateText = re.sub('(\.js-compile)\%\%',
-                          '.js-compile-advanced', templateText)
+                          '.js-compile-advanced%%', templateText)
     templateText = re.sub('(\.js-compile-compressed)\%\%',
-                          '.js-compile-advanced', templateText)
+                          '.js-compile-advanced%%', templateText)
     templateText = re.sub('(\.js-externs-compile-compressed)\%\%',
-                          '.js-compile-advanced', templateText)
+                          '.js-compile-advanced%%', templateText)
 
     templateText = re.sub('(\.js-web-compile)\%\%',
-                          '.js-web-compile-advanced', templateText)
+                          '.js-web-compile-advanced%%', templateText)
     templateText = re.sub('(\.js-web-compile-compressed)\%\%',
-                          '.js-web-compile-advanced', templateText)
+                          '.js-web-compile-advanced%%', templateText)
     templateText = re.sub('(\.js-web-externs-compile-compressed)\%\%',
-                          '.js-web-compile-advanced', templateText)
+                          '.js-web-compile-advanced%%', templateText)
     return templateText
 
 

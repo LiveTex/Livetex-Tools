@@ -47,6 +47,7 @@
 
 %.js-check: %.jst
 	@$(TEMPLATER) -a True $< > /dev/null
+	@echo CHECKED: $(shell echo $@ | cut -d '.' -f 1).js
 
 
 %.js-assemble: %.jst

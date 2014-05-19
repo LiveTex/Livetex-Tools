@@ -1,187 +1,87 @@
 
 
+
 /**
- * @type {Object.<string,*>}
+ * @namespace
  */
 var net = {};
 
-/**
- * @typedef {{allowHalfOpen: ?boolean}}
- */
-net.CreateOptions;
 
 /**
- * @param {(net.CreateOptions|function(...))=} options
- * @param {function(...)=} connectionListener
- * @return {net.Server}
+ * @return {!net.Server}
  */
-net.createServer = function(options, connectionListener) {};
+net.createServer = function() {};
+
 
 /**
- * @typedef {{
- * port: ?number,
- * host: ?string,
- * localAddress: ?string,
- * path: ?string,
- * allowHalfOpen: ?boolean
- * }}
+ * @param {number} port
+ * @param {string=} opt_host
+ * @return {!net.Socket}
  */
-net.ConnectOptions;
-
-/**
- * @param {net.ConnectOptions|number|string} arg1
- * @param {(function(...)|string)=} arg2
- * @param {function(...)=} arg3
- */
-net.connect = function(arg1, arg2, arg3) {};
-
-/**
- * @param {net.ConnectOptions|number|string} arg1
- * @param {(function(...)|string)=} arg2
- * @param {function(...)=} arg3
- */
-net.createConnection = function(arg1, arg2, arg3) {};
+net.createConnection  = function(port, opt_host) {};
 
 /**
  * @constructor
- * @extends events.EventEmitter
+ * @extends {events.EventEmitter}
  */
 net.Server = function() {};
 
-/**
- * 
- * @param {number|*} port
- * @param {(string|number|function(...))=} host
- * @param {(number|function(...))=} backlog
- * @param {function(...)=} callback
- */
-net.Server.prototype.listen = function(port, host, backlog, callback) {};
 
 /**
- * @param {function(...)=} callback
+ * @param {number|string} portOrPath
+ * @param {string=} opt_host
  */
-net.Server.prototype.close = function(callback) {};
+net.Server.prototype.listen = function(portOrPath, opt_host) {};
 
-/**
- * @return {{port: number, family: string, address: string}}
- */
-net.Server.prototype.address = function() {};
 
-/**
- * @type {number}
- */
-net.Server.prototype.maxConnectinos;
+net.Server.prototype.close = function() {};
 
-/**
- * @type {number}
- */
-net.Server.prototype.connections;
 
 /**
  * @constructor
- * @param {{fd: ?*, type: ?string, allowHalfOpen: ?boolean}=} options
- * @extends events.EventEmitter
+ * @implements {IStream}
+ * @extends {events.EventEmitter}
  */
-net.Socket = function(options) {};
+net.Socket = function() {};
+
 
 /**
- * @param {number|string|function(...)} port
- * @param {(string|function(...))=} host
- * @param {function(...)=} connectListener
+ * @type {string}
  */
-net.Socket.prototype.connect = function(port, host, connectListener) {};
+net.Socket.prototype.remoteAddress = '';
 
 /**
  * @type {number}
  */
-net.Socket.prototype.bufferSize;
+net.Socket.prototype.remotePort = 0;
 
 /**
- * @param {?string=} encoding
+ * @param {number|string} portOrPath
+ * @param {string=} opt_host
  */
-net.Socket.prototype.setEncoding = function(encoding) {};
+net.Socket.prototype.connect = function(portOrPath, opt_host) {};
+
 
 /**
- * @param {string|buffer.Buffer} data
- * @param {(string|function(...))=}encoding
- * @param {function(...)=} callback
+ * @param {!Buffer|string} bufferOrString
+ * @param {string=} opt_encoding
  */
-net.Socket.prototype.write = function(data, encoding, callback) {};
+net.Socket.prototype.write = function(bufferOrString, opt_encoding) {};
+
 
 /**
- * @param {(string|buffer.Buffer)=}data
- * @param {string=} encoding
+ * В отличие от destroy дожидается отправки всех данных в очереди для записи.
+ *
+ * @param {(!Buffer|string)=} opt_bufferOrString
+ * @param {string=} opt_encoding
  */
-net.Socket.prototype.end = function(data, encoding) {};
+net.Socket.prototype.end = function(opt_bufferOrString, opt_encoding) {};
 
-/**
- */
+
 net.Socket.prototype.destroy = function() {};
 
-/**
- */
+
 net.Socket.prototype.pause = function() {};
 
-/**
- */
+
 net.Socket.prototype.resume = function() {};
-
-/**
- * @param {number} timeout
- * @param {function(...)=} callback
- */
-net.Socket.prototype.setTimeout = function(timeout, callback) {};
-
-/**
- * @param {boolean=} noDelay
- */
-net.Socket.prototype.setNoDelay = function(noDelay) {};
-
-/**
- * @param {(boolean|number)=} enable
- * @param {number=} initialDelay
- */
-net.Socket.prototype.setKeepAlive = function(enable, initialDelay) {};
-
-/**
- * @return {string}
- */
-net.Socket.prototype.address = function() {};
-
-/**
- * @type {?string}
- */
-net.Socket.prototype.remoteAddress;
-
-/**
- * @type {?number}
- */
-net.Socket.prototype.remotePort;
-
-/**
- * @type {number}
- */
-net.Socket.prototype.bytesRead;
-
-/**
- * @type {number}
- */
-net.Socket.prototype.bytesWritten;
-
-/**
- * @param {*} input
- * @return {number}
- */
-net.isIP = function(input) {};
-
-/**
- * @param {*} input
- * @return {boolean}
- */
-net.isIPv4 = function(input) {};
-
-/**
- * @param {*} input
- * @return {boolean}
- */
-net.isIPv6 = function(input) {};
