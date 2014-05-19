@@ -1,7 +1,7 @@
 
 
 %.js-compile: %.jsd
-	@cat $(foreach FILE, ${$(shell cat $<)%%'\\n+'}, $(JS_SOURCES_PATH)/$(FILE))
+	@cat $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE))
 
 
 %.js-compile-compressed: %.jsd %.jsh-node

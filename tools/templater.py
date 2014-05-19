@@ -45,7 +45,6 @@ def interpretAdvanced(templateText):
 
 
 def assemble(templateText):
-    print templateText
     match = re.search('(\%\%.+\%\%)', templateText)
     while match:
         tag = match.group(0)
