@@ -31,8 +31,3 @@ TEMPLATER           ?= $(TOOLS_PATH)/tools/templater.py
 
 ################################################################################
 
-
-#SUBMODULES = $(foreach SUBMODULE, \
-#             $(shell grep path .gitmodules | sed 's/.*= //'), \
-#             $(SUBMODULE))
-
