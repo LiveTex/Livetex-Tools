@@ -2,7 +2,7 @@
 
 
 /**
- * @param {number|string} sizeOrData
+ * @param {(number|string|!Array.<number>)} sizeOrData
  * @param {string=} opt_encoding
  * @constructor
  */
