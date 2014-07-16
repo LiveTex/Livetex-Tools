@@ -18,3 +18,6 @@ npm-publish:
 publish: | js-check js set-version npm-publish
 	@echo $@: DONE
 
+web-publish: | js-lint js set-version npm-publish
+	@echo $@: DONE
+
