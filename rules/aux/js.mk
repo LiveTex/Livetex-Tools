@@ -17,7 +17,7 @@
 	@cat $(shell cat $^ < /dev/null) > $@
 
 
-%.jsh-web: %.js-web-headers %.js-deps-headers
+%.jsh-web: %.js-web-headers
 	@cat $(shell cat $^ < /dev/null) > $@
 
 
