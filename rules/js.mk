@@ -10,29 +10,34 @@ include $(TOOLS_PATH)/rules/tts/js.mk
 
 
 js-clean:
+	@echo IN PROCESS: $@
 	@rm -rf $(wildcard $(JS_BUILD_PATH)/*.js) $(JS_EXTERNS_PATH)
 	@echo $@: DONE
 
 
 js-tests:
+	@echo IN PROCESS: $@
 	@$(foreach TARGET_NAME, $(JS_TESTS), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-test);)
 	@echo $@: DONE
 
 
 js-lint:
+	@echo IN PROCESS: $@
 	@$(foreach TARGET_NAME, $(JS_LINT), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-lint);)
 	@echo $@: DONE
 
 
 js-check: js-lint
+	@echo IN PROCESS: $@
 	@$(foreach TARGET_NAME, $(JS_CHECK), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-check);)
 	@echo $@: DONE
 
 
 js-build: js-clean
+	@echo IN PROCESS: $@
 	@mkdir -p $(JS_BUILD_PATH)
 	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-assemble);)
@@ -40,6 +45,7 @@ js-build: js-clean
 
 
 js-externs:
+	@echo IN PROCESS: $@
 	@$(foreach TARGET_NAME, $(JS_EXTERNS), \
 	$(MAKE) -s $(shell mkdir -p $(JS_EXTERNS_PATH) && \
 	echo $(TARGET_NAME).js-extract-externs);)
