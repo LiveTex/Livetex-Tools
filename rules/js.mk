@@ -48,4 +48,3 @@ js-externs:
 
 js: | js-build js-externs
 	@echo $@: DONE
-
