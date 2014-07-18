@@ -9,23 +9,19 @@
 	@echo $(foreach FILE, $(wildcard $(ENV_EXTERNS_PATH)/node/*), $(FILE)) > $@
 
 
-%.js-web-headers:
-	@echo $(foreach FILE, $(wildcard $(ENV_EXTERNS_PATH)/browser/*), $(FILE)) > $@
-
-
 %.jsh-node: %.js-node-headers %.js-deps-headers
 	@cat $(shell cat $^ < /dev/null) > $@
 
 
-%.jsh-web: %.js-web-headers
-	@cat $(shell cat $^ < /dev/null) > $@
+%.jsh-web:
+	@echo $(foreach FILE, $(wildcard $(ENV_EXTERNS_PATH)/browser/*), cat $(FILE)) > $@
 
 
 ################################################################################
 
 
 %.js-compile-advanced: %.jsd %.jsh-node
-	$(JS_COMPILER) \
+	@$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
 	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
 	--externs   $(shell echo "$^" | cut -d " " -f 2)
@@ -53,7 +49,7 @@
 
 %.js-assemble: %.jst
 	@mkdir -p $(JS_BUILD_PATH)
-	@$(TEMPLATER) $< > \
+	$(TEMPLATER) $< > \
 	$(JS_BUILD_PATH)/$(shell echo $(shell basename $<) | cut -d '.' -f 1).js
 
 

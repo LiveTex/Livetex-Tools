@@ -2,7 +2,6 @@
 
 
 import os
-import os
 import re
 from optparse import OptionParser
 from subprocess import Popen, PIPE, check_call
@@ -48,10 +47,11 @@ def interpretAdvanced(templateText):
 def assemble(templateText):
     match = re.search('(\%\%.+\%\%)', templateText)
     while match:
-        tag = match.group(0)
+	tag = match.group(0)
         cmd = tag.strip('%')
-        check_call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
-        insertion = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+        print('CMD: ' + cmd)
+	check_call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
+	insertion = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
         insertion = addIndent(insertion, getIndent(templateText, match.start()))
         templateText = templateText.replace(tag, insertion.strip())
         match = re.search('(\%\%.+\%\%)', templateText)
@@ -69,10 +69,10 @@ def main():
                            "compilation mode or not")
 
     (options, args) = parser.parse_args()
-
+    
     templatePath = args[0]
     templateText = getTemplateText(templatePath)
-
+    
     if options.advanced:
         templateText = interpretAdvanced(templateText)
 

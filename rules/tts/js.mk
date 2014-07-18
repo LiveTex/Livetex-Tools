@@ -5,7 +5,7 @@
 
 
 %.js-compile-simple: %.jsd %.jsh-node
-	$(JS_COMPILER) \
+	@$(JS_COMPILER) \
 	--compilation_level WHITESPACE_ONLY \
 	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE))
 
