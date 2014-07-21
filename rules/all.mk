@@ -3,6 +3,9 @@
 include $(TOOLS_PATH)/rules/var/all.mk
 
 
+all: js
+
+
 set-version:
 	@$(REVERSIONER)
 	@echo $@: DONE
