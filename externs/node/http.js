@@ -9,11 +9,30 @@ var http = {};
 
 
 /**
- * @param {function(!http.ServerRequest, !http.ServerResponse)=}
- *    opt_requestHandler
+ * @param {function(!http.ServerRequest,
+ *  !http.ServerResponse)=} opt_requestHandler
  * @return {!http.Server}
  */
 http.createServer = function(opt_requestHandler) {};
+
+
+/**
+ * @param {!Object} options
+ * @param {Function=} opt_callback
+ */
+http.request = function(options, opt_callback) {};
+
+
+/**
+ * @constructor
+ */
+http.Agent = function() {};
+
+
+/**
+ * @type {!http.Agent}
+ */
+http.globalAgent;
 
 
 /**
