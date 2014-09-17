@@ -53,18 +53,18 @@ hbase.Row = function(client, table, row) {};
 
 
 /**
- * @param {string} column
- * @param {string} value
+ * @param {(string|!Array.<string>)} columns
+ * @param {(string|!Array.<string>)} values
  * @param {function(hbase.Error)} callback
  */
-hbase.Row.prototype.put = function(column, value, callback) {};
+hbase.Row.prototype.put = function(columns, values, callback) {};
 
 
 /**
- * @param {string} column
+ * @param {(string|!Array.<string>)} columns
  * @param {function(hbase.Error)} callback
  */
-hbase.Row.prototype.delete = function(column, callback) {};
+hbase.Row.prototype.delete = function(columns, callback) {};
 
 
 /**
