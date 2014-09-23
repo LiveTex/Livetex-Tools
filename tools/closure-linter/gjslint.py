@@ -312,12 +312,13 @@ def main(argv=None):
         fixjsstyle_path = str(os.path.dirname(os.path.realpath(__file__))) + \
                           os.sep + 'fixjsstyle.py ' + ' '.join(flags_args) + ' '
 
-        broken_files_paths = ' '.join([record.path for record in error_records])
+        broken_files_paths = list(set(
+            [record.path for record in error_records]))
 
         message += """
         TRY:
 
-        """ + fixjsstyle_path + broken_files_paths
+        """ + fixjsstyle_path + ' '.join(broken_files_paths)
 
         exit_code = message
 
