@@ -11,6 +11,7 @@
 JS_BUILD_PATH       ?= $(PROJECT_PATH)/bin
 JS_EXTERNS_PATH     ?= $(PROJECT_PATH)/externs
 JS_SOURCES_PATH     ?= $(PROJECT_PATH)/lib
+JS_PACKAGES_PATH    ?= $(PROJECT_PATH)/packages
 ENV_EXTERNS_PATH    ?= $(TOOLS_PATH)/externs
 
 

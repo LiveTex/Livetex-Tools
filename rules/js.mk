@@ -52,5 +52,15 @@ js-externs:
 	@echo $@: DONE
 
 
+js-package: js-build js-externs
+	@mkdir -p $(JS_PACKAGES_PATH)
+	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
+		mkdir -p $(JS_PACKAGES_PATH)/$(TARGET_NAME)/bin && \
+		mkdir -p $(JS_PACKAGES_PATH)/$(TARGET_NAME)/externs && \
+		cp $(JS_BUILD_PATH)/$(TARGET_NAME).js $(JS_PACKAGES_PATH)/$(TARGET_NAME)/bin/index.js && \
+		cp $(JS_EXTERNS_PATH)/$(TARGET_NAME).js $(JS_PACKAGES_PATH)/$(TARGET_NAME)/externs/index.js;)
+	@echo $@: DONE
+
+
 js: | js-build js-externs
 	@echo $@: DONE
