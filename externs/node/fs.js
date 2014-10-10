@@ -8,10 +8,10 @@ var fs = {};
 
 /**
  * @param {string} filename
- * @param {string} encoding
+ * @param {!Object=} opt_options
  * @return {string}
  */
-fs.readFileSync = function(filename, encoding) {};
+fs.readFileSync = function(filename, opt_options) {};
 
 
 /**
