@@ -50,3 +50,19 @@ fs.existsSync = function(filename) {};
  * @param {string} filename
  */
 fs.unlinkSync = function(filename) {};
+
+
+/**
+ * @param {string} filename
+ * @param {!Object} options
+ * @param {function(string, string)} listener
+ */
+fs.watchFile = function(filename, options, listener) {};
+
+
+/**
+ * @param {string} filename
+ * @param {!Object=} opt_options
+ * @param {function(string, string)=} opt_listener
+ */
+fs.watch = function(filename, opt_options, opt_listener) {};
