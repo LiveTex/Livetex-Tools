@@ -8,7 +8,7 @@ var fs = {};
 
 /**
  * @param {string} filename
- * @param {!Object=} opt_options
+ * @param {(!Object|string)=} opt_options
  * @return {string}
  */
 fs.readFileSync = function(filename, opt_options) {};
