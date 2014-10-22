@@ -71,9 +71,10 @@ hbase.Row.prototype.delete = function(columns, callback, opt_timeout) {};
 
 
 /**
- * @param {string} column
- * @param {!Object.<string>} options
+ * @param {(string|!Array.<string>)} columns
  * @param {function(hbase.Error, Array.<{column:string, $:string}>)} callback
  * @param {number=} opt_timeout
+ * @param {!Object=} opt_options
  */
-hbase.Row.prototype.get = function(column, options, callback, opt_timeout) {};
+hbase.Row.prototype.get =
+    function(columns, callback, opt_timeout, opt_options) {};
