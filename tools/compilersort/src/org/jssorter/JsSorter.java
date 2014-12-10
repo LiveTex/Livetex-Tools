@@ -142,7 +142,7 @@ public class JsSorter {
         if (!classGraph.containsKey(tc.getName())) {
           classGraph.put(tc.getName(), new ArrayList<>());
         }
-        if (!tc.getImpl().isEmpty()) {
+        if (!tc.getExtends().isEmpty()) {
           for (final String s : tc.getExtends()) {
             if (!classGraph.containsKey(s)) {
               classGraph.put(s, new ArrayList<>());
