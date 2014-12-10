@@ -114,6 +114,10 @@ public class JsSorter {
     JsCommentsParser parser = new JsCommentsParser(tokens);
     ParseTree tree = parser.program();
 
+    if (parser.getNumberOfSyntaxErrors() > 0) {
+      System.out.println("in file " + path.toString());
+    }
+
     ParseTreeWalker walker = new ParseTreeWalker();
 
     JsInspector tc = new JsInspector(path.getFileName().toString());
