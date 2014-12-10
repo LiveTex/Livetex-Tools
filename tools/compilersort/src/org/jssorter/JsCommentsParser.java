@@ -1,11 +1,15 @@
-package org.jssorter;// Generated from /home/dev/IdeaProjects/CompilerSort/JsComments.g4 by ANTLR 4.4.1-dev
+// Generated from /home/dev/IdeaProjects/CompilerSort/JsComments.g4 by ANTLR 4.4.1-dev
+package org.jssorter;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class JsCommentsParser extends Parser {
@@ -18,11 +22,11 @@ public class JsCommentsParser extends Parser {
       new PredictionContextCache();
   public static final int
       T__7 = 1, T__6 = 2, T__5 = 3, T__4 = 4, T__3 = 5, T__2 = 6, T__1 = 7, T__0 = 8, IDENTIFIER = 9,
-      WHITESPACE = 10, LINE_COMMENT = 11, FILTER = 12;
+      WHITESPACE = 10, LINE_COMMENT = 11, MULTILINE_COMMENT = 12, FILTER = 13;
   public static final String[] tokenNames = {
       "<INVALID>", "'@implements {'", "'@extends {'", "'*/'", "'@constructor'",
       "'/**'", "'@interface'", "'@namespace'", "'}'", "IDENTIFIER", "WHITESPACE",
-      "LINE_COMMENT", "FILTER"
+      "LINE_COMMENT", "MULTILINE_COMMENT", "FILTER"
   };
   public static final int
       RULE_program = 0, RULE_body = 1, RULE_comment = 2, RULE_mnamespace = 3,
@@ -89,13 +93,6 @@ public class JsCommentsParser extends Parser {
     public void exitRule(ParseTreeListener listener) {
       if (listener instanceof JsCommentsListener) ((JsCommentsListener) listener).exitProgram(this);
     }
-
-    @Override
-    public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof JsCommentsVisitor)
-        return ((JsCommentsVisitor<? extends T>) visitor).visitProgram(this);
-      else return visitor.visitChildren(this);
-    }
   }
 
   public final ProgramContext program() throws RecognitionException {
@@ -118,8 +115,7 @@ public class JsCommentsParser extends Parser {
           setState(19);
           _errHandler.sync(this);
           _la = _input.LA(1);
-        }
-        while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__0) | (1L << IDENTIFIER))) != 0));
+        } while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__0) | (1L << IDENTIFIER))) != 0));
       }
     } catch (RecognitionException re) {
       _localctx.exception = re;
@@ -157,12 +153,6 @@ public class JsCommentsParser extends Parser {
     @Override
     public void exitRule(ParseTreeListener listener) {
       if (listener instanceof JsCommentsListener) ((JsCommentsListener) listener).exitBody(this);
-    }
-
-    @Override
-    public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof JsCommentsVisitor) return ((JsCommentsVisitor<? extends T>) visitor).visitBody(this);
-      else return visitor.visitChildren(this);
     }
   }
 
@@ -247,13 +237,6 @@ public class JsCommentsParser extends Parser {
     @Override
     public void exitRule(ParseTreeListener listener) {
       if (listener instanceof JsCommentsListener) ((JsCommentsListener) listener).exitComment(this);
-    }
-
-    @Override
-    public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof JsCommentsVisitor)
-        return ((JsCommentsVisitor<? extends T>) visitor).visitComment(this);
-      else return visitor.visitChildren(this);
     }
   }
 
@@ -387,13 +370,6 @@ public class JsCommentsParser extends Parser {
     public void exitRule(ParseTreeListener listener) {
       if (listener instanceof JsCommentsListener) ((JsCommentsListener) listener).exitMnamespace(this);
     }
-
-    @Override
-    public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof JsCommentsVisitor)
-        return ((JsCommentsVisitor<? extends T>) visitor).visitMnamespace(this);
-      else return visitor.visitChildren(this);
-    }
   }
 
   public final MnamespaceContext mnamespace() throws RecognitionException {
@@ -441,13 +417,6 @@ public class JsCommentsParser extends Parser {
     @Override
     public void exitRule(ParseTreeListener listener) {
       if (listener instanceof JsCommentsListener) ((JsCommentsListener) listener).exitMinterface(this);
-    }
-
-    @Override
-    public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof JsCommentsVisitor)
-        return ((JsCommentsVisitor<? extends T>) visitor).visitMinterface(this);
-      else return visitor.visitChildren(this);
     }
   }
 
@@ -519,13 +488,6 @@ public class JsCommentsParser extends Parser {
     @Override
     public void exitRule(ParseTreeListener listener) {
       if (listener instanceof JsCommentsListener) ((JsCommentsListener) listener).exitConstructor(this);
-    }
-
-    @Override
-    public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof JsCommentsVisitor)
-        return ((JsCommentsVisitor<? extends T>) visitor).visitConstructor(this);
-      else return visitor.visitChildren(this);
     }
   }
 
@@ -640,13 +602,6 @@ public class JsCommentsParser extends Parser {
     public void exitRule(ParseTreeListener listener) {
       if (listener instanceof JsCommentsListener) ((JsCommentsListener) listener).exitMextends(this);
     }
-
-    @Override
-    public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof JsCommentsVisitor)
-        return ((JsCommentsVisitor<? extends T>) visitor).visitMextends(this);
-      else return visitor.visitChildren(this);
-    }
   }
 
   public final MextendsContext mextends() throws RecognitionException {
@@ -695,13 +650,6 @@ public class JsCommentsParser extends Parser {
     public void exitRule(ParseTreeListener listener) {
       if (listener instanceof JsCommentsListener) ((JsCommentsListener) listener).exitMimplements(this);
     }
-
-    @Override
-    public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-      if (visitor instanceof JsCommentsVisitor)
-        return ((JsCommentsVisitor<? extends T>) visitor).visitMimplements(this);
-      else return visitor.visitChildren(this);
-    }
   }
 
   public final MimplementsContext mimplements() throws RecognitionException {
@@ -728,7 +676,7 @@ public class JsCommentsParser extends Parser {
   }
 
   public static final String _serializedATN =
-      "\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\16e\4\2\t\2\4\3\t" +
+      "\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\17e\4\2\t\2\4\3\t" +
           "\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\3\2\6\2\24\n\2\r\2" +
           "\16\2\25\3\3\3\3\3\3\3\3\3\3\5\3\35\n\3\3\4\7\4 \n\4\f\4\16\4#\13\4\3" +
           "\4\3\4\3\4\5\4(\n\4\3\4\7\4+\n\4\f\4\16\4.\13\4\3\4\7\4\61\n\4\f\4\16" +

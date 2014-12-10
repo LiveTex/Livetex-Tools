@@ -7,9 +7,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -47,13 +47,28 @@ public class JsSorter {
     return sorted;
   }
 
+  private void walkDepthFirst(File file) throws IOException {
+
+    File listFile[] = file.listFiles();
+    ArrayList<File> dirs = new ArrayList<>();
+    if (listFile != null) {
+      dirs.clear();
+      for (File f : listFile) {
+        if (f.isFile()) {
+          inspectFile(f.toPath());
+        } else {
+          dirs.add(f);
+        }
+      }
+      for (File d : dirs) {
+        walkDepthFirst(d);
+      }
+    }
+  }
+
   private void makeSortedList() {
     try {
-      Files.walk(Paths.get(libpath)).forEach(filePath -> {
-        if (Files.isRegularFile(filePath)) {
-          inspectFile(filePath);
-        }
-      });
+      walkDepthFirst(Paths.get(libpath).toFile());
     } catch (IOException e) {
       e.printStackTrace();
     }

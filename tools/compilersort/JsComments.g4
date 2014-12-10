@@ -34,5 +34,8 @@ WHITESPACE
 LINE_COMMENT
     : '//' ~[\r\n]* -> skip;
 
+MULTILINE_COMMENT
+    : '/*'~('*') .*? '*/' -> skip;
+
 FILTER
     : . -> skip;
