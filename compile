@@ -1,7 +1,8 @@
 #!/bin/bash
 
-java -jar tools/compiler.jar --language_in ECMASCRIPT5_STRICT \
-                             --compilation_level ADVANCED \
-                             --warning_level VERBOSE \
-                             $(for f in externs/node/*; do echo "--externs $f"; done) \
-                             $(java -jar tools/sorter.jar $1)
+java -jar tools/closure-compiler.jar --language_in ECMASCRIPT5_STRICT \
+                                     --compilation_level ADVANCED \
+                                     --warning_level VERBOSE \
+                                     $(for f in externs/node/*; \
+                                     do echo "--externs $f"; done) \
+                                     $(java -jar tools/sorter.jar $1)

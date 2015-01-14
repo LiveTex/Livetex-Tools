@@ -9,6 +9,61 @@ var http = {};
 
 
 /**
+ * @constructor
+ */
+http.IncomingMessage = function() {};
+
+
+/**
+ * @type {string}
+ */
+http.IncomingMessage.prototype.httpVersion;
+
+
+/**
+ * @type {!Object}
+ */
+http.IncomingMessage.prototype.headers;
+
+
+/**
+ * @type {!Object}
+ */
+http.IncomingMessage.prototype.trailers;
+
+
+/**
+ * @type {string}
+ */
+http.IncomingMessage.prototype.method;
+
+
+/**
+ * @type {string}
+ */
+http.IncomingMessage.prototype.url;
+
+
+/**
+ * @type {number}
+ */
+http.IncomingMessage.prototype.statusCode;
+
+
+/**
+ * @type {!net.Socket}
+ */
+http.IncomingMessage.prototype.socket;
+
+
+/**
+ * @param {number} msecs
+ * @param {Function} callback
+ */
+http.IncomingMessage.prototype.setTimeout = function(msecs, callback) {};
+
+
+/**
  * @param {function(!http.ServerRequest,
  *  !http.ServerResponse)=} opt_requestHandler
  * @return {!http.Server}
@@ -141,59 +196,3 @@ http.ServerResponse.prototype.statusCode = 200;
  * @type {!Object}
  */
 http.ServerResponse.prototype.headers;
-
-
-
-/**
- * @constructor
- */
-http.IncomingMessage = function() {};
-
-
-/**
- * @type {string}
- */
-http.IncomingMessage.prototype.httpVersion;
-
-
-/**
- * @type {!Object}
- */
-http.IncomingMessage.prototype.headers;
-
-
-/**
- * @type {!Object}
- */
-http.IncomingMessage.prototype.trailers;
-
-
-/**
- * @type {string}
- */
-http.IncomingMessage.prototype.method;
-
-
-/**
- * @type {string}
- */
-http.IncomingMessage.prototype.url;
-
-
-/**
- * @type {number}
- */
-http.IncomingMessage.prototype.statusCode;
-
-
-/**
- * @type {!net.Socket}
- */
-http.IncomingMessage.prototype.socket;
-
-
-/**
- * @param {number} msecs
- * @param {Function} callback
- */
-http.IncomingMessage.prototype.setTimeout = function(msecs, callback) {};
