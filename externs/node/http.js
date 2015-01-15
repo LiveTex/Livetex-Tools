@@ -10,6 +10,7 @@ var http = {};
 
 /**
  * @constructor
+ * @extends {events.EventEmitter}
  */
 http.IncomingMessage = function() {};
 
