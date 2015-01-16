@@ -5,15 +5,19 @@
     "type": "git",
     "url": "https://github.com/LiveTex/Livetex-Tools"
   },
+
+  "bin": {
+    "js-build": "bin/js-build",
+    "js-check": "bin/js-check"
+  },
+
   "license": "Modified BSD License",
-  "contributors": [
-    {
+
+  "contributors": [{
       "name": "Sergey Kononenko",
       "email": "kononencheg@gmail.com"
-    },
-    {
-      "name": "Valeria Lepina",
-      "email": "divergence082@gmail.com"
-    }
-  ]
+  }, {
+    "name": "Valeria Lepina",
+    "email": "divergence082@gmail.com"
+  }]
 }
