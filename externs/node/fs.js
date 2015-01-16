@@ -16,10 +16,9 @@ fs.readFileSync = function(filename, opt_options) {};
 
 /**
  * @param {string} filename
- * @param {string} encoding
- * @param {function(Error, (string|!Buffer))} callback
+ * @param {function(Error, !Buffer)} callback
  */
-fs.readFile = function(filename, encoding, callback) {};
+fs.readFile = function(filename, callback) {};
 
 
 /**

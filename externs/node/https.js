@@ -9,7 +9,7 @@ var https = {};
 
 /**
  * @param {!Object} options
- * @param {function(http.ServerRequest, http.ServerResponse)=}
+ * @param {function(http.IncomingMessage, http.ServerResponse)=}
  *    opt_requestHandler
  * @return {!http.Server}
  */

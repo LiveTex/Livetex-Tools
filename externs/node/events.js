@@ -24,13 +24,6 @@ events.IEventEmitter.prototype.addListener = function(type, listener) {};
  * @param {string} type
  * @param {function(...)} listener
  */
-events.IEventEmitter.prototype.on = function(type, listener) {};
-
-
-/**
- * @param {string} type
- * @param {function(...)} listener
- */
 events.IEventEmitter.prototype.once = function(type, listener) {};
 
 
@@ -73,13 +66,6 @@ events.EventEmitter = function() {};
  * @param {function(...)} listener
  */
 events.EventEmitter.prototype.addListener = function(type, listener) {};
-
-
-/**
- * @param {string} type
- * @param {function(...)} listener
- */
-events.EventEmitter.prototype.on = function(type, listener) {};
 
 
 /**
