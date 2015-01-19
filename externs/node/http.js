@@ -9,63 +9,7 @@ var http = {};
 
 
 /**
- * @constructor
- * @extends {events.EventEmitter}
- */
-http.IncomingMessage = function() {};
-
-
-/**
- * @type {string}
- */
-http.IncomingMessage.prototype.httpVersion;
-
-
-/**
- * @type {!Object}
- */
-http.IncomingMessage.prototype.headers;
-
-
-/**
- * @type {!Object}
- */
-http.IncomingMessage.prototype.trailers;
-
-
-/**
- * @type {string}
- */
-http.IncomingMessage.prototype.method;
-
-
-/**
- * @type {string}
- */
-http.IncomingMessage.prototype.url;
-
-
-/**
- * @type {number}
- */
-http.IncomingMessage.prototype.statusCode;
-
-
-/**
- * @type {!net.Socket}
- */
-http.IncomingMessage.prototype.socket;
-
-
-/**
- * @param {number} msecs
- * @param {Function} callback
- */
-http.IncomingMessage.prototype.setTimeout = function(msecs, callback) {};
-
-
-/**
- * @param {function(!http.ServerRequest,
+ * @param {function(!http.IncomingMessage,
  *  !http.ServerResponse)=} opt_requestHandler
  * @return {!http.Server}
  */
@@ -99,10 +43,11 @@ http.Server = function() {};
 
 
 /**
- * @param {number|string} port
- * @param {string=} opt_host
+ * @param {number} port
+ * @param {string} host
+ * @param {function()=} opt_callback
  */
-http.Server.prototype.listen = function(port, opt_host) {};
+http.Server.prototype.listen = function(port, host, opt_callback) {};
 
 
 http.Server.prototype.close = function() {};
@@ -112,58 +57,67 @@ http.Server.prototype.close = function() {};
  * @constructor
  * @extends {events.EventEmitter}
  */
-http.ServerRequest = function() {};
+http.IncomingMessage = function() {};
 
 
 /**
  * @type {!Object.<string, string>}
  */
-http.ServerRequest.prototype.headers = {};
+http.IncomingMessage.prototype.headers = {};
 
 
 
 /**
  * @type {!net.Socket}
  */
-http.ServerRequest.prototype.connection;
+http.IncomingMessage.prototype.connection;
 
 
 /**
  * @type {string}
  */
-http.ServerRequest.prototype.method = '';
+http.IncomingMessage.prototype.method = '';
 
 
 /**
  * @type {string}
  */
-http.ServerRequest.prototype.url = '';
+http.IncomingMessage.prototype.url = '';
 
 
-http.ServerRequest.prototype.resume = function() {};
+http.IncomingMessage.prototype.resume = function() {};
 
 
-http.ServerRequest.prototype.pause = function() {};
+http.IncomingMessage.prototype.pause = function() {};
 
 
 /**
  * @param {string} event Событие.
  * @param {function(!Object)} callback Обработчик результата.
  */
-http.ServerRequest.prototype.on = function(event, callback) {};
+http.IncomingMessage.prototype.on = function(event, callback) {};
 
 
 /**
  * @constructor
  * @extends {events.EventEmitter}
+ * @implements {IWritableStream}
  */
 http.ServerResponse = function() {};
 
 
 /**
- * @param {(string|!Buffer)=} opt_data
+ * @param {!Buffer|string} bufferOrString
+ * @param {string=} opt_encoding
  */
-http.ServerResponse.prototype.end = function(opt_data) {};
+http.ServerResponse.prototype.write = function(bufferOrString, opt_encoding) {};
+
+
+/**
+ * @param {(!Buffer|string)=} opt_bufferOrString
+ * @param {string=} opt_encoding
+ */
+http.ServerResponse.prototype.end = function(opt_bufferOrString, opt_encoding) {};
 
 
 /**
@@ -181,13 +135,6 @@ http.ServerResponse.prototype.writeHead = function(code, opt_headers) {};
 
 
 /**
- * @param {string | Buffer} chunk Данные.
- * @param {string=} opt_encode Кодировка для строковых данных.
- */
-http.ServerResponse.prototype.write = function(chunk, opt_encode) {};
-
-
-/**
  * @type {number}
  */
 http.ServerResponse.prototype.statusCode = 200;
@@ -197,3 +144,5 @@ http.ServerResponse.prototype.statusCode = 200;
  * @type {!Object}
  */
 http.ServerResponse.prototype.headers;
+
+
