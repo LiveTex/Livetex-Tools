@@ -32,12 +32,18 @@ cp.ChildProcess.prototype.send = function(message) {};
 
 
 /**
- *
  * @param {string} script
  * @param {!Array.<string>=} opt_options
  * @return {!cp.ChildProcess}
  */
 cp.fork = function(script, opt_options) {};
+
+
+/**
+ * @param {string} script
+ * @param {function(Error)} callback
+ */
+cp.exec = function(script, callback) {};
 
 
 /**
