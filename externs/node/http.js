@@ -55,6 +55,7 @@ http.Server.prototype.close = function() {};
 
 /**
  * @constructor
+ * @implements {IReadableStream}
  * @extends {events.EventEmitter}
  */
 http.IncomingMessage = function() {};
@@ -64,7 +65,6 @@ http.IncomingMessage = function() {};
  * @type {!Object.<string, string>}
  */
 http.IncomingMessage.prototype.headers = {};
-
 
 
 /**

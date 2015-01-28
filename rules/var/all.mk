@@ -13,6 +13,7 @@ CONFIG_PATH         ?= $(PROJECT_PATH)/etc/build
 MODULES_PATH        ?= $(PROJECT_PATH)/node_modules
 TEMPLATES_PATH      ?= $(CONFIG_PATH)/templates
 SOURCES_LISTS_PATH  ?= $(CONFIG_PATH)/sources-lists
+MODULES             ?= $(wildcard $(MODULES_PATH)/*)
 
 
 ################################################################################

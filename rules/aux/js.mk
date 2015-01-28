@@ -1,7 +1,7 @@
 
 
 %.js-deps-headers:
-	@echo $(foreach DIR, $(wildcard $(MODULES_PATH)/*), \
+	@echo $(foreach DIR, $(MODULES), \
 	$(wildcard $(DIR)/externs/*.js)) > $@
 
 

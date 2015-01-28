@@ -39,6 +39,12 @@ process.pid = '';
 
 
 /**
+ * @type {!Object.<string, string>}
+ */
+process.env = {};
+
+
+/**
  * @return {!process.MemoryUsageInfo}
  */
 process.memoryUsage = function() {};
