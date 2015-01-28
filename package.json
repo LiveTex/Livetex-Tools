@@ -1,6 +1,6 @@
 {
   "name": "livetex-tools",
-  "version": "0.3.28",
+  "version": "0.3.29",
   "repository": {
     "type": "git",
     "url": "https://github.com/LiveTex/Livetex-Tools"
@@ -20,7 +20,6 @@
       "email": "divergence082@gmail.com"
     }
   ],
-
   "publishConfig": {
     "registry": "http://sonatype-nexus.livetex.ru/nexus/content/repositories/livetex-npm/"
   }
