@@ -62,6 +62,6 @@ Buffer.prototype.toString = function(opt_encoding, opt_start, opt_end) {};
 /**
  * @param {!Array.<!Buffer>} list
  * @param {number=} opt_totalLength
- * @return !Buffer
+ * @return {!Buffer}
  */
 Buffer.concat = function(list, opt_totalLength) {};
