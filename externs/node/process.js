@@ -83,6 +83,11 @@ process.stdin;
  */
 process.stdout;
 
+/**
+ * @type {!IStream}
+ */
+process.stderr;
+
 
 /**
  * @type {!Array.<string>}
