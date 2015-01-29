@@ -25,8 +25,9 @@ http.request = function(options, opt_callback) {};
 
 /**
  * @constructor
+ * @param {{maxSockets: number}=} opt_options
  */
-http.Agent = function() {};
+http.Agent = function(opt_options) {};
 
 
 /**
