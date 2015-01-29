@@ -85,3 +85,9 @@ net.Socket.prototype.pause = function() {};
 
 
 net.Socket.prototype.resume = function() {};
+
+/**
+ * @param {string} event
+ * @param {Function} callback
+ */
+net.Socket.prototype.on = function(event, callback) {};

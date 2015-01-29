@@ -1,7 +1,0 @@
-*.iml
-*.log
-.project
-.idea/
-bin/
-externs/
-node_modules/

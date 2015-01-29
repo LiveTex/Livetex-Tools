@@ -18,8 +18,8 @@ ENV_EXTERNS_PATH    ?= $(TOOLS_PATH)/externs
 # PREREQUISITES PATHS ##########################################################
 
 
-vpath %.jst         $(TEMPLATES_PATH)/js
-vpath %.jsd         $(SOURCES_LISTS_PATH)/js
+vpath %.jst         $(TEMPLATES_PATH)
+vpath %.jsd         $(SOURCES_LISTS_PATH)
 vpath %.js          $(JS_BUILD_PATH)
 
 
@@ -57,21 +57,21 @@ JS_EXTERNS          ?= $(foreach FILE, \
 
 
 JS_LINT             ?= $(foreach FILE, \
-                       $(shell find $(SOURCES_LISTS_PATH)/js \
+                       $(shell find $(SOURCES_LISTS_PATH) \
                        -maxdepth 1 \
                        -iname '*.jsd' ), \
                        $(shell basename $(FILE) | cut -d '.' -f 1))
 
 
 JS_CHECK            ?= $(foreach FILE, \
-                       $(shell find $(TEMPLATES_PATH)/js \
+                       $(shell find $(TEMPLATES_PATH) \
                        -maxdepth 1 \
                        -iname '*.jst'), \
                        $(shell basename $(FILE) | cut -d '.' -f 1))
 
 
 JS_TEMPLATES        ?= $(foreach FILE, \
-                       $(shell find $(TEMPLATES_PATH)/js \
+                       $(shell find $(TEMPLATES_PATH) \
                        -maxdepth 1 \
                        -iname '*.jst'), \
                        $(shell basename $(FILE) | cut -d '.' -f 1))
