@@ -51,3 +51,9 @@
 %.js-test: %.js
 	@node --eval "require('$^').test.run('$(names)')"
 
+
+%.chmod:
+	@$(foreach FILE, $(wildcard $(JS_BUILD_PATH)/*), \
+	if grep -Rq "#\!/" $(FILE) ; then \
+		chmod +x $(FILE) ; \
+	fi)

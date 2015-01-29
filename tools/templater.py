@@ -15,15 +15,13 @@ def getTemplateText(templatePath):
 
 
 def getIndent(text, start):
-    lineStart = text.rfind('\n', 0, start) + 1
-    return start - lineStart
+    return start - text.rfind('\n', 0, start) + 1
 
 
 def addIndent(text, indent):
     indentedText = ''
     for line in text.splitlines():
-        indentedLine = ' '*indent + line + '\n'
-        indentedText += indentedLine
+        indentedText += ' '*indent + line + '\n'
     return indentedText
 
 
@@ -45,15 +43,19 @@ def interpretAdvanced(templateText):
 
 
 def assemble(templateText):
-    match = re.search('(\%\%.+\%\%)', templateText)
+    regex = '(\/\*\%.+\%\*\/)'
+    match = re.search(regex, templateText)
+
     while match:
-	tag = match.group(0)
-        cmd = tag.strip('%')
-	check_call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
-	insertion = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-        insertion = addIndent(insertion, getIndent(templateText, match.start()))
+        tag = match.group(0)
+        cmd = tag.strip('\%\/*')
+        check_call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
+        insertion = addIndent(
+            Popen(cmd, shell=True, stdout=PIPE).communicate()[0],
+            getIndent(templateText, match.start()))
         templateText = templateText.replace(tag, insertion.strip())
-        match = re.search('(\%\%.+\%\%)', templateText)
+        match = re.search(regex, templateText)
+
     return templateText
 
 
