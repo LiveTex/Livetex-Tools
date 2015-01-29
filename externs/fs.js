@@ -8,7 +8,7 @@ var fs = {};
 
 /**
  * @param {string} filename
- * @param {!Object=} opt_options
+ * @param {(!Object|string)=} opt_options
  * @return {string}
  */
 fs.readFileSync = function(filename, opt_options) {};
@@ -16,10 +16,9 @@ fs.readFileSync = function(filename, opt_options) {};
 
 /**
  * @param {string} filename
- * @param {string} encoding
- * @param {function(Error, (string|!Buffer))} callback
+ * @param {function(Error, !Buffer)} callback
  */
-fs.readFile = function(filename, encoding, callback) {};
+fs.readFile = function(filename, callback) {};
 
 
 /**
@@ -50,3 +49,19 @@ fs.existsSync = function(filename) {};
  * @param {string} filename
  */
 fs.unlinkSync = function(filename) {};
+
+
+/**
+ * @param {string} filename
+ * @param {!Object} options
+ * @param {function(string, string)} listener
+ */
+fs.watchFile = function(filename, options, listener) {};
+
+
+/**
+ * @param {string} filename
+ * @param {!Object=} opt_options
+ * @param {function(string, string)=} opt_listener
+ */
+fs.watch = function(filename, opt_options, opt_listener) {};

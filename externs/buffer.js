@@ -62,6 +62,38 @@ Buffer.prototype.toString = function(opt_encoding, opt_start, opt_end) {};
 /**
  * @param {!Array.<!Buffer>} list
  * @param {number=} opt_totalLength
- * @return !Buffer
+ * @return {!Buffer}
  */
 Buffer.concat = function(list, opt_totalLength) {};
+
+
+/**
+ * @param {number} value
+ * @param {number} offset
+ * @param {boolean=} opt_noAssert
+ */
+Buffer.writeUInt32LE = function(value, offset, opt_noAssert) {};
+
+
+/**
+ * @param {number} value
+ * @param {number} offset
+ * @param {boolean=} opt_noAssert
+ */
+Buffer.writeUInt32BE = function(value, offset, opt_noAssert) {};
+
+
+/**
+ * @param {number} value
+ * @param {number} offset
+ * @param {boolean=} opt_noAssert
+ */
+Buffer.writeInt32LE = function(value, offset, opt_noAssert) {};
+
+
+/**
+ * @param {number} value
+ * @param {number} offset
+ * @param {boolean=} opt_noAssert
+ */
+Buffer.writeInt32BE = function(value, offset, opt_noAssert) {};

@@ -1,7 +1,4 @@
-
-
-TOOLS_PATH ?= $(shell pwd)/node_modules/livetex-tools
-
+TOOLS_PATH ?= /usr/lib/node_modules/livetex-tools
 
 include $(TOOLS_PATH)/rules/all.mk
 include $(TOOLS_PATH)/rules/var/js.mk
