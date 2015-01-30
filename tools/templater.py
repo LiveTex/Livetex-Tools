@@ -8,6 +8,7 @@ from subprocess import Popen, PIPE, check_call
 
 
 closeTag = '%*/'
+closeTagRegex = '\%\*\/'
 
 def getTemplateText(templatePath):
     file = open(templatePath, 'r')
@@ -30,23 +31,24 @@ def addIndent(text, indent):
 
 
 def interpretAdvanced(templateText):
-    templateText = re.sub('(\.js-compile)' + closeTag,
+    templateText = re.sub('(\.js-compile)' + closeTagRegex,
                           '.js-compile-advanced' + closeTag,
                           templateText)
-    templateText = re.sub('(\.js-compile-compressed)' + closeTag,
+    templateText = re.sub('(\.js-compile-compressed)' + closeTagRegex,
                           '.js-compile-advanced' + closeTag,
                           templateText)
-    templateText = re.sub('(\.js-externs-compile-compressed)' + closeTag,
+    templateText = re.sub('(\.js-externs-compile-compressed)' + closeTagRegex,
                           '.js-compile-advanced' + closeTag,
                           templateText)
 
-    templateText = re.sub('(\.js-web-compile)' + closeTag,
+    templateText = re.sub('(\.js-web-compile)' + closeTagRegex,
                           '.js-web-compile-advanced' + closeTag,
                           templateText)
-    templateText = re.sub('(\.js-web-compile-compressed)' + closeTag,
+    templateText = re.sub('(\.js-web-compile-compressed)' + closeTagRegex,
                           '.js-web-compile-advanced' + closeTag,
                           templateText)
-    templateText = re.sub('(\.js-web-externs-compile-compressed)' + closeTag,
+    templateText = re.sub('(\.js-web-externs-compile-compressed)' +
+                          closeTagRegex,
                           '.js-web-compile-advanced' + closeTag,
                           templateText)
     return templateText
