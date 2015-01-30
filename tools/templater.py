@@ -7,6 +7,8 @@ from optparse import OptionParser
 from subprocess import Popen, PIPE, check_call
 
 
+closeTag = '%*/'
+
 def getTemplateText(templatePath):
     file = open(templatePath, 'r')
     text = file.read()
@@ -28,35 +30,39 @@ def addIndent(text, indent):
 
 
 def interpretAdvanced(templateText):
-    templateText = re.sub('(\.js-compile)\%\%',
-                          '.js-compile-advanced%%', templateText)
-    templateText = re.sub('(\.js-compile-compressed)\%\%',
-                          '.js-compile-advanced%%', templateText)
-    templateText = re.sub('(\.js-externs-compile-compressed)\%\%',
-                          '.js-compile-advanced%%', templateText)
+    templateText = re.sub('(\.js-compile)' + closeTag,
+                          '.js-compile-advanced' + closeTag,
+                          templateText)
+    templateText = re.sub('(\.js-compile-compressed)' + closeTag,
+                          '.js-compile-advanced' + closeTag,
+                          templateText)
+    templateText = re.sub('(\.js-externs-compile-compressed)' + closeTag,
+                          '.js-compile-advanced' + closeTag,
+                          templateText)
 
-    templateText = re.sub('(\.js-web-compile)\%\%',
-                          '.js-web-compile-advanced%%', templateText)
-    templateText = re.sub('(\.js-web-compile-compressed)\%\%',
-                          '.js-web-compile-advanced%%', templateText)
-    templateText = re.sub('(\.js-web-externs-compile-compressed)\%\%',
-                          '.js-web-compile-advanced%%', templateText)
+    templateText = re.sub('(\.js-web-compile)' + closeTag,
+                          '.js-web-compile-advanced' + closeTag,
+                          templateText)
+    templateText = re.sub('(\.js-web-compile-compressed)' + closeTag,
+                          '.js-web-compile-advanced' + closeTag,
+                          templateText)
+    templateText = re.sub('(\.js-web-externs-compile-compressed)' + closeTag,
+                          '.js-web-compile-advanced' + closeTag,
+                          templateText)
     return templateText
 
 
 def assemble(templateText):
     regex = '(\/\*\%.+\%\*\/)'
     match = re.search(regex, templateText)
-
     while match:
         tag = match.group(0)
-        cmd = tag.strip('\%\/*')
+        cmd = tag.strip(closeTag)
         check_call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
         insertion = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
         insertion = addIndent(insertion, getIndent(templateText, match.start()))
         templateText = templateText.replace(tag, insertion.strip())
         match = re.search(regex, templateText)
-
     return templateText
 
 
@@ -71,10 +77,10 @@ def main():
                            "compilation mode or not")
 
     (options, args) = parser.parse_args()
-    
+
     templatePath = args[0]
     templateText = getTemplateText(templatePath)
-    
+
     if options.advanced:
         templateText = interpretAdvanced(templateText)
 
