@@ -15,13 +15,15 @@ def getTemplateText(templatePath):
 
 
 def getIndent(text, start):
-    return start - text.rfind('\n', 0, start) + 1
+    lineStart = text.rfind('\n', 0, start) + 1
+    return start - lineStart
 
 
 def addIndent(text, indent):
     indentedText = ''
     for line in text.splitlines():
-        indentedText += ' '*indent + line + '\n'
+        indentedLine = ' '*indent + line + '\n'
+        indentedText += indentedLine
     return indentedText
 
 
@@ -50,9 +52,8 @@ def assemble(templateText):
         tag = match.group(0)
         cmd = tag.strip('\%\/*')
         check_call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
-        insertion = addIndent(
-            Popen(cmd, shell=True, stdout=PIPE).communicate()[0],
-            getIndent(templateText, match.start()))
+        insertion = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+        insertion = addIndent(insertion, getIndent(templateText, match.start()))
         templateText = templateText.replace(tag, insertion.strip())
         match = re.search(regex, templateText)
 
