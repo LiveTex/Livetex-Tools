@@ -45,18 +45,15 @@ def interpretAdvanced(templateText):
 
 
 def assemble(templateText):
-    regex = '(\/\*\%.+\%\*\/)'
-    match = re.search(regex, templateText)
-
+    match = re.search('(\%\%.+\%\%)', templateText)
     while match:
         tag = match.group(0)
-        cmd = tag.strip('\%\/*')
+        cmd = tag.strip('%')
         check_call(cmd, shell=True, stdout=open(os.devnull, 'wb'))
         insertion = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
         insertion = addIndent(insertion, getIndent(templateText, match.start()))
         templateText = templateText.replace(tag, insertion.strip())
-        match = re.search(regex, templateText)
-
+        match = re.search('(\%\%.+\%\%)', templateText)
     return templateText
 
 

@@ -7,7 +7,7 @@ var process = {};
 
 
 /**
- * @param {Function} callback
+ * @param {function()} callback
  */
 process.nextTick = function(callback) {};
 
@@ -82,12 +82,6 @@ process.stdin;
  * @type {!IStream}
  */
 process.stdout;
-
-/**
- * @type {!IStream}
- */
-process.stderr;
-
 
 /**
  * @type {!IStream}

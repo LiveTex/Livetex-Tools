@@ -1,0 +1,4 @@
+TOOLS_PATH = /PATH_TO_LIVETEX_TOOLS
+
+
+include $(TOOLS_PATH)/rules/js.mk
