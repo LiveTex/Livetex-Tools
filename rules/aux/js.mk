@@ -6,7 +6,7 @@
 
 
 %.js-node-headers:
-	@echo $(foreach FILE, $(wildcard $(ENV_EXTERNS_PATH)/*), $(FILE)) > $@
+	echo $(foreach FILE, $(wildcard $(NODE_EXTERNS_PATH)/*), $(FILE)) > $@
 
 
 %.jsh-node: %.js-node-headers %.js-deps-headers

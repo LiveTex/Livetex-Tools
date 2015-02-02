@@ -17,6 +17,14 @@ Buffer.byteLength = function(string) {};
 
 
 /**
+ * @param {!Array.<!Buffer>} list
+ * @param {number=} opt_totalLength
+ * @return {!Buffer}
+ */
+Buffer.concat = function(list, opt_totalLength) {};
+
+
+/**
  * @type {number}
  */
 Buffer.prototype.length = 0;
@@ -60,11 +68,11 @@ Buffer.prototype.toString = function(opt_encoding, opt_start, opt_end) {};
 
 
 /**
- * @param {!Array.<!Buffer>} list
- * @param {number=} opt_totalLength
- * @return {!Buffer}
+ * @param {number} value
+ * @param {number} offset
+ * @param {boolean=} opt_noAssert
  */
-Buffer.concat = function(list, opt_totalLength) {};
+Buffer.prototype.writeUInt32LE = function(value, offset, opt_noAssert) {};
 
 
 /**
@@ -72,7 +80,7 @@ Buffer.concat = function(list, opt_totalLength) {};
  * @param {number} offset
  * @param {boolean=} opt_noAssert
  */
-Buffer.writeUInt32LE = function(value, offset, opt_noAssert) {};
+Buffer.prototype.writeUInt32BE = function(value, offset, opt_noAssert) {};
 
 
 /**
@@ -80,7 +88,7 @@ Buffer.writeUInt32LE = function(value, offset, opt_noAssert) {};
  * @param {number} offset
  * @param {boolean=} opt_noAssert
  */
-Buffer.writeUInt32BE = function(value, offset, opt_noAssert) {};
+Buffer.prototype.writeInt32LE = function(value, offset, opt_noAssert) {};
 
 
 /**
@@ -88,12 +96,4 @@ Buffer.writeUInt32BE = function(value, offset, opt_noAssert) {};
  * @param {number} offset
  * @param {boolean=} opt_noAssert
  */
-Buffer.writeInt32LE = function(value, offset, opt_noAssert) {};
-
-
-/**
- * @param {number} value
- * @param {number} offset
- * @param {boolean=} opt_noAssert
- */
-Buffer.writeInt32BE = function(value, offset, opt_noAssert) {};
+Buffer.prototype.writeInt32BE = function(value, offset, opt_noAssert) {};
