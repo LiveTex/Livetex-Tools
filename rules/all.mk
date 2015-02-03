@@ -17,9 +17,7 @@ npm-publish:
 	@npm publish --loglevel=silent
 	@echo $@: DONE
 
+
 publish: | js-check js set-version npm-publish
   @echo $@: DONE
 
-
-web-publish: | js-lint js set-version npm-publish
-  @echo $@: DONE

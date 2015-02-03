@@ -13,21 +13,10 @@
 	@cat $(shell cat $^ < /dev/null) > $@
 
 
-%.jsh-web:
-	@echo $(foreach FILE, $(wildcard $(ENV_EXTERNS_PATH)/browser/*), cat $(FILE)) > $@
-
-
 ################################################################################
 
 
 %.js-compile-advanced: %.jsd %.jsh-node
-	@$(JS_COMPILER) \
-	--compilation_level ADVANCED_OPTIMIZATIONS \
-	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
-	--externs   $(shell echo "$^" | cut -d " " -f 2)
-
-
-%.js-web-compile-advanced: %.jsd %.jsh-web
 	@$(JS_COMPILER) \
 	--compilation_level ADVANCED_OPTIMIZATIONS \
 	--js        $(foreach FILE, $(shell cat $<), $(JS_SOURCES_PATH)/$(FILE)) \
@@ -62,3 +51,9 @@
 %.js-test: %.js
 	@node --eval "require('$^').test.run('$(names)')"
 
+
+%.chmod:
+	@$(foreach FILE, $(wildcard $(JS_BUILD_PATH)/*), \
+	if grep -Rq "#\!/" $(FILE) ; then \
+		chmod +x $(FILE) ; \
+	fi)
