@@ -38,7 +38,7 @@ js-build: js-clean
 	@mkdir -p $(JS_BUILD_PATH)
 	@$(foreach TARGET_NAME, $(JS_TEMPLATES), \
 	$(MAKE) -s $(shell echo $(TARGET_NAME).js-assemble);)
-	@$(MAKE) -s js.chmod
+#	@$(MAKE) -s js.chmod
 	@echo $@: DONE
 
 
