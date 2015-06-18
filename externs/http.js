@@ -44,11 +44,12 @@ http.Server = function() {};
 
 
 /**
- * @param {number} port
- * @param {string|function()=} opt_host
+ * @param {(number|string|!Object)} portOrPathOrHandle
+ * @param {(string|function())=} opt_hostOrCallback
  * @param {function()=} opt_callback
  */
-http.Server.prototype.listen = function(port, opt_host, opt_callback) {};
+http.Server.prototype.listen =
+    function(portOrPathOrHandle, opt_hostOrCallback, opt_callback) {};
 
 
 http.Server.prototype.close = function() {};
