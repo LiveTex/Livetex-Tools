@@ -29,8 +29,11 @@ var IWritableStream = function() {};
 /**
  * @param {!Buffer|string} bufferOrString
  * @param {string=} opt_encoding
+ * @param {!function()=} opt_callback
+ * @return {boolean}
  */
-IWritableStream.prototype.write = function(bufferOrString, opt_encoding) {};
+IWritableStream.prototype.write =
+    function(bufferOrString, opt_encoding, opt_callback) {};
 
 
 /**
