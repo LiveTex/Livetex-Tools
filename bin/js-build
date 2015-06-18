@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "include /usr/lib/node_modules/livetex-tools/rules/js.mk" > Makefile
+make js || true
+rm Makefile

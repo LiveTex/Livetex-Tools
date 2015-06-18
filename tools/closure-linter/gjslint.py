@@ -269,7 +269,6 @@ def main(argv=None):
         records_iter = _CheckPaths(paths)
 
     exit_code = 0
-    message = ''
 
     records_iter, records_iter_copy = itertools.tee(records_iter, 2)
     message = _PrintErrorRecords(records_iter_copy)
@@ -296,6 +295,7 @@ def main(argv=None):
         # Write out instructions for using fixjsstyle script to fix some of the
         # reported errors.
         fix_args = []
+        flags_args = []
         for flag in sys.argv[1:]:
             for f in GJSLINT_ONLY_FLAGS:
                 if flag.startswith(f):
@@ -303,14 +303,23 @@ def main(argv=None):
             else:
                 fix_args.append(flag)
 
+        for flag in sys.argv[1:]:
+            if flag not in paths:
+                flags_args.append(flag)
+
+        #MODIFICATION [LIVETEX]
+
         fixjsstyle_path = str(os.path.dirname(os.path.realpath(__file__))) + \
-                          os.sep + 'fixjsstyle.py'
+                          os.sep + 'fixjsstyle.py ' + ' '.join(flags_args) + ' '
+
+        broken_files_paths = list(set(
+            [record.path for record in error_records]))
+
         message += """
         TRY:
 
-        """ + fixjsstyle_path + """ %s
+        """ + fixjsstyle_path + ' '.join(broken_files_paths)
 
-        """ % ' '.join(fix_args)
         exit_code = message
 
     if FLAGS.time:
