@@ -10,6 +10,7 @@
 
 PROJECT_PATH        ?= $(shell pwd)
 CONFIG_PATH         ?= $(PROJECT_PATH)/etc/build
+VENDOR_EXTERNS_PATH         ?= $(PROJECT_PATH)/etc/externs
 MODULES             ?= $(wildcard $(PROJECT_PATH)/node_modules/*)
 
 

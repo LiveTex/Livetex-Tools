@@ -4,12 +4,14 @@
 	@echo $(foreach DIR, $(MODULES), \
 	$(wildcard $(DIR)/externs/*.js)) > $@
 
+%.js-vendor-headers:
+	@echo $(wildcard $(VENDOR_EXTERNS_PATH)/*.js) > $@
 
 %.js-node-headers:
 	echo $(foreach FILE, $(wildcard $(NODE_EXTERNS_PATH)/*), $(FILE)) > $@
 
 
-%.jsh-node: %.js-node-headers %.js-deps-headers
+%.jsh-node: %.js-node-headers %.js-deps-headers %.js-vendor-headers
 	@cat $(shell cat $^ < /dev/null) > $@
 
 
