@@ -1,5 +1,7 @@
 #!/bin/bash
 
 echo "include /usr/lib/node_modules/livetex-tools/rules/js.mk" > Makefile
-make js-check || true
+make js-check
+MAKE_EXIT_CODE=$?
 rm Makefile
+exit $MAKE_EXIT_CODE
